@@ -1,5 +1,3 @@
-import { Rule } from "@sanity/types";
-
 interface Field {
 	name: string;
 	title: string;

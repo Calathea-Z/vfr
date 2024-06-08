@@ -34,27 +34,21 @@ const Header = () => {
 
 	return (
 		<nav className="fixed top-0 left-0 z-50 w-full bg-white shadow-md p-4 flex justify-between items-center">
-			<div className="flex items-center">
+			<div className="hidden md:flex md:flex-1 justify-start space-x-4">
+				<Link href="/about">Home</Link>
+				<Link href="/services">Shop</Link>
+				<Link href="/contact">Wholesale</Link>
+				<Link href="/contact">Stockists</Link>
+				<Link href="/about">About</Link>
+			</div>
+
+			<div className="flex-1 justify-center hidden md:flex">
 				<Link href="/">
-					<a>
-						<Image src="/path/to/logo.png" alt="Logo" width={50} height={50} />
-					</a>
+					<Image src={simpleLogo} alt="Logo" width={60} height={60} />
 				</Link>
 			</div>
 
-			<div className="hidden md:flex justify-center space-x-4">
-				<Link href="/about">
-					<a>About</a>
-				</Link>
-				<Link href="/services">
-					<a>Services</a>
-				</Link>
-				<Link href="/contact">
-					<a>Contact</a>
-				</Link>
-			</div>
-
-			<div className="flex items-center space-x-4">
+			<div className="hidden md:flex md:flex-1 justify-end space-x-4">
 				<button onClick={() => handleNavigate("/search")}>
 					<Microscope size={24} />
 				</button>
@@ -64,25 +58,29 @@ const Header = () => {
 				<button onClick={() => handleNavigate("/cart")}>
 					<Basket size={24} />
 				</button>
-				<button
-					className="md:hidden"
-					onClick={() => setIsMenuOpen(!isMenuOpen)}
-				>
-					<List size={24} />
-				</button>
+			</div>
+
+			<div className="md:hidden flex items-center justify-between w-full">
+				<Link href="/">
+					<Image src={simpleLogo} alt="Logo" width={60} height={60} />
+				</Link>
+				<div className="flex items-center space-x-4">
+					<button onClick={() => handleNavigate("/cart")}>
+						<Basket size={24} />
+					</button>
+					<button onClick={() => setIsMenuOpen(!isMenuOpen)}>
+						<List size={24} />
+					</button>
+				</div>
 			</div>
 
 			{isMenuOpen && (
 				<div className="absolute top-full left-0 w-full bg-white shadow-md flex flex-col items-center space-y-4 p-4">
-					<Link href="/about">
-						<a>About</a>
-					</Link>
-					<Link href="/services">
-						<a>Services</a>
-					</Link>
-					<Link href="/contact">
-						<a>Contact</a>
-					</Link>
+					<Link href="/services">Shop</Link>
+					<Link href="/contact">Wholesale</Link>
+					<Link href="/contact">Stockists</Link>
+					<Link href="/search">Search</Link>
+					<Link href="/account">Account</Link>
 				</div>
 			)}
 		</nav>

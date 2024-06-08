@@ -19,12 +19,12 @@ interface Category {
 }
 
 const Header = () => {
-	const context = useContext(stateStorage);
-	if (!context) {
-		throw new Error("stateStorage context is not available");
-	}
-	const { state, dispatch } = context;
-	const { cart, isCartVisible } = state;
+	// const context = useContext(stateStorage);
+	// if (!context) {
+	// 	throw new Error("stateStorage context is not available");
+	// }
+	// const { state, dispatch } = context;
+	// const { cart, isCartVisible } = state;
 	const navigate = useRouter();
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 

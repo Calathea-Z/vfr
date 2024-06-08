@@ -7,9 +7,6 @@ import {
 } from "react";
 import Cookies from "universal-cookie";
 
-// Corrected: Provide a default value for createContext
-export const stateStorage = createContext(null);
-
 interface CartItem {
 	_key: string;
 	// Add other properties of CartItem as needed
@@ -48,6 +45,15 @@ const defaultInitialState: State = {
 	isCartVisible: false,
 };
 
+// Corrected: Moved the declaration of defaultInitialState above its usage
+export const stateStorage = createContext<{
+	state: State;
+	dispatch: Dispatch<Action>;
+} | null>({
+	state: defaultInitialState,
+	dispatch: () => null,
+});
+
 const Store = createContext<{ state: State; dispatch: Dispatch<Action> }>({
 	state: defaultInitialState,
 	dispatch: () => null,
@@ -60,6 +66,7 @@ function reducer(state: State, action: Action): State {
 			const existItem = state.cart.cartItems.find(
 				(item) => item._key === newItem._key
 			);
+			// Update cart items, replacing existing item if found, otherwise adding new item
 			const cartItems = existItem
 				? state.cart.cartItems.map((item) =>
 						item._key === existItem._key ? newItem : item
@@ -69,12 +76,97 @@ function reducer(state: State, action: Action): State {
 			cookies.set("cartItems", JSON.stringify(cartItems));
 			return { ...state, cart: { ...state.cart, cartItems } };
 		}
-		// Add other cases here
+		case "CART_REMOVE_ITEM": {
+			// Filter out the item to be removed from the cart
+			const cartItems = state.cart.cartItems.filter(
+				(item) => item._key !== action.payload._key
+			);
+			const cookies = new Cookies();
+			cookies.set("cartItems", JSON.stringify(cartItems)); // Update cookies with new cart items
+			return { ...state, cart: { ...state.cart, cartItems } };
+		}
+		case "CART_CLEAR_ITEMS": {
+			// Clear all items from the cart
+			return { ...state, cart: { ...state.cart, cartItems: [] } };
+		}
+		case "USER_LOGIN": {
+			// Set user info upon login
+			return { ...state, userInfo: action.payload };
+		}
+		case "USER_LOGOUT": {
+			// Clear user info and reset cart upon logout
+			return {
+				...state,
+				userInfo: null,
+				cart: {
+					cartItems: [],
+					shippingInformation: {},
+					shippingWeight: null,
+					shippingCost: null,
+					orderSuccess: false,
+				},
+			};
+		}
+		case "SAVE_SHIPPING_ADDRESS": {
+			// Save or update shipping address in the cart
+			return {
+				...state,
+				cart: {
+					...state.cart,
+					shippingInformation: {
+						...state.cart.shippingInformation,
+						...action.payload,
+					},
+				},
+			};
+		}
+		case "UPDATE_SHIPPING_WEIGHT": {
+			// Update the shipping weight for the cart
+			return {
+				...state,
+				cart: { ...state.cart, shippingWeight: action.payload },
+			};
+		}
+		case "UPDATE_SHIPPING_COST": {
+			// Update the shipping cost for the cart
+			return {
+				...state,
+				cart: { ...state.cart, shippingCost: action.payload },
+			};
+		}
+		case "UPDATE_PAYMENT_SUCCESS": {
+			// Update payment success status
+			return {
+				...state,
+				cart: { ...state.cart, orderSuccess: action.payload },
+			};
+		}
+		case "CLEAR_PAYMENT_STATUS": {
+			// Clear payment success status
+			return {
+				...state,
+				cart: { ...state.cart, orderSuccess: false },
+			};
+		}
+		case "SHOW_CART": {
+			return { ...state, isCartVisible: true };
+		}
+		case "HIDE_CART": {
+			return { ...state, isCartVisible: false };
+		}
+		case "INITIALIZE_STATE": {
+			// Initialize state with values from cookies
+			const { cartItems, userInfo } = action.payload;
+			return {
+				...state,
+				cart: { ...state.cart, cartItems },
+				userInfo,
+			};
+		}
 		default:
 			return state;
 	}
 }
-
 interface StoreProviderProps {
 	children: ReactNode;
 	initialCookies: {

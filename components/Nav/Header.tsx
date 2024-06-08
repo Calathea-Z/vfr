@@ -1,6 +1,15 @@
-import { useContext, useState, useEffect } from "react";
-import { useRouter } from "next/router";
+"use client";
+import { simpleLogo } from "@/public/assets";
 import { stateStorage } from "@/utils/stateStorage";
+import { SanityClient } from "sanity";
+//---Packages---//
+import { useContext, useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+import Link from "next/link";
+import { Microscope, UserCircle, Basket, List } from "@phosphor-icons/react";
+import { motion } from "framer-motion";
+import Cookies from "universal-cookie";
 
 interface Category {
 	title: string;
@@ -9,8 +18,75 @@ interface Category {
 	imageUrl?: string;
 }
 
-const Header = ({}) => {
-	const { state, dispatch } = useContext(stateStorage);
+const Header = () => {
+	const context = useContext(stateStorage);
+	if (!context) {
+		throw new Error("stateStorage context is not available");
+	}
+	const { state, dispatch } = context;
 	const { cart, isCartVisible } = state;
-	const router = useRouter();
+	const navigate = useRouter();
+	const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+	const handleNavigate = (url: string) => {
+		navigate.push(url);
+	};
+
+	return (
+		<nav className="fixed top-0 left-0 z-50 w-full bg-white shadow-md p-4 flex justify-between items-center">
+			<div className="flex items-center">
+				<Link href="/">
+					<a>
+						<Image src="/path/to/logo.png" alt="Logo" width={50} height={50} />
+					</a>
+				</Link>
+			</div>
+
+			<div className="hidden md:flex justify-center space-x-4">
+				<Link href="/about">
+					<a>About</a>
+				</Link>
+				<Link href="/services">
+					<a>Services</a>
+				</Link>
+				<Link href="/contact">
+					<a>Contact</a>
+				</Link>
+			</div>
+
+			<div className="flex items-center space-x-4">
+				<button onClick={() => handleNavigate("/search")}>
+					<Microscope size={24} />
+				</button>
+				<button onClick={() => handleNavigate("/account")}>
+					<UserCircle size={24} />
+				</button>
+				<button onClick={() => handleNavigate("/cart")}>
+					<Basket size={24} />
+				</button>
+				<button
+					className="md:hidden"
+					onClick={() => setIsMenuOpen(!isMenuOpen)}
+				>
+					<List size={24} />
+				</button>
+			</div>
+
+			{isMenuOpen && (
+				<div className="absolute top-full left-0 w-full bg-white shadow-md flex flex-col items-center space-y-4 p-4">
+					<Link href="/about">
+						<a>About</a>
+					</Link>
+					<Link href="/services">
+						<a>Services</a>
+					</Link>
+					<Link href="/contact">
+						<a>Contact</a>
+					</Link>
+				</div>
+			)}
+		</nav>
+	);
 };
+
+export default Header;

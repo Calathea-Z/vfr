@@ -9,8 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@phosphor-icons/react": "^2.1.5",
     "@sanity/image-url": "^1.0.2",
     "@sanity/vision": "^3.45.0",
+    "framer-motion": "^11.2.10",
+    "mongoose": "^8.4.1",
     "next": "14.2.3",
     "next-sanity": "^9.3.10",
     "react": "^18",

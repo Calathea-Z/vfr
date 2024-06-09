@@ -35,8 +35,8 @@ const Header = () => {
 	return (
 		<nav className="fixed top-0 left-0 z-50 w-full bg-white shadow-md p-4 flex justify-between items-center">
 			<div className="hidden md:flex md:flex-1 justify-start space-x-4">
-				<Link href="/about">Home</Link>
-				<Link href="/services">Shop</Link>
+				<Link href="/">Home</Link>
+				<Link href="/shop">Shop</Link>
 				<Link href="/contact">Wholesale</Link>
 				<Link href="/contact">Stockists</Link>
 				<Link href="/about">About</Link>

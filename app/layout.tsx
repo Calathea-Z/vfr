@@ -3,17 +3,7 @@ import Header from "@/components/Nav/Header";
 //---Packages---//
 import type { Metadata } from "next";
 //---Fonts---//
-import { Inter } from "next/font/google";
-const inter = Inter({ subsets: ["latin"] });
-
-import { Playfair_Display } from "next/font/google";
-const playfairDisplay = Playfair_Display({
-      weight: ['400', '700'], // Regular and Bold
-      style: ['normal', 'italic'],
-      subsets: ['latin'],
-      display: 'swap',
-
-})
+import { playfairDisplay } from './fonts/fonts';
 
 export const metadata: Metadata = {
 	title: "Vine & Frond",
@@ -22,9 +12,9 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
 	children,
-}: Readonly<{
+}: {
 	children: React.ReactNode;
-}>) {
+}) {
 	return (
 		<html lang="en">
 			<body className={playfairDisplay.className}>

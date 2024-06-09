@@ -9,13 +9,19 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@next/font": "^14.2.3",
     "@phosphor-icons/react": "^2.1.5",
+    "@sanity/color-input": "^3.1.1",
+    "@sanity/image-url": "^1.0.2",
+    "@sanity/react-loader": "^1.10.2",
+    "@sanity/vision": "^3.45.0",
+    "check": "^1.0.0",
     "framer-motion": "^11.2.10",
     "mongoose": "^8.4.1",
     "next": "14.2.3",
+    "next-sanity": "^9.3.10",
     "react": "^18",
     "react-dom": "^18",
+    "sanity": "^3.45.0",
     "sharp": "^0.33.4",
     "styled-components": "^6.1.11",
     "universal-cookie": "^7.1.4"

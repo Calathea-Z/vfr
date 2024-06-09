@@ -1,8 +1,9 @@
 import "./globals.css";
 import type { Metadata } from "next";
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
 
 //---Fonts---//
-import { playfairDisplay } from './fonts/fonts';
+import { playfairDisplay } from "./fonts/fonts";
 
 export const metadata: Metadata = {
 	title: "Vine & Frond",
@@ -10,16 +11,15 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({
-    children,
+	children,
 }: {
-    children: React.ReactNode;
+	children: React.ReactNode;
 }) {
-
-    return (
-        <html lang="en">
-            <body className={playfairDisplay.className}>
-                {children}
-            </body>
-        </html>
-    );
+	return (
+		<html lang="en">
+			<AppRouterCacheProvider>
+				<body className={playfairDisplay.className}>{children}</body>
+			</AppRouterCacheProvider>
+		</html>
+	);
 }

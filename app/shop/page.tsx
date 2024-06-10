@@ -163,6 +163,7 @@ const ShopHome: React.FC = () => {
 				display: "flex",
 				flexDirection: "column",
 				minHeight: "100vh",
+				pb: 2,
 			}}
 		>
 			<Box
@@ -270,6 +271,7 @@ const ShopHome: React.FC = () => {
 								},
 								justifyItems: "center",
 								width: "100%",
+								p: 1,
 							}}
 						>
 							{products.map((product, index) => (

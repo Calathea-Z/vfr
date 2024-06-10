@@ -26,6 +26,7 @@
     "next-sanity": "^9.3.10",
     "react": "^18",
     "react-dom": "^18",
+    "react-social-icons": "^6.16.0",
     "sanity": "^3.45.0",
     "sharp": "^0.33.4",
     "styled-components": "^6.1.11",

@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation"; // Import usePathname
 import Image from "next/legacy/image";
 import Link from "next/link";
 //---Packages---//
-import { AppBar, Toolbar, IconButton, Typography, Button } from "@mui/material";
+import { AppBar, Toolbar, IconButton } from "@mui/material";
 import { Microscope, UserCircle, Basket, List } from "@phosphor-icons/react";
 import { motion } from "framer-motion";
 
@@ -152,10 +152,10 @@ const Header = () => {
 								Shop
 							</Link>
 							<Link
-								href="/shop/wholesale"
-								className={`p-1 hover:bg-emerald-500 hover:rounded-sm hover:text-primary ${pathname === "/shop/wholesale" ? "text-emerald-600" : ""}`}
+								href="/userDashboard"
+								className={`p-1 hover:bg-emerald-500 hover:rounded-sm hover:text-primary ${pathname === "/userDashboard" ? "text-emerald-600" : ""}`}
 							>
-								Wholesale
+								My Account
 							</Link>
 							<Link
 								href="/info/stockists"
@@ -170,16 +170,10 @@ const Header = () => {
 								About
 							</Link>
 							<Link
-								href="/search"
-								className={`p-1 hover:bg-emerald-500 hover:rounded-sm hover:text-primary ${pathname === "/search" ? "text-emerald-600" : ""}`}
+								href="/shop/wholesale"
+								className={`p-1 hover:bg-emerald-500 hover:rounded-sm hover:text-primary ${pathname === "/shop/wholesale" ? "text-emerald-600" : ""}`}
 							>
-								Search
-							</Link>
-							<Link
-								href="/userDashboard"
-								className={`p-1 hover:bg-emerald-500 hover:rounded-sm hover:text-primary ${pathname === "/userDashboard" ? "text-emerald-600" : ""}`}
-							>
-								Account
+								Wholesale
 							</Link>
 						</div>
 					)}

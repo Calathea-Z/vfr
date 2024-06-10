@@ -1,15 +1,13 @@
 import Header from "../components/nav/Header";
+import Footer from "../components/nav/Footer";
 
-const ShopLayout = ({
-	children, // will be a page or nested layout
-}: {
-	children: React.ReactNode;
-}) => {
+const ShopLayout = ({ children }: { children: React.ReactNode }) => {
 	return (
-		<section className="bg-primary">
+		<div className="bg-primary">
 			<Header />
 			{children}
-		</section>
+			<Footer />
+		</div>
 	);
 };
 

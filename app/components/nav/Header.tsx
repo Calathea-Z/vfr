@@ -9,7 +9,7 @@ import Link from "next/link";
 //---Packages---//
 import { AppBar, Toolbar, IconButton, Typography, Button } from "@mui/material";
 import { Microscope, UserCircle, Basket, List } from "@phosphor-icons/react";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 
 const Header = () => {
 	const router = useRouter();
@@ -54,11 +54,36 @@ const Header = () => {
 			<AppBar position="sticky" color="default">
 				<Toolbar className="flex justify-between">
 					<div className="hidden md:flex md:flex-1 justify-start space-x-4">
-						<Link href="/">Home</Link>
-						<Link href="/shop">Shop</Link>
-						<Link href="/shop/wholesale">Wholesale</Link>
-						<Link href="/info/stockists">Stockists</Link>
-						<Link href="/info">About</Link>
+						<Link
+							className={`hover-underline-animation ${pathname === "/" ? "text-emerald-600" : ""}`}
+							href="/"
+						>
+							Home
+						</Link>
+						<Link
+							className={`hover-underline-animation ${pathname === "/shop" ? "text-emerald-600" : ""}`}
+							href="/shop"
+						>
+							Shop
+						</Link>
+						<Link
+							className={`hover-underline-animation ${pathname === "/shop/wholesale" ? "text-emerald-600" : ""}`}
+							href="/shop/wholesale"
+						>
+							Wholesale
+						</Link>
+						<Link
+							className={`hover-underline-animation ${pathname === "/info/stockists" ? "text-emerald-600" : ""}`}
+							href="/info/stockists"
+						>
+							Stockists
+						</Link>
+						<Link
+							className={`hover-underline-animation ${pathname === "/info" ? "text-emerald-600" : ""}`}
+							href="/info"
+						>
+							About
+						</Link>
 					</div>
 					{pathname === "/" && isFirstLoad ? (
 						<motion.div
@@ -120,12 +145,42 @@ const Header = () => {
 					</div>
 					{isMenuOpen && (
 						<div className="absolute top-full left-0 w-full rounded-b-lg bg-white shadow-md flex flex-col items-left space-y-2 p-4">
-							<Link href="/shop">Shop</Link>
-							<Link href="/shop/wholesale">Wholesale</Link>
-							<Link href="/info/stockists">Stockists</Link>
-							<Link href="/info">About</Link>
-							<Link href="/search">Search</Link>
-							<Link href="/userDashboard">Account</Link>
+							<Link
+								href="/shop"
+								className={`p-1 hover:bg-emerald-500 hover:rounded-sm hover:text-primary ${pathname === "/shop" ? "text-emerald-600" : ""}`}
+							>
+								Shop
+							</Link>
+							<Link
+								href="/shop/wholesale"
+								className={`p-1 hover:bg-emerald-500 hover:rounded-sm hover:text-primary ${pathname === "/shop/wholesale" ? "text-emerald-600" : ""}`}
+							>
+								Wholesale
+							</Link>
+							<Link
+								href="/info/stockists"
+								className={`p-1 hover:bg-emerald-500 hover:rounded-sm hover:text-primary ${pathname === "/info/stockists" ? "text-emerald-600" : ""}`}
+							>
+								Stockists
+							</Link>
+							<Link
+								href="/info"
+								className={`p-1 hover:bg-emerald-500 hover:rounded-sm hover:text-primary ${pathname === "/info" ? "text-emerald-600" : ""}`}
+							>
+								About
+							</Link>
+							<Link
+								href="/search"
+								className={`p-1 hover:bg-emerald-500 hover:rounded-sm hover:text-primary ${pathname === "/search" ? "text-emerald-600" : ""}`}
+							>
+								Search
+							</Link>
+							<Link
+								href="/userDashboard"
+								className={`p-1 hover:bg-emerald-500 hover:rounded-sm hover:text-primary ${pathname === "/userDashboard" ? "text-emerald-600" : ""}`}
+							>
+								Account
+							</Link>
 						</div>
 					)}
 				</Toolbar>

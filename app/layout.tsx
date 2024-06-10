@@ -11,11 +11,7 @@ export const metadata: Metadata = {
 	description: "Handmade Ceramics & More. Hendersonville, NC",
 };
 
-export default function RootLayout({
-	children,
-}: {
-	children: React.ReactNode;
-}) {
+const RootLayout = ({ children }: { children: React.ReactNode }) => {
 	return (
 		<html lang="en">
 			<AppRouterCacheProvider>
@@ -23,4 +19,6 @@ export default function RootLayout({
 			</AppRouterCacheProvider>
 		</html>
 	);
-}
+};
+
+export default RootLayout;

@@ -1,4 +1,4 @@
-import Header from "@/components/Nav/Header";
+import Header from "@/components/nav/Header";
 
 export default function InfoLayout({
 	children,

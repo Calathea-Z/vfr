@@ -1,12 +1,15 @@
-import Header from "@/components/Nav/Header";
+import Header from "./components/nav/Header";
+import Hero from "./components/homePage/Hero";
 
-export default function Home() {
+const Home = () => {
 	return (
 		<>
 			<Header />
-			<main className="flex min-h-screen flex-col items-center justify-between p-24 bg-primary">
-				<p className="text-secondary">HOME</p>
+			<main className="flex min-h-screen flex-col items-center justify-between bg-primary">
+				<Hero />
 			</main>
 		</>
 	);
-}
+};
+
+export default Home;

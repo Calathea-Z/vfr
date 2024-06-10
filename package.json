@@ -18,6 +18,7 @@
     "@sanity/image-url": "^1.0.2",
     "@sanity/react-loader": "^1.10.2",
     "@sanity/vision": "^3.45.0",
+    "@splidejs/react-splide": "^0.7.12",
     "check": "^1.0.0",
     "framer-motion": "^11.2.10",
     "mongoose": "^8.4.1",

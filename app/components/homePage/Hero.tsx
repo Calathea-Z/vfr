@@ -13,8 +13,9 @@ const Hero = () => {
 				<Image
 					src={heroTwo.src} // Default image
 					alt="A selection of Vine & Frond ceramic pots"
-					layout="fill"
-					objectFit="center"
+					fill
+					priority
+					className="object-center"
 				/>
 			</picture>
 			<p

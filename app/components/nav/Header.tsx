@@ -4,7 +4,7 @@ import { simpleLogo } from "@/public/assets";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation"; // Import usePathname
-import Image from "next/image";
+import Image from "next/legacy/image";
 import Link from "next/link";
 //---Packages---//
 import { AppBar, Toolbar, IconButton, Typography, Button } from "@mui/material";

@@ -1,5 +1,7 @@
 "use client";
 import ProductComponent from "../components/shop/Product";
+import Filter from "../components/shop/Filter";
+import Sort from "../components/shop/Sort";
 import client from "../../sanity/lib/client";
 //---Framework---//
 import { useEffect, useState, useCallback } from "react";
@@ -38,10 +40,10 @@ const ShopHome: React.FC = () => {
 	const { loading, error, products, filters } = state;
 
 	const fetchData = async () => {
-		// if (!filters || filters.length === 0) {
-		// 	console.log("No filters set, skipping fetch");
-		// 	return;
-		// }
+		if (!filters || filters.length === 0) {
+			console.log("No filters set, skipping fetch");
+			return;
+		}
 		setState((prevState) => ({
 			...prevState,
 			loading: true,
@@ -49,51 +51,51 @@ const ShopHome: React.FC = () => {
 		}));
 
 		try {
-			let baseQuery = '*[_type == "product"]';
-			// let filterConditions: string[] = [];
+			let baseQuery = '*[_type == "product"';
+			let filterConditions: string[] = [];
 
-			// // Handle category filters
-			// const categoryFilters = filters.filter((f) =>
-			// 	["Ceramics", "Bags", "Stickers", "Prints"].includes(f)
-			// );
-			// if (categoryFilters.length > 0) {
-			// 	filterConditions.push(
-			// 		`category->title in [${categoryFilters
-			// 			.map((f) => `"${f}"`)
-			// 			.join(", ")}]`
-			// 	);
-			// }
+			// Handle category filters
+			const categoryFilters = filters.filter((f) =>
+				["Ceramics", "Bags", "Stickers", "Prints"].includes(f)
+			);
+			if (categoryFilters.length > 0) {
+				filterConditions.push(
+					`category->title in [${categoryFilters
+						.map((f) => `"${f}"`)
+						.join(", ")}]`
+				);
+			}
 
-			// // Handle price range filters
-			// const priceFilters = filters.filter((f) =>
-			// 	["Under 25", "25-50", "Over 50"].includes(f)
-			// );
-			// if (priceFilters.length > 0) {
-			// 	priceFilters.forEach((price) => {
-			// 		switch (price) {
-			// 			case "Under 25":
-			// 				filterConditions.push("price < 25");
-			// 				break;
-			// 			case "25-50":
-			// 				filterConditions.push("price >= 25 && price <= 50");
-			// 				break;
-			// 			case "Over 50":
-			// 				filterConditions.push("price > 50");
-			// 				break;
-			// 		}
-			// 	});
-			// }
+			// Handle price range filters
+			const priceFilters = filters.filter((f) =>
+				["Under 25", "25-50", "Over 50"].includes(f)
+			);
+			if (priceFilters.length > 0) {
+				priceFilters.forEach((price) => {
+					switch (price) {
+						case "Under 25":
+							filterConditions.push("price < 25");
+							break;
+						case "25-50":
+							filterConditions.push("price >= 25 && price <= 50");
+							break;
+						case "Over 50":
+							filterConditions.push("price > 50");
+							break;
+					}
+				});
+			}
 
-			// // Exclude out of stock products if the filter is active
-			// if (filters.includes("Exclude Out Of Stock")) {
-			// 	filterConditions.push("countInStock > 0");
-			// }
+			// Exclude out of stock products if the filter is active
+			if (filters.includes("Exclude Out Of Stock")) {
+				filterConditions.push("countInStock > 0");
+			}
 
-			// // Combine all filter conditions
-			// if (filterConditions.length > 0) {
-			// 	baseQuery += ` && (${filterConditions.join(" && ")})`;
-			// }
-			// baseQuery += "]";
+			// Combine all filter conditions
+			if (filterConditions.length > 0) {
+				baseQuery += ` && (${filterConditions.join(" && ")})`;
+			}
+			baseQuery += "]";
 
 			console.log("Querying Sanity with:", baseQuery);
 			const products = await client.fetch(baseQuery);
@@ -129,14 +131,14 @@ const ShopHome: React.FC = () => {
 		}
 	};
 
-	// useEffect(() => {
-	// 	if (filters && filters.length > 0) {
-	// 		console.log("Fetching data with filters:", filters);
-	// 		fetchData();
-	// 	} else {
-	// 		console.log("No filters set, skipping fetch");
-	// 	}
-	// }, [filters]);
+	useEffect(() => {
+		if (filters && filters.length > 0) {
+			console.log("Fetching data with filters:", filters);
+			fetchData();
+		} else {
+			console.log("No filters set, skipping fetch");
+		}
+	}, [filters]);
 
 	useEffect(() => {
 		console.log("useEffect triggered for testing, ignoring filters");
@@ -157,131 +159,51 @@ const ShopHome: React.FC = () => {
 	}, []);
 
 	return (
-		<Box
-			sx={{
-				bgcolor: "#F5F5F5",
-				display: "flex",
-				flexDirection: "column",
-				minHeight: "100vh",
-				pb: 2,
-			}}
-		>
-			<Box
-				sx={{
-					bgcolor: "#F5F5F5",
-					p: 0,
-					borderTop: 1,
-					borderBottom: 1,
-					borderColor: "black",
-				}}
-			>
-				<Box sx={{ flexGrow: 1 }}>
+		<div className="bg-primary flex flex-col min-h-screen">
+			<div className="bg-primary pb-4 px-2 h-24 border-b-black border-b-[1px]">
+				<div className="flex-grow">
 					{/* <Breadcrumbs /> */}
-					<Typography
-						variant="h4"
-						sx={{
-							fontStyle: "italic",
-							fontWeight: "light",
-							color: "black",
-							px: 1,
-							py: 4,
-							borderBottom: 0,
-						}}
-					>
+					<h1 className="text-3xl sm:text-4xl font-thin italic text-black px-1 py-4">
 						Shop All
-					</Typography>
-				</Box>
-			</Box>
-			<Box
-				sx={{
-					display: "flex",
-					justifyContent: "center",
-					bgcolor: "primary.main",
-				}}
-			>
-				<Box
-					sx={{
-						display: "flex",
-						justifyContent: "space-between",
-						alignItems: "start",
-						width: "100%",
-					}}
-				>
-					<Box sx={{ maxWidth: "xs" }}>
-						{/* <Filters
+					</h1>
+				</div>
+			</div>
+			<div className="flex flex-col lg:flex-row justify-center bg-primary px-2">
+				<div className="flex flex-col lg:flex-row justify-between items-start w-full lg:w-screen">
+					<div className="w-full lg:max-w-xs">
+						<Filter
 							productTypes={["Ceramics", "Bags", "Stickers", "Prints"]}
 							onFilterChange={handleFilterChange}
-						/> */}
-					</Box>
-					{/* <Box sx={{ maxWidth: 'xs' }}>
+						/>
+					</div>
+					<div className="w-full lg:max-w-xs mt-4 lg:mt-0">
 						<Sort />
-					</Box> */}
-				</Box>
-			</Box>
-			<Box sx={{ flexGrow: 1 }}>
-				<Box sx={{ display: "flex", justifyContent: "center" }}>
+					</div>
+				</div>
+			</div>
+			<main className="flex-grow mt-4">
+				<div className="p-2 flex justify-center">
 					{loading ? (
-						<Box
-							sx={{
-								display: "flex",
-								justifyContent: "center",
-								alignItems: "center",
-								p: 10,
-							}}
-						>
+						<div className="flex justify-center items-center p-10">
 							<PropagateLoader size={35} color={"#8cc6b0"} />
-						</Box>
+						</div>
 					) : error ? (
-						<Box
-							sx={{
-								display: "flex",
-								flexDirection: "column",
-								alignItems: "center",
-								justifyContent: "start",
-								width: "100%",
-								height: "100%",
-							}}
-						>
-							<Box
-								sx={{
-									width: "100%",
-									textAlign: "center",
-									fontSize: "xl",
-									px: 10,
-									py: 16,
-									borderRadius: "lg",
-									boxShadow: "md",
-									bgcolor: "secondary.light",
-									opacity: 0.5,
-								}}
-							>
+						<div className="flex flex-col items-center justify-start w-full h-full">
+							<div className="w-full text-center text-xl leading-relaxed px-10 py-16 rounded-lg shadow-md bg-secondary/50">
 								{error}
-							</Box>
-						</Box>
+							</div>
+						</div>
 					) : (
 						// grid layout when displaying products
-						<Box
-							sx={{
-								display: "grid",
-								gridTemplateColumns: {
-									xs: "repeat(1, 1fr)",
-									sm: "repeat(2, 1fr)",
-									md: "repeat(3, 1fr)",
-									lg: "repeat(4, 1fr)",
-								},
-								justifyItems: "center",
-								width: "100%",
-								p: 1,
-							}}
-						>
+						<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 mdLg:grid-cols-4 justify-items-center w-full">
 							{products.map((product, index) => (
 								<ProductComponent key={index} product={product} />
 							))}
-						</Box>
+						</div>
 					)}
-				</Box>
-			</Box>
-		</Box>
+				</div>
+			</main>
+		</div>
 	);
 };
 

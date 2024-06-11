@@ -101,9 +101,9 @@ const Product: React.FC<ProductProps> = ({ product }) => {
 				<Button
 					variant="contained"
 					sx={{
-						bgcolor: "rgb(5 150 105)",
+						bgcolor: "gray",
 						"&:hover": {
-							bgcolor: "rgb(5 150 120)",
+							bgcolor: "rgb(110 231 150)",
 						},
 					}}
 					className={`self-end py-1 px-2 rounded flex items-center ${

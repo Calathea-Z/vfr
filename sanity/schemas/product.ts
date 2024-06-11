@@ -124,7 +124,7 @@ const product: ProductSchema = {
 				calendarTodayLabel: "Today",
 			},
 			initialValue: () => new Date().toISOString(),
-			readOnly: true,
+			readOnly: false,
 		},
 		{
 			name: "amountSold",

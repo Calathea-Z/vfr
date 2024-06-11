@@ -53,7 +53,7 @@ const Sort: React.FC<SortProps> = ({ onSortChange }) => {
 					sortQuery = "name desc";
 					break;
 				case "Sort: Best Selling":
-					sortQuery = "amountSold desc";
+					sortQuery = "amountSold asc";
 					break;
 				case "Sort: Date, New to Old":
 					sortQuery = "dateCreated desc";

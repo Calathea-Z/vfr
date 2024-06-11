@@ -7,8 +7,6 @@ import client from "../../sanity/lib/client";
 import { useEffect, useState, useCallback } from "react";
 //---Packages---//
 import PropagateLoader from "react-spinners/PropagateLoader";
-import { Box, Typography } from "@mui/material";
-
 interface Product {
 	_id: string;
 	name: string;
@@ -27,6 +25,7 @@ interface State {
 	error: string;
 	loading: boolean;
 	filters: string[];
+	sortQuery: string;
 }
 
 const ShopHome: React.FC = () => {
@@ -35,9 +34,10 @@ const ShopHome: React.FC = () => {
 		error: "",
 		loading: true,
 		filters: [],
+		sortQuery: "",
 	});
 
-	const { loading, error, products, filters } = state;
+	const { loading, error, products, filters, sortQuery } = state;
 
 	const fetchData = async () => {
 		if (!filters || filters.length === 0) {
@@ -97,6 +97,11 @@ const ShopHome: React.FC = () => {
 			}
 			baseQuery += "]";
 
+			// Add sorting
+			if (sortQuery) {
+				baseQuery += ` | order(${sortQuery})`;
+			}
+
 			console.log("Querying Sanity with:", baseQuery);
 			const products = await client.fetch(baseQuery);
 			console.log("Products fetched:", products);
@@ -111,6 +116,7 @@ const ShopHome: React.FC = () => {
 					error: "No products found. Please check back later.",
 					products: [],
 					filters: state.filters,
+					sortQuery: state.sortQuery,
 				});
 			} else {
 				setState({
@@ -118,6 +124,7 @@ const ShopHome: React.FC = () => {
 					loading: false,
 					error: "",
 					filters: state.filters,
+					sortQuery: state.sortQuery,
 				});
 			}
 		} catch (err: any) {
@@ -127,6 +134,7 @@ const ShopHome: React.FC = () => {
 				error: err.message,
 				products: [],
 				filters: state.filters,
+				sortQuery: state.sortQuery,
 			});
 		}
 	};
@@ -138,7 +146,7 @@ const ShopHome: React.FC = () => {
 		} else {
 			console.log("No filters set, skipping fetch");
 		}
-	}, [filters]);
+	}, [filters, sortQuery]);
 
 	useEffect(() => {
 		console.log("useEffect triggered for testing, ignoring filters");
@@ -157,6 +165,13 @@ const ShopHome: React.FC = () => {
 			return prevState;
 		});
 	}, []);
+
+	const handleSortChange = (sortQuery: string) => {
+		setState((prevState) => ({
+			...prevState,
+			sortQuery,
+		}));
+	};
 
 	return (
 		<div className="bg-primary flex flex-col min-h-screen">
@@ -177,7 +192,7 @@ const ShopHome: React.FC = () => {
 						/>
 					</div>
 					<div className="w-full lg:max-w-xs mt-4 lg:mt-0">
-						<Sort />
+						<Sort onSortChange={handleSortChange} />
 					</div>
 				</div>
 			</div>
@@ -195,7 +210,7 @@ const ShopHome: React.FC = () => {
 						</div>
 					) : (
 						// grid layout when displaying products
-						<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 mdLg:grid-cols-4 justify-items-center w-full">
+						<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 mdLg:grid-cols-4 justify-items-center w-full">
 							{products.map((product, index) => (
 								<ProductComponent key={index} product={product} />
 							))}

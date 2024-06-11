@@ -8,12 +8,17 @@ interface Field {
 	options?: {
 		hotspot?: boolean;
 		maxLength?: number;
-		source?: string; // Added to support 'source' in options
+		source?: string;
+		dateFormat?: string;
+		timeFormat?: string;
+		calendarTodayLabel?: string;
 	};
 	rows?: number;
-	validation?: (rule: Rule) => any; // Changed 'typeof Rule' to 'Rule' to fix the lint error
+	validation?: (rule: Rule) => any;
 	to?: { type: string }[];
-	of?: any[]; // Added to support 'of' in fields
+	of?: any[];
+	initialValue?: () => string;
+	readOnly?: boolean;
 }
 
 interface ProductSchema {
@@ -108,6 +113,23 @@ const product: ProductSchema = {
 			type: "boolean",
 			description:
 				"Toggle on if this is a featured product (**There must be 5 featured products total for the carousel to work!**)",
+		},
+		{
+			name: "dateCreated",
+			title: "Date Created",
+			type: "datetime",
+			options: {
+				dateFormat: "YYYY-MM-DD",
+				timeFormat: "HH:mm",
+				calendarTodayLabel: "Today",
+			},
+			initialValue: () => new Date().toISOString(),
+			readOnly: true,
+		},
+		{
+			name: "amountSold",
+			title: "Amount Sold",
+			type: "number",
 		},
 	],
 };

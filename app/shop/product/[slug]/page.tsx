@@ -160,8 +160,8 @@ const ProductScreen: React.FC<ProductScreenProps> = ({ params }) => {
 							justifyContent: "center",
 							alignItems: "center",
 							overflow: "hidden",
-							height: "100%",
-							width: { xs: "100%", md: "50%" }, // Ensure the Box takes 50% of the page width on medium and larger screens
+							height: "100vh", // Ensure the Box takes full height of the viewport
+							width: { xs: "100%", md: "50%" },
 						}}
 					>
 						{product && product.photo && product.photo.length > 0 ? (
@@ -171,7 +171,7 @@ const ProductScreen: React.FC<ProductScreenProps> = ({ params }) => {
 								showThumbs={false}
 								showStatus={false}
 								dynamicHeight={true}
-								className="mx-auto"
+								className="mx-auto h-full"
 								width={"100%"}
 							>
 								{product.photo.map((photo, index) => (
@@ -180,7 +180,7 @@ const ProductScreen: React.FC<ProductScreenProps> = ({ params }) => {
 										display="flex"
 										justifyContent="center"
 										alignItems="center"
-										sx={{ width: "100%" }} // Ensure the inner Box takes full width of the parent Box
+										sx={{ width: "100%", height: "100%" }} // Ensure the inner Box takes full width and height of the parent Box
 									>
 										<CardMedia
 											component="img"
@@ -201,9 +201,7 @@ const ProductScreen: React.FC<ProductScreenProps> = ({ params }) => {
 								bgcolor="gray.200"
 								sx={{ width: "100%" }}
 							>
-								<Typography color="textSecondary">
-									No Image Available
-								</Typography>
+								<p className="text-gray-500">No Image Available</p>
 							</Box>
 						)}
 					</Box>

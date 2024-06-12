@@ -179,7 +179,7 @@ const ShopHome: React.FC = () => {
 					</h1>
 				</div>
 			</div>
-			<div className="flex flex-col lg:flex-row justify-center bg-primary px-2">
+			<div className="flex flex-col md:flex-row justify-center bg-primary px-2">
 				<div className="flex flex-col lg:flex-row justify-between items-start w-full lg:w-screen">
 					<div className="w-full lg:max-w-xs">
 						<Filter
@@ -187,7 +187,7 @@ const ShopHome: React.FC = () => {
 							onFilterChange={handleFilterChange}
 						/>
 					</div>
-					<div className="w-full lg:max-w-xs mt-4 lg:mt-0">
+					<div className="w-full lg:max-w-[15rem] mt-4 lg:mt-0">
 						<Sort onSortChange={handleSortChange} />
 					</div>
 				</div>

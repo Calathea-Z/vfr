@@ -145,9 +145,11 @@ const Filter: React.FC<FilterProps> = ({
 			</div>
 			{isOpen && (
 				<div className="bg-primary py-4 w-screen">
-					<div className="flex gap-[12rem] px-4">
+					<div className="flex gap-[3rem] sm:gap-[8rem] md:gap-[12rem] lg:gap-[19rem] px-4">
 						<div className="flex flex-col gap-1">
-							<span className="text-sm font-semibold">Product Type</span>
+							<span className="text-xs md:text-sm font-semibold">
+								Product Type
+							</span>
 							{productTypes.map((type, index) => (
 								<label key={index} className="inline-flex items-center mt-1">
 									<input
@@ -162,7 +164,7 @@ const Filter: React.FC<FilterProps> = ({
 							))}
 						</div>
 						<div className="flex flex-col gap-1">
-							<span className="text-sm font-semibold">Price</span>
+							<span className="text-xs md:text-sm font-semibold">Price</span>
 							{["All Prices", "Under 25", "25-50", "Over 50"].map(
 								(price, index) => (
 									<label key={index} className="inline-flex items-center mt-2">
@@ -181,7 +183,9 @@ const Filter: React.FC<FilterProps> = ({
 							)}
 						</div>
 						<div className="flex flex-col gap-1">
-							<span className="text-sm font-bold">Exclude Out Of Stock</span>
+							<span className="text-xs md:text-sm font-bold">
+								Exclude Out Of Stock
+							</span>
 							<label className="inline-flex items-center mt-2">
 								<input
 									type="checkbox"

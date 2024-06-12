@@ -7,6 +7,7 @@ import client from "../../sanity/lib/client";
 import { useEffect, useState, useCallback } from "react";
 //---Packages---//
 import PropagateLoader from "react-spinners/PropagateLoader";
+import Link from "next/link";
 interface Product {
 	_id: string;
 	name: string;

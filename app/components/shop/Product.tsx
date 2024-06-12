@@ -66,7 +66,7 @@ const Product: React.FC<ProductProps> = ({ product }) => {
 		<div className="flex flex-col items-center relative">
 			<Card className="w-full h-auto bg-white shadow-lg border border-black flex flex-col items-center justify-center p-2">
 				{product.photo && product.photo.length > 0 ? (
-					<Link href={`/allproducts/product/${slug}`}>
+					<Link href={`/shop/product/${slug}`}>
 						<CardMedia
 							component="img"
 							image={sanityImageBuilder(product.photo[0].asset._ref).url()}

@@ -19,6 +19,7 @@
     "@sanity/react-loader": "^1.10.2",
     "@sanity/vision": "^3.45.0",
     "@splidejs/react-splide": "^0.7.12",
+    "axios": "^1.7.2",
     "check": "^1.0.0",
     "cors": "^2.8.5",
     "framer-motion": "^11.2.10",

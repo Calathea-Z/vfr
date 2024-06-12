@@ -2,7 +2,7 @@
 import client from "../../../../sanity/lib/client";
 import { stateStorage } from "../../../../utils/stateStorage";
 import { sanityImageBuilder } from "../../../../utils/sanityImageBuilder";
-import { playfairDisplay } from "../../../fonts/fonts"; // Importing the playfair font
+import { playfairDisplay, lato } from "../../../fonts/fonts"; // Importing the playfair font
 // import Modal from "@/components/store/Modal";
 //---Framework---//
 import { useEffect, useState, useContext } from "react";
@@ -17,12 +17,12 @@ import {
 	Typography,
 	Button,
 	CardMedia,
-	Grid,
 	Container,
 	Box,
 } from "@mui/material";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from "react-responsive-carousel";
+import { Plus, Minus, PlusCircle } from "@phosphor-icons/react";
 
 interface Product {
 	_id: string;
@@ -217,7 +217,6 @@ const ProductScreen: React.FC<ProductScreenProps> = ({ params }) => {
 							overflow: "auto",
 							width: { xs: "100%", md: "50%" },
 							height: "100vh", // Ensure the Box takes full height of the viewport
-							fontFamily: playfairDisplay.className, // Apply Playfair font
 						}}
 					>
 						{product ? (
@@ -227,73 +226,50 @@ const ProductScreen: React.FC<ProductScreenProps> = ({ params }) => {
 									width: "100%",
 									display: "flex",
 									flexDirection: "column",
-									justifyContent: "center",
+									justifyContent: "start",
 									alignItems: "center",
 									textAlign: "center",
+									background:
+										"linear-gradient(to top right, rgba(255, 255, 255, 0.2), rgba(255, 165, 0, 0.2))", // Very light whitish towards the bottom left to the lighter orange at the top right
 								}}
 							>
 								<CardContent sx={{ width: "100%" }}>
-									<Typography
-										variant="h4"
-										component="h1"
-										gutterBottom
-										sx={{ fontFamily: playfairDisplay.className }}
-										className="italic"
-									>
+									<h1 className={`text-4xl mt-12 ${lato.className}`}>
 										{product.name}
-									</Typography>
-									<Typography
-										variant="h5"
-										color="textSecondary"
-										gutterBottom
-										sx={{ fontFamily: playfairDisplay.className }}
-									>
-										$ {product.price}.00
-									</Typography>
-									<Typography
-										variant="body1"
-										gutterBottom
-										sx={{ fontFamily: playfairDisplay.className }}
-									>
+									</h1>
+									<h2 className={`font-bold ${lato.className} mb-2`}>
+										${product.price}.00
+									</h2>
+									<p className={`text-base mb-2 ${lato.className}`}>
 										{product.tagLine}
-									</Typography>
-									<Typography
-										variant="body2"
-										color="textSecondary"
-										gutterBottom
-										sx={{ fontFamily: playfairDisplay.className }}
-									>
-										{product.description}
-									</Typography>
+									</p>
 									<Box
 										display="flex"
 										alignItems="center"
 										justifyContent="center"
 										mt={2}
 									>
-										<Typography variant="body2" mr={2}>
+										<span className={`text-sm mr-2 ${lato.className}`}>
 											Quantity:
-										</Typography>
-										<Button
-											variant="contained"
-											color="primary"
+										</span>
+										<button
+											className={`bg-blue-500 text-white font-bold rounded-xl text-xs p-1 ${quantity <= 1 ? "opacity-50 cursor-not-allowed" : ""}`}
 											onClick={() => handleQuantityChange(-1)}
-											sx={{ fontFamily: playfairDisplay.className }}
 											disabled={quantity <= 1}
 										>
-											-
-										</Button>
-										<Typography variant="body1" mx={2}>
-											{quantity}
-										</Typography>
-										<Button
-											variant="contained"
-											color="primary"
-											onClick={() => handleQuantityChange(1)}
-											sx={{ fontFamily: playfairDisplay.className }}
+											<Minus />
+										</button>
+										<span
+											className={`text-lg font-bold mx-2 ${lato.className}`}
 										>
-											+
-										</Button>
+											{quantity}
+										</span>
+										<button
+											className="bg-blue-500 text-white font-bold rounded-xl text-[.75rem] p-1"
+											onClick={() => handleQuantityChange(1)}
+										>
+											<Plus />
+										</button>
 									</Box>
 									<Box mt={4} width="100%">
 										{product.countInStock > 0 ? (
@@ -302,36 +278,27 @@ const ProductScreen: React.FC<ProductScreenProps> = ({ params }) => {
 													rotate: [0, 1, -1, 1, 0],
 													transition: { duration: 0.4 },
 												}}
+												className="inline-flex items-center"
 											>
-												<Button
-													variant="contained"
-													color="success"
-													fullWidth
-													// onClick={addToCartHandler}
-													sx={{ fontFamily: playfairDisplay.className }}
-												>
+												<button className="bg-emerald-600 text-white text-sm py-2 px-4 rounded cursor-pointer inline-flex items-center">
+													<PlusCircle className="mr-2" />
 													Add to Cart
-												</Button>
+												</button>
 											</motion.div>
 										) : (
-											<Button
-												variant="contained"
-												color="error"
-												fullWidth
+											<button
+												className="bg-red-600 text-white text-sm py-2 px-4 rounded cursor-not-allowed inline-flex items-center"
 												disabled
-												sx={{ fontFamily: playfairDisplay.className }}
 											>
 												Sold Out
-											</Button>
+											</button>
 										)}
 									</Box>
 								</CardContent>
 							</Card>
 						) : (
 							<Box textAlign="center">
-								<Typography variant="h5" component="h1">
-									Product not found
-								</Typography>
+								<h1 className="text-2xl font-bold">Product not found</h1>
 							</Box>
 						)}
 					</Box>

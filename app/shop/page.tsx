@@ -6,7 +6,7 @@ import client from "../../sanity/lib/client";
 //---Framework---//
 import { useEffect, useState, useCallback } from "react";
 //---Packages---//
-import PropagateLoader from "react-spinners/PropagateLoader";
+import { CircularProgress } from "@mui/material";
 import Link from "next/link";
 interface Product {
 	_id: string;
@@ -103,9 +103,7 @@ const ShopHome: React.FC = () => {
 				baseQuery += ` | order(${sortQuery})`;
 			}
 
-			console.log("Querying Sanity with:", baseQuery);
 			const products = await client.fetch(baseQuery);
-			console.log("Products fetched:", products);
 
 			if (!Array.isArray(products)) {
 				throw new Error("Fetch did not return an array");
@@ -142,7 +140,6 @@ const ShopHome: React.FC = () => {
 
 	useEffect(() => {
 		if (filters && filters.length > 0) {
-			console.log("Fetching data with filters:", filters);
 			fetchData();
 		} else {
 			console.log("No filters set, skipping fetch");
@@ -150,12 +147,10 @@ const ShopHome: React.FC = () => {
 	}, [filters, sortQuery]);
 
 	useEffect(() => {
-		console.log("useEffect triggered for testing, ignoring filters");
 		fetchData();
 	}, []);
 
 	const handleFilterChange = useCallback((selectedFilters: string[]) => {
-		console.log("Received filters for update:", selectedFilters);
 		setState((prevState) => {
 			if (
 				JSON.stringify(prevState.filters) !== JSON.stringify(selectedFilters)
@@ -201,7 +196,7 @@ const ShopHome: React.FC = () => {
 				<div className="p-2 flex justify-center">
 					{loading ? (
 						<div className="flex justify-center items-center p-10">
-							<PropagateLoader size={35} color={"#8cc6b0"} />
+							<CircularProgress sx={{ color: "#8cc6b0" }} />
 						</div>
 					) : error ? (
 						<div className="flex flex-col items-center justify-start w-full h-full">

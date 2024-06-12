@@ -60,8 +60,6 @@ const Product: React.FC<ProductProps> = ({ product }) => {
 	const slug =
 		typeof product.slug === "object" ? product.slug.current : product.slug;
 
-	console.log(product.name, product.countInStock);
-
 	return (
 		<div className="flex flex-col items-center relative">
 			<Card className="w-full h-auto bg-white shadow-lg border border-black flex flex-col items-center justify-center p-2">
@@ -72,7 +70,13 @@ const Product: React.FC<ProductProps> = ({ product }) => {
 							image={sanityImageBuilder(product.photo[0].asset._ref).url()}
 							alt={product.name}
 							className="object-cover rounded-3xl px-1 py-2"
-							style={{ maxHeight: "100%", maxWidth: "100%", width: "100%" }}
+							style={{
+								maxHeight: "100%",
+								maxWidth: "100%",
+								width: "100%",
+								filter: "blur(10px)",
+							}}
+							onLoad={(e) => (e.currentTarget.style.filter = "none")}
 						/>
 					</Link>
 				) : (

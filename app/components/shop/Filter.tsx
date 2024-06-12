@@ -73,7 +73,6 @@ const Filter: React.FC<FilterProps> = ({
 		}
 
 		setSelectedFilters(filteredFilters);
-		console.log(`Updated selectedFilters: ${filteredFilters}`); // Debugging
 	};
 
 	const handleExcludeOutOfStockChange = (exclude: boolean) => {

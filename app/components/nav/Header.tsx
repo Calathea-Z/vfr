@@ -53,7 +53,7 @@ const Header = () => {
 		<>
 			<AppBar position="sticky" color="default">
 				<Toolbar className="flex justify-between">
-					<div className="hidden md:flex md:flex-1 justify-start space-x-4">
+					<div className="hidden md:flex md:flex-1 justify-start space-x-4 lg:text-2xl">
 						<Link
 							className={`hover-underline-animation ${pathname === "/" ? "text-emerald-600" : ""}`}
 							href="/"
@@ -118,13 +118,13 @@ const Header = () => {
 					)}
 					<div className="hidden md:flex md:flex-1 justify-end space-x-4">
 						<IconButton onClick={() => handleNavigate("/search")}>
-							<Microscope size={24} />
+							<Microscope className="lg:w-8 lg:h-8 w-5 h-5" />
 						</IconButton>
 						<IconButton onClick={() => handleNavigate("/userDashboard")}>
-							<UserCircle size={24} />
+							<UserCircle className="lg:w-8 lg:h-8 w-5 h-5" />
 						</IconButton>
 						<IconButton onClick={() => handleNavigate("/cart")}>
-							<Basket size={24} />
+							<Basket className="lg:w-8 lg:h-8 w-5 h-5" />
 						</IconButton>
 					</div>
 					<div className="md:hidden flex items-center justify-between w-full">
@@ -148,30 +148,35 @@ const Header = () => {
 							<Link
 								href="/shop"
 								className={`p-1 hover:bg-emerald-500 hover:rounded-sm hover:text-primary ${pathname === "/shop" ? "text-emerald-600" : ""}`}
+								onClick={() => setIsMenuOpen(false)}
 							>
 								Shop
 							</Link>
 							<Link
 								href="/userDashboard"
 								className={`p-1 hover:bg-emerald-500 hover:rounded-sm hover:text-primary ${pathname === "/userDashboard" ? "text-emerald-600" : ""}`}
+								onClick={() => setIsMenuOpen(false)}
 							>
 								My Account
 							</Link>
 							<Link
 								href="/info/stockists"
 								className={`p-1 hover:bg-emerald-500 hover:rounded-sm hover:text-primary ${pathname === "/info/stockists" ? "text-emerald-600" : ""}`}
+								onClick={() => setIsMenuOpen(false)}
 							>
 								Stockists
 							</Link>
 							<Link
 								href="/info"
 								className={`p-1 hover:bg-emerald-500 hover:rounded-sm hover:text-primary ${pathname === "/info" ? "text-emerald-600" : ""}`}
+								onClick={() => setIsMenuOpen(false)}
 							>
 								About
 							</Link>
 							<Link
 								href="/shop/wholesale"
 								className={`p-1 hover:bg-emerald-500 hover:rounded-sm hover:text-primary ${pathname === "/shop/wholesale" ? "text-emerald-600" : ""}`}
+								onClick={() => setIsMenuOpen(false)}
 							>
 								Wholesale
 							</Link>

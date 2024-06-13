@@ -171,10 +171,10 @@ const ShopHome: React.FC = () => {
 
 	return (
 		<div className="bg-primary flex flex-col min-h-screen">
-			<div className="bg-primary pb-4 px-2 h-24 border-b-black border-b-[1px]">
+			<div className="bg-primary pt-4 px-2 h-24md:h-36 border-b-black border-b-[1px]">
 				<div className="flex-grow">
 					{/* <Breadcrumbs /> */}
-					<h1 className="text-3xl sm:text-4xl font-thin italic text-black px-1 py-4">
+					<h1 className="text-3xl sm:text-6xl font-thin italic text-black px-1 py-4">
 						Shop All
 					</h1>
 				</div>

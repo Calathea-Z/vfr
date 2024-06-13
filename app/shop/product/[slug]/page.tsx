@@ -231,10 +231,12 @@ const ProductScreen: React.FC<ProductScreenProps> = ({ params }) => {
 								<h1 className={`text-4xl mt-12 ${lato.className}`}>
 									{product.name}
 								</h1>
-								<h2 className={`font-bold ${lato.className} mb-2`}>
-									${product.price}.00
+								<h2
+									className={`font-bold text-2xl mt-2 ${lato.className} mb-2`}
+								>
+									$ {product.price}
 								</h2>
-								<p className={`text-base mb-2 ${lato.className}`}>
+								<p className={`text-xl mb-2 ${lato.className}`}>
 									{product.tagLine}
 								</p>
 								<Box
@@ -243,17 +245,17 @@ const ProductScreen: React.FC<ProductScreenProps> = ({ params }) => {
 									justifyContent="center"
 									mt={2}
 								>
-									<span className={`text-sm mr-2 ${lato.className}`}>
+									<span className={`text-2xl mr-2 ${lato.className}`}>
 										Quantity:
 									</span>
 									<button
-										className={`bg-blue-500 text-white font-bold rounded-xl text-xs p-1 ${quantity <= 1 ? "opacity-50 cursor-not-allowed" : ""}`}
+										className={`bg-blue-500 text-white font-bold rounded-xl text-[.75rem] p-1 ${quantity <= 1 ? "opacity-50 cursor-not-allowed" : ""}`}
 										onClick={() => handleQuantityChange(-1)}
 										disabled={quantity <= 1}
 									>
 										<Minus />
 									</button>
-									<span className={`text-lg font-bold mx-2 ${lato.className}`}>
+									<span className={`font-bold text-2xl mx-2 ${lato.className}`}>
 										{quantity}
 									</span>
 									<button
@@ -265,18 +267,12 @@ const ProductScreen: React.FC<ProductScreenProps> = ({ params }) => {
 								</Box>
 								<Box mt={4} width="100%">
 									{product.countInStock > 0 ? (
-										<motion.div
-											whileHover={{
-												rotate: [0, 1, -1, 1, 0],
-												transition: { duration: 0.4 },
-											}}
-											className="inline-flex items-center"
-										>
-											<button className="bg-emerald-600 text-white text-sm py-2 px-4 rounded cursor-pointer inline-flex items-center">
+										<div className="inline-flex items-center">
+											<button className="bg-emerald-600 text-white text-2xl py-2 px-4 rounded cursor-pointer inline-flex items-center">
 												<PlusCircle className="mr-2" />
 												Add to Cart
 											</button>
-										</motion.div>
+										</div>
 									) : (
 										<button
 											className="bg-red-600 text-white text-sm py-2 px-4 rounded cursor-not-allowed inline-flex items-center"

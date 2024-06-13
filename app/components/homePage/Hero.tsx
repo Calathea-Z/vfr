@@ -1,25 +1,53 @@
 import { heroOne, heroTwo, cellHero } from "@/public/assets/index";
-//---Framework---///
 import Image from "next/image";
-import Link from "next/link";
-//---Packages---///
 
 const Hero = () => {
 	return (
 		<section className="relative w-full h-[400px] md:h-[500px] z-0">
-			<picture>
-				<source media="(max-width: 450px)" srcSet={cellHero.src} />
-				<source media="(min-width: 450px)" srcSet={heroOne.src} />
+			{/* Single image for extra small screens */}
+			<div className="md:hidden w-full h-full">
 				<Image
-					src={heroTwo.src} // Default image
-					alt="A selection of Vine & Frond ceramic pots"
+					src={cellHero.src}
+					alt="Hero image for extra small screens"
 					fill
+					className="object-cover border-2 border-black "
 					priority
-					className="object-center"
 				/>
-			</picture>
+			</div>
+			{/* Single image for small to medium screens */}
+			<div className="lg:hidden w-full h-full">
+				<Image
+					src={heroOne.src}
+					alt="Hero image for smaller screens"
+					fill
+					className="object-cover border-2 border-black "
+					priority
+				/>
+			</div>
+			{/* Two images side by side for large screens */}
+			<div className="hidden lg:flex w-full h-full">
+				<div className="w-1/2 h-full relative">
+					<Image
+						src={heroOne.src}
+						alt="Hero One"
+						fill
+						className="object-cover border-2 border-black border-r-0"
+						priority
+					/>
+				</div>
+				<div className="w-1/2 h-full relative">
+					<Image
+						src={heroTwo.src}
+						alt="Hero Two"
+						fill
+						className="object-cover border-2 border-black"
+						priority
+					/>
+				</div>
+			</div>
+
 			<p
-				className="absolute top-5 left-[2rem] text-slate-900 bg-primary opacity-90 p-2 rounded-lg text-2xl sm:text-3xl md:text-5xl italic"
+				className="absolute top-12 left-[2rem] text-slate-900 bg-primary opacity-90 p-2 rounded-lg text-2xl sm:text-3xl md:text-5xl italic"
 				style={{ width: "max-content", maxWidth: "100%" }}
 			>
 				🍃 Pots. Plants. Prints.

@@ -308,17 +308,33 @@ const ProductScreen: React.FC<ProductScreenProps> = ({ params }) => {
 							}}
 						>
 							<CardContent>
-								<h5 className="text-2xl font-bold mb-4">Details:</h5>
-								<ul className="list-disc pl-5">
-									{splitProductDetails().map((detail, index) => (
-										<li
-											key={index}
-											className={`text-lg font-medium mx-2 ${lato.className}`}
-										>
-											{detail}
-										</li>
-									))}
-								</ul>
+								<Grid container spacing={4}>
+									<Grid item xs={12} sm={6}>
+										<h5 className="text-2xl sm:text-3xl font-bold mb-4">
+											Details:
+										</h5>
+										<ul className="list-disc pl-5">
+											{splitProductDetails().map((detail, index) => (
+												<li
+													key={index}
+													className={`text-lg sm:text-2xl font-medium mx-2 ${lato.className}`}
+												>
+													{detail}
+												</li>
+											))}
+										</ul>
+									</Grid>
+									<Grid item xs={12} sm={6}>
+										<h5 className="text-2xl sm:text-3xl font-bold mb-4">
+											Dimensions:
+										</h5>
+										<p className="text-slate-800 text-lg sm:text-2xl mb-8">
+											{product
+												? product.measurements
+												: "No measurements available"}
+										</p>
+									</Grid>
+								</Grid>
 							</CardContent>
 						</Card>
 					</Box>

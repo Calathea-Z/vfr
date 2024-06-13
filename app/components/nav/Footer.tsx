@@ -1,5 +1,4 @@
 "use client";
-import { fullLogo, simpleLogo } from "@/public/assets";
 import { lato } from "@/app/fonts/fonts";
 //---Packages---//
 import { SocialIcon } from "react-social-icons";
@@ -10,7 +9,6 @@ import {
 	Link,
 	Typography,
 	TextField,
-	Button,
 } from "@mui/material";
 
 const Footer = () => {

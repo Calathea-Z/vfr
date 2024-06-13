@@ -127,7 +127,17 @@ const ProductScreen: React.FC<ProductScreenProps> = ({ params }) => {
 		}
 	};
 
-	return (
+	return loading ? (
+		<Box
+			display="flex"
+			justifyContent="center"
+			alignItems="center"
+			width="100%"
+			height="100vh"
+		>
+			<ClipLoader />
+		</Box>
+	) : (
 		<Container
 			maxWidth={false}
 			disableGutters
@@ -141,17 +151,7 @@ const ProductScreen: React.FC<ProductScreenProps> = ({ params }) => {
 					md={6}
 					sx={{ height: { xs: "50%", sm: "auto", maxHeight: "70%" } }}
 				>
-					{loading ? (
-						<Box
-							display="flex"
-							justifyContent="center"
-							alignItems="center"
-							width="100%"
-							height="100%"
-						>
-							<ClipLoader />
-						</Box>
-					) : error ? (
+					{error ? (
 						<Box textAlign="center" width="100%" height="100%">
 							{error}
 						</Box>
@@ -166,7 +166,7 @@ const ProductScreen: React.FC<ProductScreenProps> = ({ params }) => {
 								className="mx-auto max-h-[70%]"
 								width={"100%"}
 							>
-								{product.photo.map((photo, index) => (
+								{product.photo.map((photo: any, index: number) => (
 									<Box
 										key={index}
 										display="flex"
@@ -285,9 +285,11 @@ const ProductScreen: React.FC<ProductScreenProps> = ({ params }) => {
 							</CardContent>
 						</Card>
 					) : (
-						<Box textAlign="center">
-							<h1 className="text-2xl font-bold">Product not found</h1>
-						</Box>
+						!loading && (
+							<Box textAlign="center">
+								<h1 className="text-2xl font-bold">Product not found</h1>
+							</Box>
+						)
 					)}
 				</Grid>
 				{/* Bottom: Product Details */}
@@ -310,7 +312,7 @@ const ProductScreen: React.FC<ProductScreenProps> = ({ params }) => {
 										Details:
 									</h5>
 									<ul className="list-disc pl-5">
-										{splitProductDetails().map((detail, index) => (
+										{splitProductDetails().map((detail: any, index: number) => (
 											<li
 												key={index}
 												className={`text-lg sm:text-2xl font-medium mx-2 ${lato.className}`}

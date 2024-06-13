@@ -35,7 +35,7 @@ const ShopHome: React.FC = () => {
 		error: "",
 		loading: true,
 		filters: [],
-		sortQuery: "",
+		sortQuery: "amountSold asc",
 	});
 
 	const { loading, error, products, filters, sortQuery } = state;

@@ -86,13 +86,11 @@ const Product: React.FC<ProductProps> = ({ product }) => {
 						</Typography>
 					</div>
 				)}
-				<CardContent className="w-full flex justify-between gap-3 items-center p-2">
-					<Typography variant="subtitle2" component="h4" className="font-bold">
+				<CardContent className="w-full flex flex-col xl:flex-row justify-between gap-3 items-center p-2">
+					<h4 className="font-bold text-sm lg:text-[1.15rem]">
 						{product.name}
-					</Typography>
-					<Typography variant="body1" color="text.secondary">
-						${product.price}
-					</Typography>
+					</h4>
+					<p className="text-slate-800 text-xl md:ml-3">${product.price}</p>
 				</CardContent>
 				{product.countInStock === 0 && (
 					<Chip
@@ -102,23 +100,16 @@ const Product: React.FC<ProductProps> = ({ product }) => {
 						className="absolute top-2 right-2"
 					/>
 				)}
-				<Button
-					variant="contained"
-					sx={{
-						bgcolor: "gray",
-						"&:hover": {
-							bgcolor: "rgb(110 231 150)",
-						},
-					}}
-					className={`self-end py-1 px-2 rounded flex items-center ${
-						product.countInStock <= 0 ? "opacity-0" : ""
+				<button
+					className={`self-end py-1 px-4 rounded flex items-center bg-slate-200 hover:bg-green-300 ${
+						product.countInStock <= 0 ? "opacity-0 cursor-not-allowed" : ""
 					}`}
 					onClick={addToCartHandler}
 					disabled={product.countInStock <= 0}
-					startIcon={<Basket className="h-5 w-5" />}
 				>
+					<Basket className="h-5 w-5 mr-2" />
 					Add to Cart
-				</Button>
+				</button>
 			</Card>
 		</div>
 	);

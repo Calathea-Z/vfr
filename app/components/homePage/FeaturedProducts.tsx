@@ -8,7 +8,7 @@ import Head from "next/head";
 import Slider from "react-slick";
 import { CircularProgress } from "@mui/material";
 import { Box } from "@mui/material";
-import { Splide, SplideTrack, SplideSlide } from "@splidejs/react-splide";
+import { Splide, SplideSlide } from "@splidejs/react-splide";
 import "@splidejs/react-splide/css";
 
 interface Product {
@@ -34,13 +34,16 @@ function FeaturedProducts({}: Props) {
 
 	const carouselSettings = {
 		type: "slide",
-		perPage: 4,
+		perPage: 4, // Display 4 slides at 1600 width
 		perMove: 1,
 		breakpoints: {
-			1300: {
-				perPage: 2,
+			1600: {
+				perPage: 3,
 			},
-			480: {
+			1245: {
+				perPage: 2, // Change to 2 slides at 1245 width
+			},
+			800: {
 				perPage: 1,
 			},
 		},
@@ -107,10 +110,16 @@ function FeaturedProducts({}: Props) {
 	}
 
 	return (
-		<section className="slider-container">
+		<section className="slider-container w-full overflow-hidden">
+			<h1 className="text-4xl sm:text-5xl xl:text-7xl mb-4 pt-10 font-thin italic px-4">
+				Featured Ceramics
+			</h1>
 			<Splide aria-label="Featured Products" options={carouselSettings}>
 				{products.map((product) => (
-					<SplideSlide key={product._id}>
+					<SplideSlide
+						key={product._id}
+						className="flex justify-center items-center"
+					>
 						<ProductComponent product={product} />
 					</SplideSlide>
 				))}

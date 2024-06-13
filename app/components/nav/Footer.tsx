@@ -139,18 +139,15 @@ const Footer = () => {
 						md={3}
 						sx={{
 							display: "flex",
-							justifyContent: { xs: "flex-end", lg: "flex-end" },
-							alignItems: "flex-end",
-							position: { lg: "absolute" },
-							right: { lg: 0 },
-							bottom: { lg: -370 },
-							pr: { lg: 2 },
-							pb: { lg: 2 },
+							justifyContent: { xs: "flex-start", sm: "flex-end" },
+							alignItems: { xs: "flex-start", sm: "flex-end" },
+							pr: 2,
+							pb: 2,
 						}}
 					>
 						<Typography
 							variant="caption"
-							sx={{ fontSize: "0.5rem" }}
+							sx={{ fontSize: "0.7rem" }}
 							className="hover:bg-gradient-to-r hover:from-orange-500 hover:to-orange-400 hover:text-white px-2 py-1 rounded-lg"
 						>
 							<p>Website Credit:</p>

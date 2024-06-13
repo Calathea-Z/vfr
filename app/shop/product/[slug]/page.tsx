@@ -138,8 +138,8 @@ const ProductScreen: React.FC<ProductScreenProps> = ({ params }) => {
 				<Grid
 					item
 					xs={12}
-					sm={6}
-					sx={{ height: { xs: "50vh", sm: "auto", maxHeight: "50vh" } }}
+					md={6}
+					sx={{ height: { xs: "50%", sm: "auto", maxHeight: "70%" } }}
 				>
 					{loading ? (
 						<Box
@@ -156,37 +156,44 @@ const ProductScreen: React.FC<ProductScreenProps> = ({ params }) => {
 							{error}
 						</Box>
 					) : product && product.photo && product.photo.length > 0 ? (
-						<Carousel
-							infiniteLoop={true}
-							useKeyboardArrows={true}
-							showThumbs={false}
-							showStatus={false}
-							// dynamicHeight={true}
-							className="mx-auto max-h-[50vh]"
-							width={"100%"}
-						>
-							{product.photo.map((photo, index) => (
-								<Box
-									key={index}
-									display="flex"
-									justifyContent="center"
-									alignItems="center"
-									sx={{ width: "100%", height: "100%", maxHeight: "50vh" }}
-								>
-									<CardMedia
-										component="img"
-										image={sanityImageBuilder(photo.asset._ref).url()}
-										alt={product.name}
-										onLoad={(e) => (e.currentTarget.style.filter = "none")}
-										style={{
+						<div className="border-b-black border-b-[.5px]">
+							<Carousel
+								infiniteLoop={true}
+								useKeyboardArrows={true}
+								showThumbs={false}
+								showStatus={false}
+								dynamicHeight={true}
+								className="mx-auto max-h-[70%]"
+								width={"100%"}
+							>
+								{product.photo.map((photo, index) => (
+									<Box
+										key={index}
+										display="flex"
+										justifyContent="center"
+										alignItems="center"
+										sx={{
 											width: "100%",
 											height: "100%",
-											objectFit: "cover",
-										}} // Ensure the image covers the entire box
-									/>
-								</Box>
-							))}
-						</Carousel>
+											maxHeight: "70%",
+											borderBottom: "1px solid black",
+										}}
+									>
+										<CardMedia
+											component="img"
+											image={sanityImageBuilder(photo.asset._ref).url()}
+											alt={product.name}
+											onLoad={(e) => (e.currentTarget.style.filter = "none")}
+											style={{
+												width: "100%",
+												height: "100%",
+												objectFit: "cover",
+											}}
+										/>
+									</Box>
+								))}
+							</Carousel>
+						</div>
 					) : (
 						<Box
 							display="flex"
@@ -201,7 +208,7 @@ const ProductScreen: React.FC<ProductScreenProps> = ({ params }) => {
 					)}
 				</Grid>
 				{/* Top-right: Product Info */}
-				<Grid item xs={12} sm={6} sx={{ height: { xs: "50vh", sm: "auto" } }}>
+				<Grid item xs={12} md={6} sx={{ height: { xs: "50vh", sm: "auto" } }}>
 					{product ? (
 						<Card
 							sx={{
@@ -216,7 +223,8 @@ const ProductScreen: React.FC<ProductScreenProps> = ({ params }) => {
 								borderRadius: 0,
 								background:
 									"linear-gradient(to top right, rgba(255, 255, 255, 0.2), rgba(255, 165, 0, 0.2))",
-								boxShadow: "none", // Ensure no shadow
+								boxShadow: "none",
+								borderBottom: ".5px solid black",
 							}}
 						>
 							<CardContent sx={{ width: "100%" }}>
@@ -288,56 +296,47 @@ const ProductScreen: React.FC<ProductScreenProps> = ({ params }) => {
 				</Grid>
 				{/* Bottom: Product Details */}
 				<Grid item xs={12} sm={12}>
-					<Box
-						display="flex"
-						justifyContent="center"
-						alignItems="start"
-						marginTop={4}
-						minHeight="50vh"
+					<Card
+						sx={{
+							width: "100%",
+							minHeight: "60vh",
+							borderRadius: 0,
+							paddingX: 3,
+							paddingY: 8,
+							background:
+								"linear-gradient(to top left, rgba(16, 185, 129, 0.1), white)",
+						}}
 					>
-						<Card
-							sx={{
-								width: "95%",
-								height: "100%",
-								boxShadow: 3,
-								borderRadius: 2,
-								paddingX: 3,
-								paddingY: 8,
-								background:
-									"linear-gradient(to top left, rgba(16, 185, 129, 0.1), white)",
-							}}
-						>
-							<CardContent>
-								<Grid container spacing={4}>
-									<Grid item xs={12} sm={6}>
-										<h5 className="text-2xl sm:text-3xl font-bold mb-4">
-											Details:
-										</h5>
-										<ul className="list-disc pl-5">
-											{splitProductDetails().map((detail, index) => (
-												<li
-													key={index}
-													className={`text-lg sm:text-2xl font-medium mx-2 ${lato.className}`}
-												>
-													{detail}
-												</li>
-											))}
-										</ul>
-									</Grid>
-									<Grid item xs={12} sm={6}>
-										<h5 className="text-2xl sm:text-3xl font-bold mb-4">
-											Dimensions:
-										</h5>
-										<p className="text-slate-800 text-lg sm:text-2xl mb-8">
-											{product
-												? product.measurements
-												: "No measurements available"}
-										</p>
-									</Grid>
+						<CardContent>
+							<Grid container spacing={4}>
+								<Grid item xs={12} sm={6}>
+									<h5 className="text-2xl sm:text-3xl font-bold mb-4">
+										Details:
+									</h5>
+									<ul className="list-disc pl-5">
+										{splitProductDetails().map((detail, index) => (
+											<li
+												key={index}
+												className={`text-lg sm:text-2xl font-medium mx-2 ${lato.className}`}
+											>
+												{detail}
+											</li>
+										))}
+									</ul>
 								</Grid>
-							</CardContent>
-						</Card>
-					</Box>
+								<Grid item xs={12} sm={6}>
+									<h5 className="text-2xl sm:text-3xl font-bold mb-4">
+										Dimensions:
+									</h5>
+									<p className="text-slate-800 text-lg sm:text-2xl mb-8">
+										{product
+											? product.measurements
+											: "No measurements available"}
+									</p>
+								</Grid>
+							</Grid>
+						</CardContent>
+					</Card>
 				</Grid>
 			</Grid>
 		</Container>

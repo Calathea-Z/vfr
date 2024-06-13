@@ -4,7 +4,15 @@ import { stateStorage } from "../../../utils/stateStorage";
 import { useContext, useState } from "react";
 import Link from "next/link";
 import { Basket, Minus, Plus } from "@phosphor-icons/react";
-import { Card, CardContent, CardMedia, Chip } from "@mui/material";
+import {
+	Card,
+	CardContent,
+	CardMedia,
+	Chip,
+	Snackbar,
+	Alert,
+	Slide,
+} from "@mui/material";
 
 interface Product {
 	_id: string;
@@ -28,6 +36,7 @@ const Product: React.FC<ProductProps> = ({ product }) => {
 	const context = useContext(stateStorage);
 	const [quantity, setQuantity] = useState(1);
 	const [showQuantitySelector, setShowQuantitySelector] = useState(false);
+	const [showSnackbar, setShowSnackbar] = useState(false);
 
 	if (!context) {
 		throw new Error("stateStorage context is not available");
@@ -130,18 +139,40 @@ const Product: React.FC<ProductProps> = ({ product }) => {
 								Add to Cart
 							</button>
 						</>
+					) : product.countInStock <= 0 ? (
+						<button
+							className={`self-end py-1 px-4 rounded flex items-center bg-slate-200 hover:bg-green-300`}
+							onClick={() => setShowSnackbar(true)}
+						>
+							Out of Stock
+						</button>
 					) : (
 						<button
-							className={`self-end py-1 px-4 rounded flex items-center bg-slate-200 hover:bg-green-300 ${
-								product.countInStock <= 0 ? "cursor-not-allowed" : ""
-							}`}
-							onClick={() => setShowQuantitySelector(true)}
-							disabled={product.countInStock <= 0}
+							className={`self-end py-1 px-4 rounded flex items-center bg-slate-200 hover:bg-green-300`}
+							onClick={() => {
+								setShowQuantitySelector(true);
+							}}
 						>
 							<Plus className="h-5 w-5" />
 						</button>
 					)}
 				</div>
+				<Slide direction="down" in={showSnackbar} mountOnEnter unmountOnExit>
+					<Snackbar
+						open={showSnackbar}
+						autoHideDuration={3000}
+						onClose={() => setShowSnackbar(false)}
+						anchorOrigin={{ vertical: "top", horizontal: "right" }}
+					>
+						<Alert
+							onClose={() => setShowSnackbar(false)}
+							severity="warning"
+							sx={{ width: "100%" }}
+						>
+							{product.name} is currently out of stock.
+						</Alert>
+					</Snackbar>
+				</Slide>
 			</Card>
 		</div>
 	);

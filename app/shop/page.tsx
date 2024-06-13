@@ -146,10 +146,6 @@ const ShopHome: React.FC = () => {
 		}
 	}, [filters, sortQuery]);
 
-	useEffect(() => {
-		fetchData();
-	}, []);
-
 	const handleFilterChange = useCallback((selectedFilters: string[]) => {
 		setState((prevState) => {
 			if (

@@ -1,17 +1,10 @@
 import { sanityImageBuilder } from "../../../utils/sanityImageBuilder";
 import { stateStorage } from "../../../utils/stateStorage";
 //---Packages---/
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import Link from "next/link";
-import { Basket } from "@phosphor-icons/react";
-import {
-	Card,
-	CardContent,
-	CardMedia,
-	Typography,
-	Button,
-	Chip,
-} from "@mui/material";
+import { Basket, Minus, Plus } from "@phosphor-icons/react";
+import { Card, CardContent, CardMedia, Chip } from "@mui/material";
 
 interface Product {
 	_id: string;
@@ -33,6 +26,8 @@ interface ProductProps {
 
 const Product: React.FC<ProductProps> = ({ product }) => {
 	const context = useContext(stateStorage);
+	const [quantity, setQuantity] = useState(1);
+	const [showQuantitySelector, setShowQuantitySelector] = useState(false);
 
 	if (!context) {
 		throw new Error("stateStorage context is not available");
@@ -50,7 +45,7 @@ const Product: React.FC<ProductProps> = ({ product }) => {
 				slug: product.slug.current,
 				price: product.price,
 				photo: product.photo,
-				quantity: 1,
+				quantity: quantity,
 			},
 		});
 		// Toggle cart visibility to show the cart
@@ -59,7 +54,6 @@ const Product: React.FC<ProductProps> = ({ product }) => {
 
 	const slug =
 		typeof product.slug === "object" ? product.slug.current : product.slug;
-
 	return (
 		<div className="flex flex-col items-center relative">
 			<Card className="w-full h-auto bg-white shadow-lg border border-black flex flex-col items-center justify-center p-2">
@@ -81,9 +75,7 @@ const Product: React.FC<ProductProps> = ({ product }) => {
 					</Link>
 				) : (
 					<div className="flex items-center justify-center w-full h-full">
-						<Typography variant="body2" color="text.secondary">
-							No Image Available
-						</Typography>
+						<p className="text-sm text-gray-500">No Image Available</p>
 					</div>
 				)}
 				<CardContent className="w-full flex flex-col xl:flex-row justify-between gap-3 items-center p-2">
@@ -100,16 +92,56 @@ const Product: React.FC<ProductProps> = ({ product }) => {
 						className="absolute top-2 right-2"
 					/>
 				)}
-				<button
-					className={`self-end py-1 px-4 rounded flex items-center bg-slate-200 hover:bg-green-300 ${
-						product.countInStock <= 0 ? "opacity-0 cursor-not-allowed" : ""
-					}`}
-					onClick={addToCartHandler}
-					disabled={product.countInStock <= 0}
-				>
-					<Basket className="h-5 w-5 mr-2" />
-					Add to Cart
-				</button>
+				<div className="flex items-end justify-center md:justify-end w-full min-h-[3.5rem] lg:min-h-[3rem]">
+					{showQuantitySelector ? (
+						<>
+							<div className="flex items-center py-1 px-4">
+								<button
+									className="px-2 py-1 bg-gray-200 rounded-l hover:bg-gray-300"
+									onClick={() => setQuantity(quantity - 1)}
+									disabled={quantity <= 1}
+								>
+									<Minus />
+								</button>
+								<input
+									type="text"
+									className="w-12 text-center border-t border-b"
+									value={quantity}
+									readOnly
+								/>
+								<button
+									className="px-2 py-1 bg-gray-200 rounded-r hover:bg-gray-300"
+									onClick={() => setQuantity(quantity + 1)}
+									disabled={quantity >= product.countInStock}
+								>
+									<Plus />
+								</button>
+							</div>
+							<button
+								className={`ml-2 py-1 px-4 rounded flex items-center bg-slate-200 hover:bg-green-300 ${
+									product.countInStock <= 0
+										? "opacity-0 cursor-not-allowed"
+										: ""
+								}`}
+								onClick={addToCartHandler}
+								disabled={product.countInStock <= 0}
+							>
+								<Basket className="h-5 w-5 mr-2" />
+								Add to Cart
+							</button>
+						</>
+					) : (
+						<button
+							className={`self-end py-1 px-4 rounded flex items-center bg-slate-200 hover:bg-green-300 ${
+								product.countInStock <= 0 ? "cursor-not-allowed" : ""
+							}`}
+							onClick={() => setShowQuantitySelector(true)}
+							disabled={product.countInStock <= 0}
+						>
+							<Plus className="h-5 w-5" />
+						</button>
+					)}
+				</div>
 			</Card>
 		</div>
 	);

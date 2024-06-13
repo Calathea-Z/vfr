@@ -3,7 +3,10 @@ import Image from "next/image";
 
 const Hero = () => {
 	return (
-		<section className="relative w-full h-[400px] md:h-[500px] z-0">
+		<section
+			aria-label="Hero"
+			className="relative w-full h-[400px] md:h-[500px] z-0"
+		>
 			{/* Single image for extra small screens */}
 			<div className="md:hidden w-full h-full">
 				<Image

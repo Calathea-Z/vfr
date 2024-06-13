@@ -8,7 +8,7 @@ import { playfairDisplay, lato } from "../../../fonts/fonts"; // Importing the p
 import { useEffect, useState, useContext } from "react";
 import Image from "next/image";
 //--Packages---//
-import ClipLoader from "react-spinners/ClipLoader";
+import { CircularProgress } from "@mui/material";
 import axios from "axios";
 import { motion } from "framer-motion";
 import {
@@ -20,7 +20,7 @@ import {
 	Container,
 	Box,
 } from "@mui/material";
-import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
+import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
 import { Plus, Minus, PlusCircle } from "@phosphor-icons/react";
 
@@ -135,7 +135,7 @@ const ProductScreen: React.FC<ProductScreenProps> = ({ params }) => {
 			width="100%"
 			height="100vh"
 		>
-			<ClipLoader />
+			<CircularProgress />
 		</Box>
 	) : (
 		<Container

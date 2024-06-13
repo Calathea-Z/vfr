@@ -139,8 +139,13 @@ const Footer = () => {
 						md={3}
 						sx={{
 							display: "flex",
-							justifyContent: "flex-end",
+							justifyContent: { xs: "flex-end", lg: "flex-end" },
 							alignItems: "flex-end",
+							position: { lg: "absolute" },
+							right: { lg: 0 },
+							bottom: { lg: -370 },
+							pr: { lg: 2 },
+							pb: { lg: 2 },
 						}}
 					>
 						<Typography

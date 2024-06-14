@@ -204,7 +204,7 @@ const Stockists: React.FC = () => {
 			<div className="grid grid-cols-1 lg:grid-cols-4 justify-center gap-0 p-0">
 				{" "}
 				{/* Removed gap between columns */}
-				<div className="col-span-2 xl:col-span-1 order-2 lg:order-1 w-full bg-slate-200">
+				<div className="col-span-2 xl:col-span-1 order-2 lg:order-1 w-full bg-slate-200 overflow-y-auto max-h-screen">
 					{stockists.map((stockist) => (
 						<div
 							key={stockist.name}
@@ -237,7 +237,7 @@ const Stockists: React.FC = () => {
 					))}
 				</div>
 				<div className="col-span-2 xl:col-span-3 order-1 lg:order-2 p-0">
-					<div className="sticky top-0 bg-white lg:rounded-md shadow-sm flex justify-center p-3 h-[500px] md:h-[500px] lg:h-[900px]">
+					<div className="sticky top-0 bg-white lg:rounded-md shadow-sm flex justify-center p-3 h-[500px] md:h-[500px] lg:h-[850px]">
 						{renderMap()}
 					</div>
 				</div>

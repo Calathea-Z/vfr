@@ -39,7 +39,7 @@ const Header = () => {
 		if (isFirstLoad && pathname === "/") {
 			const timer = setTimeout(() => {
 				setIsFirstLoad(false);
-			}, 10000);
+			}, 6000);
 
 			return () => clearTimeout(timer);
 		}
@@ -53,7 +53,7 @@ const Header = () => {
 		<>
 			<AppBar position="sticky" color="default">
 				<Toolbar className="flex justify-between">
-					<div className="hidden md:flex md:flex-1 justify-start space-x-4 lg:text-2xl">
+					<div className="hidden md:flex md:flex-1 justify-start space-x-4 md:text-xl lg:text-2xl">
 						<Link
 							className={`hover-underline-animation ${pathname === "/" ? "text-emerald-600" : ""}`}
 							href="/"
@@ -85,9 +85,10 @@ const Header = () => {
 							About
 						</Link>
 					</div>
+					{/* Logo Section */}
 					{pathname === "/" && isFirstLoad ? (
 						<motion.div
-							className="flex-1 justify-center hidden md:flex rounded-lg"
+							className="flex-1 justify-center hidden md:flex rounded-sm"
 							initial={{ opacity: 0, backgroundColor: "rgba(0, 0, 0, 0)" }}
 							animate={{
 								opacity: 1,
@@ -101,38 +102,40 @@ const Header = () => {
 								transition: { duration: 4 },
 							}}
 							transition={{
-								duration: 8,
+								duration: 5,
 								ease: "easeInOut",
 							}}
 						>
 							<Link href="/">
-								<Image src={simpleLogo} alt="Logo" width={80} height={80} />
+								<Image src={simpleLogo} alt="Logo" width={100} height={100} />
 							</Link>
 						</motion.div>
 					) : (
 						<div className="flex-1 justify-center hidden md:flex rounded-lg">
 							<Link href="/">
-								<Image src={simpleLogo} alt="Logo" width={80} height={80} />
+								<Image src={simpleLogo} alt="Logo" width={100} height={100} />
 							</Link>
 						</div>
 					)}
+					{/* Menu Section */}
 					<div className="hidden md:flex md:flex-1 justify-end space-x-4">
 						<IconButton onClick={() => handleNavigate("/search")}>
-							<Microscope className="lg:w-8 lg:h-8 w-5 h-5" />
+							<Microscope className="w-5 h-5 md:w-7 md:h-7 lg:w-8 lg:h-8" />
 						</IconButton>
 						<IconButton onClick={() => handleNavigate("/userDashboard")}>
-							<UserCircle className="lg:w-8 lg:h-8 w-5 h-5" />
+							<UserCircle className="w-5 h-5 md:w-7 md:h-7 lg:w-8 lg:h-8" />
 						</IconButton>
 						<IconButton onClick={() => handleNavigate("/cart")}>
-							<Basket className="lg:w-8 lg:h-8 w-5 h-5" />
+							<Basket className="w-5 h-5 md:w-7 md:h-7 lg:w-8 lg:h-8" />
 						</IconButton>
 					</div>
+					{/* Mobile Menu Section */}
 					<div className="md:hidden flex items-center justify-between w-full">
 						<IconButton onClick={toggleMenu}>
 							<List size={24} />
 						</IconButton>
 						<Link href="/">
-							<Image src={simpleLogo} alt="Logo" width={60} height={60} />
+							<Image src={simpleLogo} alt="Logo" width={70} height={70} />
 						</Link>
 						<div className="flex items-center space-x-1">
 							<IconButton onClick={() => handleNavigate("/search")}>
@@ -143,6 +146,7 @@ const Header = () => {
 							</IconButton>
 						</div>
 					</div>
+					{/* Mobile Menu Overlay */}
 					{isMenuOpen && (
 						<div className="absolute top-full left-0 w-full rounded-b-lg bg-white shadow-md flex flex-col items-left space-y-2 p-4">
 							<Link

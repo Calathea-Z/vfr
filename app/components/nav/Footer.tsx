@@ -1,5 +1,8 @@
 "use client";
 import { lato } from "@/app/fonts/fonts";
+//---Framework---//
+import NextLink from "next/link";
+import { useState, useEffect } from "react";
 //---Packages---//
 import { SocialIcon } from "react-social-icons";
 import {
@@ -12,6 +15,28 @@ import {
 } from "@mui/material";
 
 const Footer = () => {
+	const [isAtBottom, setIsAtBottom] = useState(false);
+
+	useEffect(() => {
+		const handleScroll = () => {
+			const scrollPosition = window.scrollY + window.innerHeight;
+			const bottomPosition = document.documentElement.scrollHeight;
+			setIsAtBottom(scrollPosition >= bottomPosition);
+		};
+
+		window.addEventListener("scroll", handleScroll);
+		return () => {
+			window.removeEventListener("scroll", handleScroll);
+		};
+	}, []);
+
+	const handleLinkClick = (e: React.MouseEvent, href: string) => {
+		if (window.location.pathname === href) {
+			e.preventDefault();
+			window.scrollTo({ top: 0, behavior: "smooth" });
+		}
+	};
+
 	const renderSocialIcons = (iconSize: string) => (
 		<Box sx={{ display: "flex", gap: 2 }}>
 			<SocialIcon
@@ -50,17 +75,27 @@ const Footer = () => {
 			<Container>
 				<Grid container spacing={4}>
 					<Grid item xs={12} sm={6} md={3}>
-						{renderSocialIcons("36px")}
+						{renderSocialIcons("40px")}
 					</Grid>
 					<Grid item xs={12} sm={6} md={3}>
 						<Typography variant="h6" gutterBottom>
 							Links
 						</Typography>
-						<Link href="/" color="inherit" sx={{ textDecoration: "none" }}>
+						<Link
+							href="/"
+							color="inherit"
+							sx={{ textDecoration: "none" }}
+							onClick={(e) => handleLinkClick(e, "/")}
+						>
 							Home
 						</Link>
 						<br />
-						<Link href="/shop" color="inherit" sx={{ textDecoration: "none" }}>
+						<Link
+							href="/shop"
+							color="inherit"
+							sx={{ textDecoration: "none" }}
+							onClick={(e) => handleLinkClick(e, "/shop")}
+						>
 							Shop
 						</Link>
 						<br />
@@ -68,11 +103,17 @@ const Footer = () => {
 							href="/info/stockists"
 							color="inherit"
 							sx={{ textDecoration: "none" }}
+							onClick={(e) => handleLinkClick(e, "/info/stockists")}
 						>
 							Stockists
 						</Link>
 						<br />
-						<Link href="/info" color="inherit" sx={{ textDecoration: "none" }}>
+						<Link
+							href="/info"
+							color="inherit"
+							sx={{ textDecoration: "none" }}
+							onClick={(e) => handleLinkClick(e, "/info")}
+						>
 							About
 						</Link>
 						<br />
@@ -80,6 +121,7 @@ const Footer = () => {
 							href="/shop/wholesale"
 							color="inherit"
 							sx={{ textDecoration: "none" }}
+							onClick={(e) => handleLinkClick(e, "/shop/wholesale")}
 						>
 							Wholesale
 						</Link>

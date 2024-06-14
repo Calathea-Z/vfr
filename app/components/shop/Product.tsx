@@ -4,15 +4,8 @@ import { stateStorage } from "../../../utils/stateStorage";
 import { useContext, useState } from "react";
 import Link from "next/link";
 import { Basket, Minus, Plus } from "@phosphor-icons/react";
-import {
-	Card,
-	CardContent,
-	CardMedia,
-	Chip,
-	Snackbar,
-	Alert,
-	Slide,
-} from "@mui/material";
+import { Card, CardContent, CardMedia, Chip } from "@mui/material";
+import { useSnackbar } from "notistack";
 
 interface Product {
 	_id: string;
@@ -36,7 +29,7 @@ const Product: React.FC<ProductProps> = ({ product }) => {
 	const context = useContext(stateStorage);
 	const [quantity, setQuantity] = useState(1);
 	const [showQuantitySelector, setShowQuantitySelector] = useState(false);
-	const [showSnackbar, setShowSnackbar] = useState(false);
+	const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
 	if (!context) {
 		throw new Error("stateStorage context is not available");
@@ -95,10 +88,11 @@ const Product: React.FC<ProductProps> = ({ product }) => {
 				</CardContent>
 				{product.countInStock === 0 && (
 					<Chip
-						label="SOLD OUT"
+						label="Sold Out"
 						color="error"
 						size="small"
 						className="absolute top-2 right-2"
+						style={{ fontFamily: "Arial" }}
 					/>
 				)}
 				<div className="flex items-end justify-center md:justify-end w-full min-h-[3.5rem] lg:min-h-[3rem]">
@@ -141,8 +135,12 @@ const Product: React.FC<ProductProps> = ({ product }) => {
 						</>
 					) : product.countInStock <= 0 ? (
 						<button
-							className={`self-end py-1 px-4 rounded flex items-center bg-slate-200 hover:bg-green-300`}
-							onClick={() => setShowSnackbar(true)}
+							className={`self-end py-1 px-4 rounded flex items-center bg-slate-200 hover:bg-red-200`}
+							onClick={() =>
+								enqueueSnackbar(`${product.name} is currently out of stock.`, {
+									autoHideDuration: 3000,
+								})
+							}
 						>
 							Out of Stock
 						</button>
@@ -157,22 +155,6 @@ const Product: React.FC<ProductProps> = ({ product }) => {
 						</button>
 					)}
 				</div>
-				<Slide direction="down" in={showSnackbar} mountOnEnter unmountOnExit>
-					<Snackbar
-						open={showSnackbar}
-						autoHideDuration={3000}
-						onClose={() => setShowSnackbar(false)}
-						anchorOrigin={{ vertical: "top", horizontal: "right" }}
-					>
-						<Alert
-							onClose={() => setShowSnackbar(false)}
-							severity="warning"
-							sx={{ width: "100%" }}
-						>
-							{product.name} is currently out of stock.
-						</Alert>
-					</Snackbar>
-				</Slide>
 			</Card>
 		</div>
 	);

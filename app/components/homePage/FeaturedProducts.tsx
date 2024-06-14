@@ -112,7 +112,7 @@ function FeaturedProducts({}: Props) {
 	return (
 		<section className="slider-container w-full overflow-hidden">
 			<h1 className="text-4xl sm:text-5xl xl:text-7xl mb-4 pt-10 font-thin italic px-4">
-				Featured Ceramics
+				Featured Items
 			</h1>
 			<Splide aria-label="Featured Products" options={carouselSettings}>
 				{products.map((product) => (

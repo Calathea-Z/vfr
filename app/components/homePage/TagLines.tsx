@@ -8,7 +8,7 @@ interface TagLinesProps {
 
 const TagLines: React.FC<TagLinesProps> = ({ inView }) => {
 	return (
-		<div className="flex justify-center items-center p-6 gap-2 sm:gap-6 lg:gap-20">
+		<div className="flex justify-center items-center p-10 gap-2 sm:gap-6 lg:gap-20">
 			<motion.h1
 				whileHover={{
 					scale: 1.1,

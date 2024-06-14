@@ -13,9 +13,11 @@ import {
 	Typography,
 	TextField,
 } from "@mui/material";
+import { useSnackbar } from "notistack";
 
 const Footer = () => {
 	const [isAtBottom, setIsAtBottom] = useState(false);
+	const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
 	useEffect(() => {
 		const handleScroll = () => {
@@ -150,9 +152,13 @@ const Footer = () => {
 									const email = form.email.value;
 									const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 									if (emailRegex.test(email)) {
-										alert("Thank you for subscribing!");
+										enqueueSnackbar("Thank you for subscribing!", {
+											variant: "success",
+										});
 									} else {
-										alert("Please enter a valid email address.");
+										enqueueSnackbar("Please enter a valid email address.", {
+											variant: "error",
+										});
 									}
 								}}
 							>

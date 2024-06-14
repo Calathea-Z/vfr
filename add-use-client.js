@@ -5,8 +5,7 @@ const filePath = path.join(
 	__dirname,
 	"node_modules",
 	"notistack",
-	"dist",
-	"index.js"
+	"notistack.esm.js"
 );
 
 fs.readFile(filePath, "utf8", (err, data) => {

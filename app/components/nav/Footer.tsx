@@ -128,6 +128,23 @@ const Footer = () => {
 							Wholesale
 						</Link>
 						<br />
+						<Link
+							href="/info/privacy-policy"
+							color="inherit"
+							sx={{ textDecoration: "none" }}
+							onClick={(e) => handleLinkClick(e, "/shop/privacy-policy")}
+						>
+							Privacy Policy
+						</Link>
+						<br />
+						<Link
+							href="/info/terms-of-service"
+							color="inherit"
+							sx={{ textDecoration: "none" }}
+							onClick={(e) => handleLinkClick(e, "/info/terms-of-service")}
+						>
+							Terms of Service
+						</Link>
 					</Grid>
 					<Grid item xs={12} sm={6} md={3}>
 						<Typography variant="h6" gutterBottom>

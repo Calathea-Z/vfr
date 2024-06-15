@@ -1,35 +1,28 @@
 "use client";
-import ProductComponent from "../components/shop/Product";
-import Filter from "../components/shop/Filter";
-import Sort from "../components/shop/Sort";
-import client from "../../sanity/lib/client";
+import client from "../../../../../sanity/lib/client";
+import Filter from "@/app/components/shop/Filter";
+import Sort from "@/app/components/shop/Sort";
+import ProductComponent from "@/app/components/shop/Product";
 //---Framework---//
 import { useEffect, useState, useCallback } from "react";
+import { useRouter, useParams } from "next/navigation";
 //---Packages---//
 import { CircularProgress } from "@mui/material";
-interface Product {
-	_id: string;
-	name: string;
-	countInStock: number;
-	slug: { current: string };
-	price: number;
-	photo: {
-		asset: {
-			_ref: string;
-		};
-	}[];
-}
 
-interface State {
-	products: Product[];
-	error: string;
-	loading: boolean;
-	filters: string[];
-	sortQuery: string;
-}
+const CategoryPage: React.FC = () => {
+	const { slug } = useParams();
+	const formattedCategoryName =
+		typeof slug === "string"
+			? slug.charAt(0).toUpperCase() + slug.slice(1).toLowerCase()
+			: "";
 
-const ShopHome: React.FC = () => {
-	const [state, setState] = useState<State>({
+	const [state, setState] = useState<{
+		products: any[];
+		error: string;
+		loading: boolean;
+		filters: string[];
+		sortQuery: string;
+	}>({
 		products: [],
 		error: "",
 		loading: true,
@@ -52,7 +45,8 @@ const ShopHome: React.FC = () => {
 
 		try {
 			let baseQuery = '*[_type == "product"';
-			let filterConditions: string[] = [];
+			let params = { category: formattedCategoryName };
+			let filterConditions = [`category->title == $category`];
 
 			// Handle category filters
 			const categoryFilters = filters.filter((f) =>
@@ -95,14 +89,18 @@ const ShopHome: React.FC = () => {
 			if (filterConditions.length > 0) {
 				baseQuery += ` && (${filterConditions.join(" && ")})`;
 			}
-			baseQuery += "]";
+
+			baseQuery +=
+				']{..., "categoryTitle": category->title, "slug": slug.current}';
 
 			// Add sorting
 			if (sortQuery) {
 				baseQuery += ` | order(${sortQuery})`;
 			}
 
-			const products = await client.fetch(baseQuery);
+			console.log("Final query:", baseQuery);
+
+			const products = await client.fetch(baseQuery, params);
 
 			if (!Array.isArray(products)) {
 				throw new Error("Fetch did not return an array");
@@ -111,7 +109,7 @@ const ShopHome: React.FC = () => {
 			if (products.length === 0) {
 				setState({
 					loading: false,
-					error: "No products found. Please check back later.",
+					error: `Sorry, no results were found.`,
 					products: [],
 					filters: state.filters,
 					sortQuery: state.sortQuery,
@@ -150,7 +148,7 @@ const ShopHome: React.FC = () => {
 			if (
 				JSON.stringify(prevState.filters) !== JSON.stringify(selectedFilters)
 			) {
-				console.log("Updating Filters in AllProducts:", selectedFilters);
+				console.log("Updating Filters in CategoryPage:", selectedFilters);
 				return { ...prevState, filters: selectedFilters };
 			}
 			return prevState;
@@ -168,9 +166,10 @@ const ShopHome: React.FC = () => {
 		<div className="bg-primary flex flex-col min-h-screen">
 			<div className="bg-primary pt-4 px-2 h-24 md:h-36 border-b-black border-b-[1px]">
 				<div className="flex-grow">
-					{/* <Breadcrumbs /> */}
 					<h1 className="text-3xl sm:text-6xl font-thin italic text-black px-1 py-4">
-						Shop All
+						{typeof slug === "string"
+							? slug.charAt(0).toUpperCase() + slug.slice(1)
+							: ""}
 					</h1>
 				</div>
 			</div>
@@ -179,6 +178,7 @@ const ShopHome: React.FC = () => {
 					<div className="w-full lg:max-w-xs">
 						<Filter
 							productTypes={["Ceramics", "Bags", "Stickers", "Prints"]}
+							selectedCategory={formattedCategoryName}
 							onFilterChange={handleFilterChange}
 						/>
 					</div>
@@ -194,8 +194,8 @@ const ShopHome: React.FC = () => {
 							<CircularProgress sx={{ color: "#8cc6b0" }} />
 						</div>
 					) : error ? (
-						<div className="flex flex-col items-center justify-start w-full h-full">
-							<div className="w-full text-center text-xl leading-relaxed px-10 py-16 rounded-lg shadow-md bg-secondary/50">
+						<div className="flex flex-col items-start justify-start w-full">
+							<div className="w-full text-left text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-bold px-10 py-16 shadow-sm h-screen bg-gradient-to-b from-primary to-secondary">
 								{error}
 							</div>
 						</div>
@@ -213,4 +213,4 @@ const ShopHome: React.FC = () => {
 	);
 };
 
-export default ShopHome;
+export default CategoryPage;

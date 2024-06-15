@@ -3,18 +3,12 @@
 import { useState, useEffect } from "react";
 //---Packages---//
 import { Plus, Minus, X } from "@phosphor-icons/react";
-import {
-	Box,
-	Typography,
-	FormControlLabel,
-	Checkbox,
-	Radio,
-} from "@mui/material";
 //---Fonts---//
 import { lato } from "../../fonts/fonts";
 
 interface FilterProps {
 	productTypes: string[];
+	selectedCategory?: string;
 	onFilterChange: (filters: string[]) => void;
 }
 
@@ -24,20 +18,29 @@ interface CheckedStates {
 
 const Filter: React.FC<FilterProps> = ({
 	productTypes = [],
+	selectedCategory,
 	onFilterChange = () => {},
 }) => {
 	const [isOpen, setIsOpen] = useState<boolean>(false);
 	const [checkedStates, setCheckedStates] = useState<CheckedStates>(() =>
 		productTypes.reduce((acc: CheckedStates, type: string) => {
-			acc[type] = true; // Initialize all as checked
+			acc[type] = selectedCategory ? type === selectedCategory : true; // Initialize based on selectedCategory
 			return acc;
 		}, {})
 	);
-	const [selectedFilters, setSelectedFilters] =
-		useState<string[]>(productTypes); // Initialize with all types
+	const [selectedFilters, setSelectedFilters] = useState<string[]>(() =>
+		selectedCategory ? [selectedCategory] : productTypes
+	);
 	const [selectedPriceRange, setSelectedPriceRange] =
 		useState<string>("All Prices");
 	const [excludeOutOfStock, setExcludeOutOfStock] = useState<boolean>(false);
+
+	useEffect(() => {
+		if (selectedCategory) {
+			// Initialize the selected filters with the selected category
+			setSelectedFilters([selectedCategory]);
+		}
+	}, [selectedCategory]);
 
 	useEffect(() => {
 		onFilterChange(selectedFilters);
@@ -157,7 +160,12 @@ const Filter: React.FC<FilterProps> = ({
 										className="form-checkbox bg-emerald-300"
 										checked={checkedStates[type] || false}
 										onChange={() => handleCheckboxChange(type)}
-										disabled={productTypes.length === 1}
+										disabled={
+											selectedCategory === type ||
+											(checkedStates[type] &&
+												Object.values(checkedStates).filter(Boolean).length ===
+													1)
+										}
 									/>
 									<span className="ml-2 font-bold text-[.6rem]">{type}</span>
 								</label>

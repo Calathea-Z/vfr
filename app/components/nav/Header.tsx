@@ -8,7 +8,7 @@ import Image from "next/legacy/image";
 import Link from "next/link";
 //---Packages---//
 import { AppBar, Toolbar, IconButton } from "@mui/material";
-import { Microscope, UserCircle, Basket, List } from "@phosphor-icons/react";
+import { Binoculars, UserCircle, Basket, List } from "@phosphor-icons/react";
 import { motion } from "framer-motion";
 
 const Header = () => {
@@ -143,7 +143,7 @@ const Header = () => {
 							{/* Menu Section */}
 							<div className="hidden md:flex md:flex-1 justify-end space-x-4">
 								<IconButton onClick={toggleSearch}>
-									<Microscope className="w-5 h-5 md:w-7 md:h-7 lg:w-8 lg:h-8" />
+									<Binoculars className="w-5 h-5 md:w-7 md:h-7 lg:w-8 lg:h-8" />
 								</IconButton>
 								<IconButton onClick={() => handleNavigate("/userDashboard")}>
 									<UserCircle className="w-5 h-5 md:w-7 md:h-7 lg:w-8 lg:h-8" />
@@ -162,7 +162,7 @@ const Header = () => {
 								</Link>
 								<div className="flex items-center space-x-1">
 									<IconButton onClick={toggleSearch}>
-										<Microscope size={16} />
+										<Binoculars size={16} />
 									</IconButton>
 									<IconButton onClick={() => handleNavigate("/cart")}>
 										<Basket size={16} />

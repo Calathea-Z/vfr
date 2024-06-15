@@ -1,13 +1,15 @@
 "use client";
-import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
-import Link from "@mui/material/Link";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
-import Card from "@mui/material/Card";
-import { styled } from "@mui/material/styles";
+import {
+	Container,
+	Typography,
+	Box,
+	Link,
+	List,
+	ListItem,
+	ListItemText,
+	Card,
+	styled,
+} from "@mui/material";
 
 const FullWidthCard = styled(Card)({
 	height: "85vh",

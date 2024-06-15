@@ -41,7 +41,7 @@ const ShopSubMenu = ({ isVisible }: { isVisible: boolean }) => {
 	return (
 		<>
 			{isVisible && (
-				<div className="absolute bg-primary shadow-xl z-20 rounded-xl w-full md:w-[45rem] left-0 top-[1] flex flex-col md:flex-row">
+				<div className="absolute bg-white md:bg-primary shadow-xl z-20 rounded-xl w-full md:w-[45rem] left-0 top-[1] flex flex-col md:flex-row">
 					<div className="w-full md:w-1/4 p-2">
 						{currentCategories.map((category) => (
 							<motion.div
@@ -50,7 +50,7 @@ const ShopSubMenu = ({ isVisible }: { isVisible: boolean }) => {
 									rotate: [0, 1, -1, 1, 0],
 									transition: { duration: 0.5 },
 								}}
-								className="hover:bg-[#ECC89A] rounded-md w-full"
+								className="hover:bg-emerald-500 rounded-md w-full"
 							>
 								<Link
 									href={
@@ -58,7 +58,7 @@ const ShopSubMenu = ({ isVisible }: { isVisible: boolean }) => {
 											? "/shop"
 											: `/shop/product/category/${category.title.toLowerCase()}`
 									}
-									className="block text-sm text-gray-700 px-4 py-2 rounded-md hover:font-amaticSC hover:font-semibold hover:text-xl"
+									className="block text-sm px-4 py-2 rounded-md md:hover:font-semibold hover:text-white"
 									onMouseEnter={() =>
 										setSubMenuImageToShow(
 											sanityImageBuilder(category.subMenuImage).url()
@@ -70,7 +70,7 @@ const ShopSubMenu = ({ isVisible }: { isVisible: boolean }) => {
 							</motion.div>
 						))}
 					</div>
-					<div className="w-full md:w-3/4 relative h-72">
+					<div className="w-full md:w-3/4 relative h-72 hidden md:block">
 						<div className="absolute inset-0 flex justify-center items-center z-30 border-[.4rem] border-primary rounded-xl">
 							{subMenuImageToShow && (
 								<Image

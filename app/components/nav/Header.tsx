@@ -19,6 +19,7 @@ const Header = () => {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const [isSearchOpen, setIsSearchOpen] = useState(false);
 	const [isShopSubMenuOpen, setIsShopSubMenuOpen] = useState(false);
+	const [isMobileSubMenuOpen, setIsMobileSubMenuOpen] = useState(false);
 
 	const toggleMenu = () => {
 		console.log("Toggling menu:", !isMenuOpen);
@@ -184,13 +185,6 @@ const Header = () => {
 							{isMenuOpen && (
 								<div className="absolute top-full left-0 w-full rounded-b-lg bg-white shadow-md flex flex-col items-left space-y-2 p-4">
 									<Link
-										href="/shop"
-										className={`p-1 hover:bg-emerald-500 hover:rounded-sm hover:text-primary ${pathname === "/shop" ? "text-emerald-600" : ""}`}
-										onClick={() => setIsMenuOpen(false)}
-									>
-										Shop
-									</Link>
-									<Link
 										href="/userDashboard"
 										className={`p-1 hover:bg-emerald-500 hover:rounded-sm hover:text-primary ${pathname === "/userDashboard" ? "text-emerald-600" : ""}`}
 										onClick={() => setIsMenuOpen(false)}
@@ -218,12 +212,33 @@ const Header = () => {
 									>
 										Wholesale
 									</Link>
+									<div
+										className="relative group"
+										onMouseEnter={() => setIsMobileSubMenuOpen(true)}
+										onMouseLeave={() => setIsMobileSubMenuOpen(false)}
+									>
+										<div
+											className={`p-1 ${isMobileSubMenuOpen ? "bg-emerald-500 rounded-sm text-primary" : "hover:bg-emerald-500 hover:rounded-sm hover:text-primary"} ${pathname === "/shop" ? "text-emerald-600" : ""}`}
+										>
+											Shop
+										</div>
+										{isMobileSubMenuOpen && (
+											<ShopSubMenu isVisible={isMobileSubMenuOpen} />
+										)}
+									</div>
 								</div>
 							)}
 						</>
 					)}
 				</Toolbar>
 			</AppBar>
+			{/* Close mobile menu on screen resize */}
+			{typeof window !== "undefined" &&
+				window.addEventListener("resize", () => {
+					if (window.innerWidth >= 768 && isMenuOpen) {
+						setIsMenuOpen(false);
+					}
+				})}
 		</>
 	);
 };

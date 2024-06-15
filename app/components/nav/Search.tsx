@@ -32,8 +32,8 @@ const Search: React.FC<{ visible: boolean; onClose: () => void }> = ({
 
 	const handleResultClick = (slug: string) => {
 		router.push(`/shop/product/${slug}`);
+		onClose();
 	};
-
 	const handleKeyPress = (event: React.KeyboardEvent) => {
 		if (event.key === "Enter" && query.trim().length >= 3) {
 			router.push(`/shop/product/search/${query}`);

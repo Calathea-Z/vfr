@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 //---Packages---//
 import CircularProgress from "@mui/material/CircularProgress";
+import { MaskHappy, MaskSad } from "@phosphor-icons/react";
 
 const SearchResultsPage: React.FC = () => {
 	const { slug } = useParams();
@@ -35,28 +36,44 @@ const SearchResultsPage: React.FC = () => {
 			error: "",
 		}));
 		try {
-			let baseQuery = `*[_type == "product" && name match "${searchQuery}*"]{..., "slug": slug.current}`;
+			// Fetch products that match the search query
+			let productQuery = `*[_type == "product" && (name match "${searchQuery}*" || "${searchQuery}" in category->title)]{..., "slug": slug.current}`;
+			const products = await client.fetch(productQuery);
 
-			console.log("Final query:", baseQuery);
+			// Fetch categories that match the search query and include their products
+			let categoryQuery = `*[_type == "category" && title match "${searchQuery}*"]{
+				"products": *[_type == "product" && references(^._id)]{..., "slug": slug.current}
+			}`;
+			const categories = await client.fetch(categoryQuery);
 
-			const products = await client.fetch(baseQuery);
+			// Flatten the category products
+			const categoryProducts = categories.reduce(
+				(acc: any[], category: any) => {
+					return acc.concat(category.products);
+				},
+				[]
+			);
 
-			if (!Array.isArray(products)) {
-				throw new Error("Fetch did not return an array");
-			}
+			// Combine product results and category products
+			const combinedResults = [...products, ...categoryProducts];
 
-			if (products.length === 0) {
+			// Remove duplicates
+			const uniqueResults = Array.from(
+				new Set(combinedResults.map((item: any) => item._id))
+			).map((id) => combinedResults.find((item: any) => item._id === id));
+
+			if (uniqueResults.length === 0) {
 				// Fetch best sellers if no search results are found
 				const bestSellersQuery = `*[_type == "product" && countInStock > 0] | order(amountSold desc)[0...5]{..., "slug": slug.current}`;
 				const bestSellers = await client.fetch(bestSellersQuery);
 				setState({
 					loading: false,
-					error: `Sorry, no results were found for "${decodeURIComponent(searchQuery)}".\nPopular items you might like:`,
+					error: `Sorry, no results were found for '${decodeURIComponent(searchQuery)}'.`,
 					products: bestSellers,
 				});
 			} else {
 				setState({
-					products,
+					products: uniqueResults,
 					loading: false,
 					error: "",
 				});
@@ -78,6 +95,7 @@ const SearchResultsPage: React.FC = () => {
 			console.log("No search query provided, skipping fetch");
 		}
 	}, [searchQuery]);
+
 	return (
 		<div className="bg-white flex flex-col min-h-screen">
 			<main className="flex-grow mt-2 md:mt-4">
@@ -90,13 +108,20 @@ const SearchResultsPage: React.FC = () => {
 						<div className="flex flex-col items-start justify-start w-full">
 							{error ? (
 								<div
-									className={`w-full text-left text-base sm:text-xl md:text-3xl lg:text-4xl xl:text-5xl font-bold px-5 md:px-10 py-1 sm:py-4 md:py-8 shadow-sm  ${lato.className}`}
+									className={`flex flex-col gap-1 md:gap-4 w-full text-left text-sm sm:text-xl md:text-3xl lg:text-4xl xl:text-5xl font-bold px-5 md:px-10 py-1 sm:py-4 md:py-8 shadow-sm  ${lato.className}`}
 								>
-									{error}
+									<span className="flex items-center gap-2 text-secondary">
+										<MaskSad size={40} />
+										{error}
+									</span>
+									<span className="flex items-center gap-2 ml-[3.5rem] text-emerald-500">
+										<p>Here are some things you may like!</p>
+										<MaskHappy size={40} />
+									</span>
 								</div>
 							) : (
 								<div
-									className={`w-full text-left text-xl md:text-3xl lg:text-4xl xl:text-5xl font-bold px-10 py-8 shadow-sm  ${lato.className}`}
+									className={`w-full text-left text-xl md:text-3xl lg:text-4xl xl:text-5xl font-bold px-10 py-8 shadow-sm text-emerald-500 ${lato.className}`}
 								>
 									{`Search results for "${decodeURIComponent(searchQuery)}"`}
 								</div>

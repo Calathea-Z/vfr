@@ -8,7 +8,13 @@ import { sanityImageBuilder } from "../../../utils/sanityImageBuilder";
 //---Packages---//
 import { motion } from "framer-motion";
 
-const ShopSubMenu = ({ isVisible }: { isVisible: boolean }) => {
+const ShopSubMenu = ({
+	isVisible,
+	onClose,
+}: {
+	isVisible: boolean;
+	onClose: () => void;
+}) => {
 	const [subMenuImageToShow, setSubMenuImageToShow] = useState<string | null>(
 		null
 	);
@@ -37,7 +43,6 @@ const ShopSubMenu = ({ isVisible }: { isVisible: boolean }) => {
 	}, []);
 
 	if (!isVisible) return null;
-
 	return (
 		<>
 			{isVisible && (
@@ -64,6 +69,7 @@ const ShopSubMenu = ({ isVisible }: { isVisible: boolean }) => {
 											sanityImageBuilder(category.subMenuImage).url()
 										)
 									}
+									onClick={() => onClose()} // Close the parent menu on link click
 								>
 									{category.title}
 								</Link>

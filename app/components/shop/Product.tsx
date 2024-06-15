@@ -58,14 +58,17 @@ const Product: React.FC<ProductProps> = ({ product }) => {
 		typeof product.slug === "object" ? product.slug.current : product.slug;
 	return (
 		<div className="flex flex-col items-center relative">
-			<Card className="w-full h-auto bg-white shadow-lg border border-black flex flex-col items-center justify-center p-2">
+			<Card
+				className="w-full h-auto bg-white shadow-lg border border-black flex flex-col items-center justify-center p-2"
+				style={{ borderRadius: 0 }}
+			>
 				{product.photo && product.photo.length > 0 ? (
 					<Link href={`/shop/product/${slug}`}>
 						<CardMedia
 							component="img"
 							image={sanityImageBuilder(product.photo[0].asset._ref).url()}
 							alt={product.name}
-							className="object-cover rounded-3xl px-1 py-2"
+							className="object-cover rounded-2xl px-1 py-2"
 							style={{
 								maxHeight: "100%",
 								maxWidth: "100%",

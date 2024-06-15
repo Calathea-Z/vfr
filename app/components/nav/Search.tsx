@@ -19,17 +19,55 @@ const Search: React.FC<{ visible: boolean; onClose: () => void }> = ({
 		const handleSearch = async () => {
 			if (query.trim().length < 3) return;
 
-			// Fetch search results from your backend or API
-			const data = await client.fetch(
-				`*[_type == "product" && name match "${query}*"]`
-			);
-			setResults(data);
-			setSearchPerformed(true);
+			try {
+				// Fetch search results from your backend or API
+				const data = await client.fetch(
+					`*[_type == "product" && (name match $query || $query in category->title)]{
+						...,
+						"categoryTitle": category->title,
+						"slug": slug.current
+					} | *[_type == "category" && title match $query]{
+						"products": *[_type == "product" && references(^._id)]{
+							...,
+							"categoryTitle": ^.title,
+							"slug": slug.current
+						}
+					}`,
+					{ query: `${query}*` as never }
+				);
+
+				console.log("Fetched data:", data);
+
+				// Flatten the results to include both product names and category matches
+				const flattenedResults = data.reduce((acc: any[], item: any) => {
+					if (item.products) {
+						acc.push(...item.products);
+					} else {
+						acc.push(item);
+					}
+					return acc;
+				}, []);
+
+				console.log("Flattened results:", flattenedResults);
+
+				// Remove duplicates
+				const uniqueResults = Array.from(
+					new Set(flattenedResults.map((item: any) => item.name))
+				).map((name: any) =>
+					flattenedResults.find((item: any) => item.name === name)
+				);
+
+				console.log("Unique results:", uniqueResults);
+
+				setResults(uniqueResults);
+				setSearchPerformed(true);
+			} catch (error) {
+				console.error("Error fetching data:", error);
+			}
 		};
 
 		handleSearch();
 	}, [query]);
-
 	const handleResultClick = (slug: string) => {
 		router.push(`/shop/product/${slug}`);
 	};

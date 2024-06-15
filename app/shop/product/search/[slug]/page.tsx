@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 //---Packages---//
 import CircularProgress from "@mui/material/CircularProgress";
+import { MaskHappy, MaskSad } from "@phosphor-icons/react";
 
 const SearchResultsPage: React.FC = () => {
 	const { slug } = useParams();
@@ -67,7 +68,7 @@ const SearchResultsPage: React.FC = () => {
 				const bestSellers = await client.fetch(bestSellersQuery);
 				setState({
 					loading: false,
-					error: `Sorry, no results were found for "${decodeURIComponent(searchQuery)}".\nPopular items you might like:`,
+					error: `Sorry, no results were found for '${decodeURIComponent(searchQuery)}'.`,
 					products: bestSellers,
 				});
 			} else {
@@ -107,13 +108,20 @@ const SearchResultsPage: React.FC = () => {
 						<div className="flex flex-col items-start justify-start w-full">
 							{error ? (
 								<div
-									className={`w-full text-left text-base sm:text-xl md:text-3xl lg:text-4xl xl:text-5xl font-bold px-5 md:px-10 py-1 sm:py-4 md:py-8 shadow-sm  ${lato.className}`}
+									className={`flex flex-col gap-1 md:gap-4 w-full text-left text-sm sm:text-xl md:text-3xl lg:text-4xl xl:text-5xl font-bold px-5 md:px-10 py-1 sm:py-4 md:py-8 shadow-sm  ${lato.className}`}
 								>
-									{error}
+									<span className="flex items-center gap-2 text-secondary">
+										<MaskSad size={40} />
+										{error}
+									</span>
+									<span className="flex items-center gap-2 ml-[3.5rem] text-emerald-500">
+										<p>Here are some things you may like!</p>
+										<MaskHappy size={40} />
+									</span>
 								</div>
 							) : (
 								<div
-									className={`w-full text-left text-xl md:text-3xl lg:text-4xl xl:text-5xl font-bold px-10 py-8 shadow-sm  ${lato.className}`}
+									className={`w-full text-left text-xl md:text-3xl lg:text-4xl xl:text-5xl font-bold px-10 py-8 shadow-sm text-emerald-500 ${lato.className}`}
 								>
 									{`Search results for "${decodeURIComponent(searchQuery)}"`}
 								</div>

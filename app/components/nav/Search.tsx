@@ -12,7 +12,6 @@ const Search: React.FC<{ visible: boolean; onClose: () => void }> = ({
 }) => {
 	const [query, setQuery] = useState("");
 	const [results, setResults] = useState<any[]>([]);
-	const [searchPerformed, setSearchPerformed] = useState(false);
 	const router = useRouter(); // Use useRouter from next/navigation
 
 	useEffect(() => {
@@ -24,7 +23,6 @@ const Search: React.FC<{ visible: boolean; onClose: () => void }> = ({
 				`*[_type == "product" && name match "${query}*"]`
 			);
 			setResults(data);
-			setSearchPerformed(true);
 		};
 
 		handleSearch();
@@ -49,15 +47,15 @@ const Search: React.FC<{ visible: boolean; onClose: () => void }> = ({
 					onClick={onClose}
 					sx={{
 						position: "absolute",
-						left: "-.5rem", // Moved the icon to the left
+						left: "-.5rem",
 						top: "4%",
 						transform: "translateY(-50%)",
-						zIndex: 10, // Ensure the close button is above the results
-						backgroundColor: "white", // Set background to white
-						padding: 0, // Remove padding to make background fit the icon
+						zIndex: 10,
+						backgroundColor: "white",
+						padding: 0,
 						"&:hover": {
-							backgroundColor: "rgb(255, 204, 204)", // Turn very light red on hover
-							opacity: 1, // Ensure it does not get opaque
+							backgroundColor: "rgb(255, 204, 204)",
+							opacity: 1,
 						},
 					}}
 				>
@@ -68,7 +66,6 @@ const Search: React.FC<{ visible: boolean; onClose: () => void }> = ({
 					options={results.map((result) => result.name)}
 					onInputChange={(event, newInputValue) => {
 						setQuery(newInputValue);
-						setSearchPerformed(false);
 					}}
 					onChange={(event, newValue) => {
 						const selectedResult = results.find(

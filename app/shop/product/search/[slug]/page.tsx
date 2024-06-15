@@ -80,7 +80,7 @@ const SearchResultsPage: React.FC = () => {
 	}, [searchQuery]);
 	return (
 		<div className="bg-white flex flex-col min-h-screen">
-			<main className="flex-grow mt-4">
+			<main className="flex-grow mt-2 md:mt-4">
 				<div className="flex justify-center">
 					{loading ? (
 						<div className="flex justify-center items-center p-10">
@@ -90,7 +90,7 @@ const SearchResultsPage: React.FC = () => {
 						<div className="flex flex-col items-start justify-start w-full">
 							{error ? (
 								<div
-									className={`w-full text-left text-xl md:text-3xl lg:text-4xl xl:text-5xl font-bold px-10 py-8 shadow-sm  ${lato.className}`}
+									className={`w-full text-left text-base sm:text-xl md:text-3xl lg:text-4xl xl:text-5xl font-bold px-5 md:px-10 py-1 sm:py-4 md:py-8 shadow-sm  ${lato.className}`}
 								>
 									{error}
 								</div>

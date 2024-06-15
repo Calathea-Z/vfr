@@ -59,7 +59,7 @@ const Product: React.FC<ProductProps> = ({ product }) => {
 	return (
 		<div className="flex flex-col items-center relative">
 			<Card
-				className="w-full h-auto bg-white shadow-lg border border-black flex flex-col items-center justify-center p-2"
+				className="w-full h-auto bg-white border border-black flex flex-col items-center justify-center p-2 shadow-none"
 				style={{ borderRadius: 0 }}
 			>
 				{product.photo && product.photo.length > 0 ? (

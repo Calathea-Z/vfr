@@ -8,17 +8,16 @@ import { playfairDisplay, lato } from "../../../fonts/fonts"; // Importing the p
 import { useEffect, useState, useContext } from "react";
 import Image from "next/image";
 //--Packages---//
-import { CircularProgress } from "@mui/material";
 import axios from "axios";
 import { motion } from "framer-motion";
 import {
 	Card,
 	CardContent,
-	Typography,
 	Grid,
 	CardMedia,
 	Container,
 	Box,
+	CircularProgress,
 } from "@mui/material";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";

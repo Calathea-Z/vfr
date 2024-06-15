@@ -5,6 +5,8 @@ import fullLogo from "./logos/fullLogo.jpeg";
 import heroOne from "./hero/ceramicNew.jpg";
 import heroTwo from "./hero/ceramicNewTwo.jpg";
 import cellHero from "./hero/cellphoneVF.jpg";
+//---Info---//
+import bioPic from "./info/sydney.png";
 
 export {
 	//---Logos---//
@@ -14,4 +16,6 @@ export {
 	heroOne,
 	heroTwo,
 	cellHero,
+	//---Info---//
+	bioPic,
 };

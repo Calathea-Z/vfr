@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation"; // Import usePathname
 import Image from "next/legacy/image";
 import Link from "next/link";
 //---Packages---//
-import { AppBar, Toolbar, IconButton } from "@mui/material";
+import { AppBar, Toolbar, IconButton, TextField } from "@mui/material";
 import { Microscope, UserCircle, Basket, List } from "@phosphor-icons/react";
 import { motion } from "framer-motion";
 
@@ -16,10 +16,15 @@ const Header = () => {
 	const pathname = usePathname();
 	const [isFirstLoad, setIsFirstLoad] = useState(true);
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
+	const [isSearchOpen, setIsSearchOpen] = useState(false);
 
 	const toggleMenu = () => {
 		console.log("Toggling menu:", !isMenuOpen);
 		setIsMenuOpen(!isMenuOpen);
+	};
+
+	const toggleSearch = () => {
+		setIsSearchOpen(!isSearchOpen);
 	};
 
 	useEffect(() => {
@@ -119,7 +124,41 @@ const Header = () => {
 					)}
 					{/* Menu Section */}
 					<div className="hidden md:flex md:flex-1 justify-end space-x-4">
-						<IconButton onClick={() => handleNavigate("/search")}>
+						{isSearchOpen && (
+							<div className="hidden lg:block">
+								<TextField
+									className="transition-transform transform"
+									variant="outlined"
+									placeholder="Search..."
+									autoFocus
+									fullWidth
+									sx={{
+										"& .MuiOutlinedInput-root": {
+											"& .MuiOutlinedInput-notchedOutline": {
+												borderColor: "rgb(5, 150, 105) !important",
+											},
+										},
+									}}
+									InputProps={{
+										style: {
+											color: "rgb(5, 150, 105)",
+											fontSize: "1rem",
+											fontWeight: "bold",
+											fontStyle: "italic",
+										},
+									}}
+									InputLabelProps={{
+										style: {
+											color: "#043391",
+											fontSize: "1rem",
+											fontWeight: "bold",
+											fontStyle: "italic",
+										},
+									}}
+								/>
+							</div>
+						)}
+						<IconButton onClick={toggleSearch}>
 							<Microscope className="w-5 h-5 md:w-7 md:h-7 lg:w-8 lg:h-8" />
 						</IconButton>
 						<IconButton onClick={() => handleNavigate("/userDashboard")}>
@@ -129,6 +168,40 @@ const Header = () => {
 							<Basket className="w-5 h-5 md:w-7 md:h-7 lg:w-8 lg:h-8" />
 						</IconButton>
 					</div>
+					{isSearchOpen && (
+						<div className="lg:hidden absolute top-full left-0 w-full bg-primary shadow-md p-4">
+							<TextField
+								className="transition-transform transform"
+								variant="outlined"
+								placeholder="Search..."
+								autoFocus
+								fullWidth
+								sx={{
+									"& .MuiOutlinedInput-root": {
+										"& .MuiOutlinedInput-notchedOutline": {
+											borderColor: "rgb(5, 150, 105) !important",
+										},
+									},
+								}}
+								InputProps={{
+									style: {
+										color: "rgb(5, 150, 105)",
+										fontSize: "1rem",
+										fontWeight: "bold",
+										fontStyle: "italic",
+									},
+								}}
+								InputLabelProps={{
+									style: {
+										color: "#043391",
+										fontSize: "1rem",
+										fontWeight: "bold",
+										fontStyle: "italic",
+									},
+								}}
+							/>
+						</div>
+					)}
 					{/* Mobile Menu Section */}
 					<div className="md:hidden flex items-center justify-between w-full">
 						<IconButton onClick={toggleMenu}>
@@ -138,13 +211,47 @@ const Header = () => {
 							<Image src={simpleLogo} alt="Logo" width={70} height={70} />
 						</Link>
 						<div className="flex items-center space-x-1">
-							<IconButton onClick={() => handleNavigate("/search")}>
+							<IconButton onClick={toggleSearch}>
 								<Microscope size={16} />
 							</IconButton>
 							<IconButton onClick={() => handleNavigate("/cart")}>
 								<Basket size={16} />
 							</IconButton>
 						</div>
+						{isSearchOpen && (
+							<div className="absolute top-full left-0 w-full bg-primary shadow-md p-4">
+								<TextField
+									className="transition-transform transform"
+									variant="outlined"
+									placeholder="Search..."
+									autoFocus
+									fullWidth
+									sx={{
+										"& .MuiOutlinedInput-root": {
+											"& .MuiOutlinedInput-notchedOutline": {
+												borderColor: "rgb(5, 150, 105) !important",
+											},
+										},
+									}}
+									InputProps={{
+										style: {
+											color: "rgb(5, 150, 105)",
+											fontSize: "1rem",
+											fontWeight: "bold",
+											fontStyle: "italic",
+										},
+									}}
+									InputLabelProps={{
+										style: {
+											color: "#043391",
+											fontSize: "1rem",
+											fontWeight: "bold",
+											fontStyle: "italic",
+										},
+									}}
+								/>
+							</div>
+						)}
 					</div>
 					{/* Mobile Menu Overlay */}
 					{isMenuOpen && (

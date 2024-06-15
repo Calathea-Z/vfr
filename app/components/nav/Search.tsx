@@ -34,6 +34,12 @@ const Search: React.FC<{ visible: boolean; onClose: () => void }> = ({
 		router.push(`/shop/product/${slug}`);
 	};
 
+	const handleKeyPress = (event: React.KeyboardEvent) => {
+		if (event.key === "Enter" && query.trim().length >= 3) {
+			router.push(`/shop/product/search/${query}`);
+		}
+	};
+
 	if (!visible) return null;
 
 	return (
@@ -79,6 +85,7 @@ const Search: React.FC<{ visible: boolean; onClose: () => void }> = ({
 							placeholder="Search..."
 							autoFocus
 							fullWidth
+							onKeyPress={handleKeyPress} // Add this line to handle "Enter" key press
 							sx={{
 								"& .MuiOutlinedInput-root": {
 									"& .MuiOutlinedInput-notchedOutline": {

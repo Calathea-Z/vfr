@@ -148,7 +148,7 @@ const Stockists: React.FC = () => {
 						}
 					/>
 				))}
-				{selectedStockist && (
+				{selectedStockist && isMapsScriptLoaded && (
 					<GoogleMapCustomOverlay
 						map={mapRef.current} // Use the map instance from mapRef
 						google={window.google}

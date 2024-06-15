@@ -1,6 +1,7 @@
 "use client";
 import { simpleLogo } from "@/public/assets";
 import Search from "./Search";
+import ShopSubMenu from "./ShopSubMenu";
 //--Framework--//
 import { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation"; // Combined imports
@@ -17,6 +18,7 @@ const Header = () => {
 	const [isFirstLoad, setIsFirstLoad] = useState(true);
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const [isSearchOpen, setIsSearchOpen] = useState(false);
+	const [isShopSubMenuOpen, setIsShopSubMenuOpen] = useState(false);
 
 	const toggleMenu = () => {
 		console.log("Toggling menu:", !isMenuOpen);
@@ -73,12 +75,21 @@ const Header = () => {
 								>
 									Home
 								</Link>
-								<Link
-									className={`hover-underline-animation ${pathname === "/shop" ? "text-emerald-600" : ""}`}
-									href="/shop"
+								<div
+									className="relative"
+									onMouseEnter={() => setIsShopSubMenuOpen(true)}
+									onMouseLeave={() => setIsShopSubMenuOpen(false)}
 								>
-									Shop
-								</Link>
+									<Link
+										className={`hover-underline-animation ${pathname === "/shop" ? "text-emerald-600" : ""}`}
+										href="/shop"
+									>
+										Shop
+									</Link>
+									{isShopSubMenuOpen && (
+										<ShopSubMenu isVisible={isShopSubMenuOpen} />
+									)}
+								</div>
 								<Link
 									className={`hover-underline-animation ${pathname === "/shop/wholesale" ? "text-emerald-600" : ""}`}
 									href="/shop/wholesale"

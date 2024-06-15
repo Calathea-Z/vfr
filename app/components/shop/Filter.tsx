@@ -1,6 +1,7 @@
 "use client";
 //---Framework---//
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 //---Packages---//
 import { Plus, Minus, X } from "@phosphor-icons/react";
 //---Fonts---//
@@ -35,6 +36,9 @@ const Filter: React.FC<FilterProps> = ({
 		useState<string>("All Prices");
 	const [excludeOutOfStock, setExcludeOutOfStock] = useState<boolean>(false);
 
+	const pathname = usePathname();
+	const isCategoryRoute = pathname.includes("/shop/product/category"); // Check if the current route is a category route
+
 	useEffect(() => {
 		if (selectedCategory) {
 			// Initialize the selected filters with the selected category
@@ -47,6 +51,8 @@ const Filter: React.FC<FilterProps> = ({
 	}, [selectedFilters, onFilterChange]); // Effect to propagate changes
 
 	const handleCheckboxChange = (type: string) => {
+		if (isCategoryRoute) return; // Prevent changes if on a category route
+
 		setCheckedStates((prevStates) => ({
 			...prevStates,
 			[type]: !prevStates[type],
@@ -138,10 +144,12 @@ const Filter: React.FC<FilterProps> = ({
 							<span className=" text-black text-[.6rem] font-bold mr-1">
 								{filter}
 							</span>
-							<X
-								className="w-3 h-3 cursor-pointer"
-								onClick={() => clearFilter(filter)}
-							/>
+							{filter !== selectedCategory && (
+								<X
+									className="w-3 h-3 cursor-pointer"
+									onClick={() => clearFilter(filter)}
+								/>
+							)}
 						</div>
 					))}
 				</div>
@@ -164,7 +172,8 @@ const Filter: React.FC<FilterProps> = ({
 											selectedCategory === type ||
 											(checkedStates[type] &&
 												Object.values(checkedStates).filter(Boolean).length ===
-													1)
+													1) ||
+											isCategoryRoute // Disable if on a category route
 										}
 									/>
 									<span className="ml-2 font-bold text-[.6rem]">{type}</span>

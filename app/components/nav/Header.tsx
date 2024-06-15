@@ -88,7 +88,10 @@ const Header = () => {
 										Shop
 									</Link>
 									{isShopSubMenuOpen && (
-										<ShopSubMenu isVisible={isShopSubMenuOpen} />
+										<ShopSubMenu
+											isVisible={isShopSubMenuOpen}
+											onClose={() => setIsShopSubMenuOpen(false)}
+										/>
 									)}
 								</div>
 								<Link
@@ -223,7 +226,13 @@ const Header = () => {
 											Shop
 										</div>
 										{isMobileSubMenuOpen && (
-											<ShopSubMenu isVisible={isMobileSubMenuOpen} />
+											<ShopSubMenu
+												isVisible={isMobileSubMenuOpen}
+												onClose={() => {
+													setIsMobileSubMenuOpen(false);
+													setIsMenuOpen(false);
+												}}
+											/>
 										)}
 									</div>
 								</div>

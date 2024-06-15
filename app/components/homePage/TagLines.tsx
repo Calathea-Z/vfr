@@ -14,7 +14,7 @@ const TagLines: React.FC<TagLinesProps> = ({ inView }) => {
 					scale: 1.1,
 					textShadow: "0px 0px 8px rgba(255, 255, 255, 0.8)",
 				}}
-				className="p-2 text-2xl sm:text-3xl md:text-4xl lg:text-6xl italic text-emerald-500"
+				className="p-2 text-xl sm:text-3xl md:text-4xl lg:text-6xl italic text-emerald-500"
 				initial={{ x: -1000 }}
 				animate={{ x: inView ? 0 : -500 }}
 				transition={{ type: "spring", stiffness: 30 }}
@@ -27,7 +27,7 @@ const TagLines: React.FC<TagLinesProps> = ({ inView }) => {
 					scale: 1.1,
 					textShadow: "0px 0px 8px rgba(255, 255, 255, 0.8)",
 				}}
-				className="p-2 text-2xl sm:text-3xl md:text-4xl lg:text-6xl italic text-emerald-500"
+				className="p-2 text-xl sm:text-3xl md:text-4xl lg:text-6xl italic text-emerald-500"
 				initial={{ x: 1000 }}
 				animate={{ x: inView ? 0 : 500 }}
 				transition={{ type: "spring", stiffness: 30 }}

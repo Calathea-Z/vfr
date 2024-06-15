@@ -167,7 +167,7 @@ const ShopHome: React.FC = () => {
 
 	return (
 		<div className="bg-primary flex flex-col min-h-screen">
-			<div className="bg-primary pt-4 px-2 h-24md:h-36 border-b-black border-b-[1px]">
+			<div className="bg-primary pt-4 px-2 h-24 md:h-36 border-b-black border-b-[1px]">
 				<div className="flex-grow">
 					{/* <Breadcrumbs /> */}
 					<h1 className="text-3xl sm:text-6xl font-thin italic text-black px-1 py-4">
@@ -189,7 +189,7 @@ const ShopHome: React.FC = () => {
 				</div>
 			</div>
 			<main className="flex-grow mt-4">
-				<div className="p-2 flex justify-center">
+				<div className="flex justify-center">
 					{loading ? (
 						<div className="flex justify-center items-center p-10">
 							<CircularProgress sx={{ color: "#8cc6b0" }} />
@@ -202,7 +202,7 @@ const ShopHome: React.FC = () => {
 						</div>
 					) : (
 						// grid layout when displaying products
-						<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 mdLg:grid-cols-4 justify-items-center w-full">
+						<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 3xl:grid-cols-4 justify-items-center w-full">
 							{products.map((product, index) => (
 								<ProductComponent key={index} product={product} />
 							))}

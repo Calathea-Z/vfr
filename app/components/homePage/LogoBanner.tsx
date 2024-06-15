@@ -12,8 +12,8 @@ export const LogoBanner = () => {
 				md: "repeat(2, 1fr)",
 				lg: "repeat(4, 1fr)",
 			}}
-			width="100vw"
-			padding="2rem"
+			width="100%"
+			padding="1rem"
 			overflow="hidden" // Added to prevent overflow on mobile screens
 		>
 			{[...Array(4)].map((_, index) => (

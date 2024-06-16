@@ -15,6 +15,7 @@ const TopBanner: React.FC = () => {
 	const [topBannerData, setTopBannerData] = useState<TopBannerData | null>(
 		null
 	);
+	const [isVisible, setIsVisible] = useState(true);
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -25,10 +26,20 @@ const TopBanner: React.FC = () => {
 			}
 		};
 
+		const isBannerClosed = sessionStorage.getItem("topBannerClosed");
+		if (isBannerClosed === "true") {
+			setIsVisible(false);
+		}
+
 		fetchData();
 	}, []);
 
-	if (!topBannerData || !topBannerData.enabled) {
+	const handleClose = () => {
+		setIsVisible(false);
+		sessionStorage.setItem("topBannerClosed", "true");
+	};
+
+	if (!topBannerData || !topBannerData.enabled || !isVisible) {
 		return null;
 	}
 
@@ -41,7 +52,7 @@ const TopBanner: React.FC = () => {
 				zIndex: 7000,
 				borderBottom: "1px solid #000000",
 			}}
-			className="w-full flex justify-center items-center"
+			className="w-full flex justify-center items-center relative"
 			id="top-banner"
 		>
 			<Link
@@ -51,6 +62,13 @@ const TopBanner: React.FC = () => {
 			>
 				{topBannerData.text}
 			</Link>
+			<button
+				onClick={handleClose}
+				className="absolute right-4 top-1/2 transform -translate-y-1/2 text-black"
+				style={{ background: "none", border: "none", cursor: "pointer" }}
+			>
+				&times;
+			</button>
 		</div>
 	);
 };

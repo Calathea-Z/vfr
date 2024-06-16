@@ -21,7 +21,6 @@ const ShopSubMenu = ({
 	const [currentCategories, setCurrentCategories] = useState<
 		{ title: string; subMenuImage: string }[]
 	>([]);
-	const [showSubMenu, setShowSubMenu] = useState<boolean>(false);
 
 	useEffect(() => {
 		const fetchCategories = async () => {

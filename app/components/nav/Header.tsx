@@ -160,7 +160,7 @@ const Header = () => {
 								<IconButton onClick={toggleSearch}>
 									<Binoculars className="w-5 h-5 md:w-7 md:h-7 lg:w-8 lg:h-8" />
 								</IconButton>
-								<IconButton onClick={() => handleNavigate("/userDashboard")}>
+								<IconButton onClick={() => handleNavigate("/user/login")}>
 									<UserCircle className="w-5 h-5 md:w-7 md:h-7 lg:w-8 lg:h-8" />
 								</IconButton>
 								<IconButton onClick={() => handleNavigate("/cart")}>

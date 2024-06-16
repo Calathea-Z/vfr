@@ -72,7 +72,7 @@ const Header: React.FC = () => {
 						</div>
 					) : (
 						<>
-							<div className="hidden md:flex md:flex-1 justify-start space-x-4 md:text-xl lg:text-2xl">
+							<div className="hidden lg:flex lg:flex-1 justify-start space-x-4 md:text-xl lg:text-2xl">
 								<Link
 									className={`hover-underline-animation ${pathname === "/" ? "text-emerald-600" : ""}`}
 									href="/"
@@ -119,7 +119,7 @@ const Header: React.FC = () => {
 							{/* Logo Section */}
 							{pathname === "/" && isFirstLoad ? (
 								<motion.div
-									className="flex-1 justify-center hidden md:flex rounded-sm"
+									className="flex-1 justify-center hidden lg:flex rounded-sm"
 									initial={{ opacity: 0, backgroundColor: "rgba(0, 0, 0, 0)" }}
 									animate={{
 										opacity: 1,
@@ -147,7 +147,7 @@ const Header: React.FC = () => {
 									</Link>
 								</motion.div>
 							) : (
-								<div className="flex-1 justify-center hidden md:flex rounded-lg">
+								<div className="flex-1 justify-center hidden lg:flex rounded-lg">
 									<Link href="/">
 										<Image
 											src={simpleLogo}
@@ -159,7 +159,7 @@ const Header: React.FC = () => {
 								</div>
 							)}
 							{/* Menu Section */}
-							<div className="hidden md:flex md:flex-1 justify-end space-x-4">
+							<div className="hidden lg:flex lg:flex-1 justify-end space-x-4">
 								<IconButton onClick={toggleSearch}>
 									<Binoculars className="w-5 h-5 md:w-7 md:h-7 lg:w-8 lg:h-8" />
 								</IconButton>
@@ -169,20 +169,22 @@ const Header: React.FC = () => {
 								</IconButton>
 							</div>
 							{/* Mobile Menu Section */}
-							<div className="md:hidden flex items-center justify-between w-full">
-								<IconButton onClick={toggleMenu}>
-									<List size={24} />
-								</IconButton>
-								<Link href="/">
-									<Image src={simpleLogo} alt="Logo" width={70} height={70} />
+							<div className="lg:hidden flex items-center justify-between w-full mr-[1.5rem]">
+								<div className="absolute left-2 flex items-center">
+									<IconButton onClick={toggleMenu}>
+										<List size={30} />
+									</IconButton>
+								</div>
+								<Link href="/" className="mx-auto">
+									<Image src={simpleLogo} alt="Logo" width={80} height={80} />
 								</Link>
-								<div className="flex items-center space-x-1">
+								<div className="absolute right-2 flex items-center space-x-1">
 									<IconButton onClick={toggleSearch}>
-										<Binoculars size={16} />
+										<Binoculars size={28} />
 									</IconButton>
 									<AccountDropdown />
 									<IconButton onClick={() => handleNavigate("/cart")}>
-										<Basket size={16} />
+										<Basket size={28} />
 									</IconButton>
 								</div>
 							</div>

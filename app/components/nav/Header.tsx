@@ -3,6 +3,7 @@ import { simpleLogo } from "@/public/assets";
 import Search from "./Search";
 import ShopSubMenu from "./ShopSubMenu";
 import AccountDropdown from "./AccountDropdown";
+import TopBanner from "../homePage/TopBanner";
 //--Framework--//
 import { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation"; // Combined imports
@@ -13,7 +14,15 @@ import { AppBar, Toolbar, IconButton } from "@mui/material";
 import { Binoculars, UserCircle, Basket, List } from "@phosphor-icons/react";
 import { motion } from "framer-motion";
 
-const Header = () => {
+interface TopBannerData {
+	backgroundColor: { hex: string };
+	textColor: { hex: string };
+	link: string;
+	text: string;
+	enabled: boolean;
+}
+
+const Header: React.FC = () => {
 	const router = useRouter();
 	const pathname = usePathname();
 	const [isFirstLoad, setIsFirstLoad] = useState(true);
@@ -21,6 +30,9 @@ const Header = () => {
 	const [isSearchOpen, setIsSearchOpen] = useState(false);
 	const [isShopSubMenuOpen, setIsShopSubMenuOpen] = useState(false);
 	const [isMobileSubMenuOpen, setIsMobileSubMenuOpen] = useState(false);
+	const [topBannerData, setTopBannerData] = useState<TopBannerData | null>(
+		null
+	);
 
 	const toggleMenu = () => {
 		console.log("Toggling menu:", !isMenuOpen);
@@ -61,6 +73,7 @@ const Header = () => {
 	return (
 		<>
 			<AppBar position="sticky" color="default">
+				<TopBanner />
 				<Toolbar className="flex justify-between">
 					{isSearchOpen ? (
 						<div className="flex-1 flex justify-center">

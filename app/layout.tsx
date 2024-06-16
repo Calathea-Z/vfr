@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 //---Packages---//
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
 import { SnackbarProvider } from "notistack";
+import { SessionProvider } from "next-auth/react";
 //---Fonts---//
 import { playfairDisplay } from "./fonts/fonts";
 
@@ -17,7 +18,9 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
 		<html lang="en">
 			<SnackbarProvider>
 				<AppRouterCacheProvider>
-					<body className={playfairDisplay.className}>{children}</body>
+					<SessionProvider>
+						<body className={playfairDisplay.className}>{children}</body>
+					</SessionProvider>
 				</AppRouterCacheProvider>
 			</SnackbarProvider>
 		</html>

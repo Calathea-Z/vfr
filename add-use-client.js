@@ -1,3 +1,5 @@
+//This script makes sure that notistack has use client directive in the beginning of the file for compatibility with Next JS 14 App Router.
+
 const fs = require("fs");
 const path = require("path");
 

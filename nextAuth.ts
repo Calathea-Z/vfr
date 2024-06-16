@@ -1,22 +1,11 @@
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
-import Credentials from "next-auth/providers/credentials";
 import type { Provider } from "next-auth/providers";
+import { MongoDBAdapter } from "@auth/mongodb-adapter";
+import clientPromise from "./app/lib/db";
+import Resend from "next-auth/providers/resend";
 
-const providers: Provider[] = [
-	Google,
-	Credentials({
-		credentials: { password: { label: "Password", type: "password" } },
-		authorize(c) {
-			if (c.password !== "password") return null;
-			return {
-				id: "test",
-				name: "Test User",
-				email: "test@example.com",
-			};
-		},
-	}),
-];
+const providers: Provider[] = [Google, Resend];
 
 export const providerMap = providers.map((provider) => {
 	if (typeof provider === "function") {
@@ -28,6 +17,7 @@ export const providerMap = providers.map((provider) => {
 });
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+	adapter: MongoDBAdapter(clientPromise),
 	providers,
 	pages: {
 		signIn: "/user/login",

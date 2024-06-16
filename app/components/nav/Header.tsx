@@ -2,6 +2,7 @@
 import { simpleLogo } from "@/public/assets";
 import Search from "./Search";
 import ShopSubMenu from "./ShopSubMenu";
+import AccountDropdown from "./AccountDropdown";
 //--Framework--//
 import { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation"; // Combined imports
@@ -160,9 +161,7 @@ const Header = () => {
 								<IconButton onClick={toggleSearch}>
 									<Binoculars className="w-5 h-5 md:w-7 md:h-7 lg:w-8 lg:h-8" />
 								</IconButton>
-								<IconButton onClick={() => handleNavigate("/userDashboard")}>
-									<UserCircle className="w-5 h-5 md:w-7 md:h-7 lg:w-8 lg:h-8" />
-								</IconButton>
+								<AccountDropdown />
 								<IconButton onClick={() => handleNavigate("/cart")}>
 									<Basket className="w-5 h-5 md:w-7 md:h-7 lg:w-8 lg:h-8" />
 								</IconButton>
@@ -179,6 +178,7 @@ const Header = () => {
 									<IconButton onClick={toggleSearch}>
 										<Binoculars size={16} />
 									</IconButton>
+									<AccountDropdown />
 									<IconButton onClick={() => handleNavigate("/cart")}>
 										<Basket size={16} />
 									</IconButton>
@@ -187,13 +187,6 @@ const Header = () => {
 							{/* Mobile Menu Overlay */}
 							{isMenuOpen && (
 								<div className="absolute top-full left-0 w-full rounded-b-lg bg-white shadow-md flex flex-col items-left space-y-2 p-4">
-									<Link
-										href="/userDashboard"
-										className={`p-1 hover:bg-emerald-500 hover:rounded-sm hover:text-primary ${pathname === "/userDashboard" ? "text-emerald-600" : ""}`}
-										onClick={() => setIsMenuOpen(false)}
-									>
-										My Account
-									</Link>
 									<Link
 										href="/info/stockists"
 										className={`p-1 hover:bg-emerald-500 hover:rounded-sm hover:text-primary ${pathname === "/info/stockists" ? "text-emerald-600" : ""}`}

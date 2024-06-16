@@ -11,16 +11,8 @@ import Image from "next/legacy/image";
 import Link from "next/link";
 //---Packages---//
 import { AppBar, Toolbar, IconButton } from "@mui/material";
-import { Binoculars, UserCircle, Basket, List } from "@phosphor-icons/react";
+import { Binoculars, Basket, List } from "@phosphor-icons/react";
 import { motion } from "framer-motion";
-
-interface TopBannerData {
-	backgroundColor: { hex: string };
-	textColor: { hex: string };
-	link: string;
-	text: string;
-	enabled: boolean;
-}
 
 const Header: React.FC = () => {
 	const router = useRouter();
@@ -30,9 +22,6 @@ const Header: React.FC = () => {
 	const [isSearchOpen, setIsSearchOpen] = useState(false);
 	const [isShopSubMenuOpen, setIsShopSubMenuOpen] = useState(false);
 	const [isMobileSubMenuOpen, setIsMobileSubMenuOpen] = useState(false);
-	const [topBannerData, setTopBannerData] = useState<TopBannerData | null>(
-		null
-	);
 
 	const toggleMenu = () => {
 		console.log("Toggling menu:", !isMenuOpen);

@@ -118,15 +118,16 @@ const Footer = () => {
 						>
 							About
 						</Link>
-						<br />
-						<Link
+						{/* <br /> */}
+						{/* LEAVING WHOLESALE LINKS IN-CASE CLIENT WANTS LATER*/}
+						{/* <Link
 							href="/shop/wholesale"
 							color="inherit"
 							sx={{ textDecoration: "none" }}
 							onClick={(e) => handleLinkClick(e, "/shop/wholesale")}
 						>
 							Wholesale
-						</Link>
+						</Link> */}
 						<br />
 						<Link
 							href="/info/privacy-policy"

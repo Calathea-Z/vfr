@@ -1,5 +1,6 @@
 import product from "./product";
-import wholeSaleProduct from "./wholeSaleProduct";
+//Remove wholeSaleProduct, but leaving in in case client wants it back later.
+// import wholeSaleProduct from "./wholeSaleProduct";
 import stockist from "./stockist";
 import bio from "./bio";
 import category from "./category";
@@ -9,7 +10,7 @@ import sideButton from "./sideButton";
 
 export const schemaTypes: any[] = [
 	product,
-	wholeSaleProduct,
+	// wholeSaleProduct,
 	stockist,
 	bio,
 	category,

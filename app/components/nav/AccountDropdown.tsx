@@ -48,10 +48,10 @@ const AccountDropdown = () => {
 					<Avatar
 						src={session.user.image ?? undefined}
 						alt={session.user.name ?? undefined}
-						sx={{ width: { xs: 24, md: 40 }, height: { xs: 24, md: 40 } }}
+						sx={{ width: { xs: 24, md: 36 }, height: { xs: 24, md: 36 } }}
 					/>
 				) : (
-					<UserCircle className="w-5 h-5 md:w-7 md:h-7 lg:w-8 lg:h-8" />
+					<UserCircle className="w-7 h-7 lg:w-8 lg:h-8" />
 				)}
 			</IconButton>
 			<Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>

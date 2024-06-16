@@ -97,12 +97,13 @@ const Header: React.FC = () => {
 										/>
 									)}
 								</div>
-								<Link
+								{/* LEAVING WHOLESALE LINKS IN-CASE CLIENT WANTS LATER*/}
+								{/* <Link
 									className={`hover-underline-animation ${pathname === "/shop/wholesale" ? "text-emerald-600" : ""}`}
 									href="/shop/wholesale"
 								>
 									Wholesale
-								</Link>
+								</Link> */}
 								<Link
 									className={`hover-underline-animation ${pathname === "/info/stockists" ? "text-emerald-600" : ""}`}
 									href="/info/stockists"
@@ -205,13 +206,14 @@ const Header: React.FC = () => {
 									>
 										About
 									</Link>
-									<Link
+									{/* LEAVING WHOLESALE LINKS IN-CASE CLIENT WANTS LATER*/}
+									{/* <Link
 										href="/shop/wholesale"
 										className={`p-1 hover:bg-emerald-500 hover:rounded-sm hover:text-primary ${pathname === "/shop/wholesale" ? "text-emerald-600" : ""}`}
 										onClick={() => setIsMenuOpen(false)}
 									>
 										Wholesale
-									</Link>
+									</Link> */}
 									<div
 										className="relative group"
 										onMouseEnter={() => setIsMobileSubMenuOpen(true)}

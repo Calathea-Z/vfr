@@ -74,7 +74,7 @@ const TopBanner: React.FC = () => {
 			</Link>
 			<button
 				onClick={handleClose}
-				className="absolute right-4 top-1/2 transform -translate-y-1/2 text-black"
+				className="absolute right-[.2rem] md:right-4 top-[15%] md:top-1/2 transform -translate-y-1/2 text-black"
 				style={{ background: "none", border: "none", cursor: "pointer" }}
 			>
 				&times;

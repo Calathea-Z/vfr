@@ -1,5 +1,4 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { createRouter } from "next-connect";
 // import { unstable_getServerSession } from "next-auth/react";
 import client from "../../../sanity/lib/client";
 

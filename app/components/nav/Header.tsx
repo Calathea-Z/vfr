@@ -29,6 +29,9 @@ const Header: React.FC = () => {
 	const toggleMenu = () => {
 		console.log("Toggling menu:", !isMenuOpen);
 		setIsMenuOpen(!isMenuOpen);
+		if (!isMenuOpen) {
+			dispatch({ type: "HIDE_CART" });
+		}
 	};
 
 	const toggleSearch = () => {
@@ -36,6 +39,9 @@ const Header: React.FC = () => {
 	};
 
 	const handleCartClick = () => {
+		if (isMenuOpen) {
+			setIsMenuOpen(false);
+		}
 		dispatch({ type: isCartVisible ? "HIDE_CART" : "SHOW_CART" });
 	};
 
@@ -200,6 +206,13 @@ const Header: React.FC = () => {
 							{isMenuOpen && (
 								<div className="absolute top-full left-0 w-full rounded-b-lg bg-white shadow-md flex flex-col items-left space-y-2 p-4">
 									<Link
+										href="/"
+										className={`p-1 hover:bg-emerald-500 hover:rounded-sm hover:text-primary ${pathname === "/" ? "text-emerald-600" : ""}`}
+										onClick={() => setIsMenuOpen(false)}
+									>
+										Home
+									</Link>
+									<Link
 										href="/info/stockists"
 										className={`p-1 hover:bg-emerald-500 hover:rounded-sm hover:text-primary ${pathname === "/info/stockists" ? "text-emerald-600" : ""}`}
 										onClick={() => setIsMenuOpen(false)}
@@ -215,12 +228,13 @@ const Header: React.FC = () => {
 									</Link>
 									{/* LEAVING WHOLESALE LINKS IN-CASE CLIENT WANTS LATER*/}
 									{/* <Link
-										href="/shop/wholesale"
-										className={`p-1 hover:bg-emerald-500 hover:rounded-sm hover:text-primary ${pathname === "/shop/wholesale" ? "text-emerald-600" : ""}`}
-										onClick={() => setIsMenuOpen(false)}
-									>
-										Wholesale
-									</Link> */}
+										    href="/shop/wholesale"
+										    className={`p-1 hover:bg-emerald-500 hover:rounded-sm hover:text-primary ${pathname === "/shop/wholesale" ? "text-emerald-600" : ""}`}
+										    onClick={() => setIsMenuOpen(false)}
+									        >
+										    Wholesale
+									        </Link> 
+                                        */}
 									<div
 										className="relative group"
 										onMouseEnter={() => setIsMobileSubMenuOpen(true)}

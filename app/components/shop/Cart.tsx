@@ -1,6 +1,7 @@
 "use client";
 import { useStateStorage, CartItem } from "@/utils/stateStorage";
 import { sanityImageBuilder } from "@/utils/sanityImageBuilder";
+import useNoScroll from "@/app/hooks/useNoScroll";
 //---Framework---//
 import { useEffect } from "react";
 //---Components---//
@@ -14,6 +15,7 @@ const Cart: React.FC = () => {
 	const {
 		cart: { cartItems },
 		isCartVisible,
+		isTopBannerVisible,
 	} = state;
 
 	const { enqueueSnackbar } = useSnackbar();
@@ -64,18 +66,21 @@ const Cart: React.FC = () => {
 		const cookies = new Cookies();
 		cookies.set("shippingWeight", JSON.stringify(currentWeight));
 	}, [cartItems, dispatch]);
+
+	useNoScroll();
+
 	return (
 		<div>
 			{isCartVisible && (
 				<div
 					id="cartContainer"
-					className={`fixed right-0 ${state.isTopBannerVisible ? "top-[8.5rem] sm:top-[3.14rem]" : "top-[5.2rem] sm:top-0"} w-full sm:w-[50%] h-[84%] xs:h-[86%] sm:h-[96%] bg-blue-400 z-[10000] transform transition-transform duration-1000 ease-in-out flex flex-col`}
+					className={`fixed right-0 ${isTopBannerVisible ? "top-[8.5rem] sm:top-[3.14rem]" : "top-[5.2rem] sm:top-0"} w-full sm:w-[50%] h-[84%] xs:h-[86%] sm:h-[96%] bg-blue-400 z-[8000] transform transition-transform duration-1000 ease-in-out flex flex-col`}
 				>
 					{/* Cart Header */}
 					<div className="hidden sm:flex justify-between items-center p-4 border-b border-black bg-white flex-shrink-0">
 						<button onClick={closeCartHandler} className="">
 							<X
-								className={`${state.isTopBannerVisible ? "h-[3.35rem] w-[3.35rem]" : "h-[3.4rem] w-[3.4rem]"} lg:h-[4.6rem] lg:w-[4.6rem] text-black hover:bg-gray-200 rounded-full p-2`}
+								className={`${isTopBannerVisible ? "h-[3.35rem] w-[3.35rem]" : "h-[3.4rem] w-[3.4rem]"} lg:h-[4.6rem] lg:w-[4.6rem] text-black hover:bg-gray-200 rounded-full p-2`}
 							/>
 						</button>
 						<h1 className="text-sm sm:text-2xl underline decoration-primary underline-offset-4 decoration-1">

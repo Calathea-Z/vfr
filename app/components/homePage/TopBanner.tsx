@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import client from "../../../sanity/lib/client";
 import Link from "next/link";
 
@@ -12,6 +13,7 @@ interface TopBannerData {
 }
 
 const TopBanner: React.FC = () => {
+	const pathname = usePathname();
 	const [topBannerData, setTopBannerData] = useState<TopBannerData | null>(
 		null
 	);
@@ -38,6 +40,10 @@ const TopBanner: React.FC = () => {
 		setIsVisible(false);
 		sessionStorage.setItem("topBannerClosed", "true");
 	};
+
+	if (pathname === "/user/login") {
+        return null;
+	}
 
 	if (!topBannerData || !topBannerData.enabled || !isVisible) {
 		return null;

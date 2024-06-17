@@ -1,4 +1,6 @@
 import "./globals.css";
+import StoreProviderWrapper from "./components/clientWrappers/StoreProviderWrapper";
+import Cart from "./components/shop/Cart";
 //---Framework---//
 import type { Metadata } from "next";
 //---Packages---//
@@ -19,7 +21,12 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
 			<SnackbarProvider>
 				<AppRouterCacheProvider>
 					<SessionProvider>
-						<body className={playfairDisplay.className}>{children}</body>
+						<StoreProviderWrapper>
+							<body className={playfairDisplay.className}>
+								{children}
+								<Cart />
+							</body>
+						</StoreProviderWrapper>
 					</SessionProvider>
 				</AppRouterCacheProvider>
 			</SnackbarProvider>

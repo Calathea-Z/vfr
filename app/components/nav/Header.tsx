@@ -4,6 +4,7 @@ import Search from "./Search";
 import ShopSubMenu from "./ShopSubMenu";
 import AccountDropdown from "./AccountDropdown";
 import TopBanner from "../homePage/TopBanner";
+import { useStateStorage } from "@/utils/stateStorage";
 //--Framework--//
 import { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation"; // Combined imports
@@ -22,6 +23,8 @@ const Header: React.FC = () => {
 	const [isSearchOpen, setIsSearchOpen] = useState(false);
 	const [isShopSubMenuOpen, setIsShopSubMenuOpen] = useState(false);
 	const [isMobileSubMenuOpen, setIsMobileSubMenuOpen] = useState(false);
+	const { state, dispatch } = useStateStorage();
+	const { cart, isCartVisible } = state;
 
 	const toggleMenu = () => {
 		console.log("Toggling menu:", !isMenuOpen);
@@ -30,6 +33,10 @@ const Header: React.FC = () => {
 
 	const toggleSearch = () => {
 		setIsSearchOpen(!isSearchOpen);
+	};
+
+	const handleCartClick = () => {
+		dispatch({ type: isCartVisible ? "HIDE_CART" : "SHOW_CART" });
 	};
 
 	useEffect(() => {
@@ -165,7 +172,7 @@ const Header: React.FC = () => {
 									<Binoculars className="w-5 h-5 md:w-7 md:h-7 lg:w-8 lg:h-8" />
 								</IconButton>
 								<AccountDropdown />
-								<IconButton onClick={() => handleNavigate("/cart")}>
+								<IconButton onClick={handleCartClick}>
 									<Basket className="w-5 h-5 md:w-7 md:h-7 lg:w-8 lg:h-8" />
 								</IconButton>
 							</div>
@@ -184,7 +191,7 @@ const Header: React.FC = () => {
 										<Binoculars size={28} />
 									</IconButton>
 									<AccountDropdown />
-									<IconButton onClick={() => handleNavigate("/cart")}>
+									<IconButton onClick={handleCartClick}>
 										<Basket size={28} />
 									</IconButton>
 								</div>

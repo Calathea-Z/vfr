@@ -3,9 +3,8 @@ import client from "../../../sanity/lib/client";
 import ProductComponent from "../shop/Product";
 //---Framework---//
 import { useEffect, useState } from "react";
-import Head from "next/head";
+
 //---Packages---//
-import Slider from "react-slick";
 import { CircularProgress } from "@mui/material";
 import { Box } from "@mui/material";
 import { Splide, SplideSlide } from "@splidejs/react-splide";
@@ -23,6 +22,7 @@ interface Product {
 			_ref: string;
 		};
 	}[];
+	shippingWeight: number;
 }
 
 interface Props {}

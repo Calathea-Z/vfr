@@ -23,7 +23,8 @@ const Header: React.FC = () => {
 	const [isSearchOpen, setIsSearchOpen] = useState(false);
 	const [isShopSubMenuOpen, setIsShopSubMenuOpen] = useState(false);
 	const [isMobileSubMenuOpen, setIsMobileSubMenuOpen] = useState(false);
-	const { dispatch } = useStateStorage();
+	const { state, dispatch } = useStateStorage();
+	const { cart, isCartVisible } = state;
 
 	const toggleMenu = () => {
 		console.log("Toggling menu:", !isMenuOpen);
@@ -35,7 +36,7 @@ const Header: React.FC = () => {
 	};
 
 	const handleCartClick = () => {
-		dispatch({ type: "SHOW_CART" });
+		dispatch({ type: isCartVisible ? "HIDE_CART" : "SHOW_CART" });
 	};
 
 	useEffect(() => {

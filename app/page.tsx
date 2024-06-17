@@ -2,7 +2,7 @@ import Header from "./components/nav/Header";
 import Hero from "./components/homePage/Hero";
 import Footer from "./components/nav/Footer";
 import FeaturedProducts from "./components/homePage/FeaturedProducts";
-import TagLinesWrapper from "./components/homePage/TagLinesWrapper";
+import TagLinesWrapper from "./components/clientWrappers/TagLinesWrapper";
 import { LogoBanner } from "./components/homePage/LogoBanner";
 
 const Home = () => {

@@ -1,7 +1,7 @@
 "use client";
 import { handleSignOut } from "../../actions/signOutAction";
 //---Framework---//
-import { useState, MouseEvent } from "react";
+import { useState, MouseEvent, useRef } from "react";
 import { useRouter } from "next/navigation";
 //---Packages---//
 import { IconButton, Menu, MenuItem, Avatar } from "@mui/material";
@@ -14,6 +14,7 @@ const AccountDropdown = () => {
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const router = useRouter();
 	const { enqueueSnackbar } = useSnackbar();
+	const buttonRef = useRef<HTMLButtonElement>(null);
 
 	const handleClick = (event: MouseEvent<HTMLElement>) => {
 		setAnchorEl(event.currentTarget);
@@ -41,9 +42,10 @@ const AccountDropdown = () => {
 			handleClose();
 		}
 	};
+
 	return (
 		<>
-			<IconButton onClick={handleClick}>
+			<IconButton ref={buttonRef} onClick={handleClick}>
 				{session?.user?.image ? (
 					<Avatar
 						src={session.user.image ?? undefined}
@@ -56,21 +58,24 @@ const AccountDropdown = () => {
 			</IconButton>
 			<Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
 				{session ? (
-					<>
-						<MenuItem disabled>
+					[
+						<MenuItem key="greeting" disabled>
 							<span className="font-bold text-black text-xl">
 								Hi, {session?.user?.name?.split(" ")[0]}
 							</span>
-						</MenuItem>
-						<MenuItem onClick={() => handleNavigate("/userDashboard")}>
+						</MenuItem>,
+						<MenuItem
+							key="account"
+							onClick={() => handleNavigate("/userDashboard")}
+						>
 							<GearSix className="w-5 h-5" />
 							&nbsp;Account
-						</MenuItem>
-						<MenuItem onClick={handleLogout}>
+						</MenuItem>,
+						<MenuItem key="logout" onClick={handleLogout}>
 							<HandWaving className="w-5 h-5" />
 							&nbsp;Logout
-						</MenuItem>
-					</>
+						</MenuItem>,
+					]
 				) : (
 					<MenuItem onClick={() => handleNavigate("/user/login")}>
 						Log In

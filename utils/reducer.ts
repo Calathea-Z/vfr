@@ -31,6 +31,12 @@ export const reducer = (state: State, action: Action): State => {
 		case "HIDE_CART":
 			return { ...state, isCartVisible: false };
 
+		case "SHOW_TOP_BANNER":
+			return { ...state, isTopBannerVisible: true };
+
+		case "HIDE_TOP_BANNER":
+			return { ...state, isTopBannerVisible: false };
+
 		case "INITIALIZE_STATE":
 			return {
 				...state,

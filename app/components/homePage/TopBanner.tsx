@@ -1,7 +1,9 @@
 "use client";
+import client from "../../../sanity/lib/client";
+import { useStateStorage } from "@/utils/stateStorage";
+//---Framework---//
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import client from "../../../sanity/lib/client";
 import Link from "next/link";
 
 interface TopBannerData {
@@ -14,10 +16,10 @@ interface TopBannerData {
 
 const TopBanner: React.FC = () => {
 	const pathname = usePathname();
+	const { state, dispatch } = useStateStorage();
 	const [topBannerData, setTopBannerData] = useState<TopBannerData | null>(
 		null
 	);
-	const [isVisible, setIsVisible] = useState(true);
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -30,22 +32,24 @@ const TopBanner: React.FC = () => {
 
 		const isBannerClosed = sessionStorage.getItem("topBannerClosed");
 		if (isBannerClosed === "true") {
-			setIsVisible(false);
+			dispatch({ type: "HIDE_TOP_BANNER" });
+		} else {
+			dispatch({ type: "SHOW_TOP_BANNER" });
 		}
 
 		fetchData();
 	}, []);
 
 	const handleClose = () => {
-		setIsVisible(false);
+		dispatch({ type: "HIDE_TOP_BANNER" });
 		sessionStorage.setItem("topBannerClosed", "true");
 	};
 
 	if (pathname === "/user/login") {
-        return null;
+		return null;
 	}
 
-	if (!topBannerData || !topBannerData.enabled || !isVisible) {
+	if (!topBannerData || !topBannerData.enabled || !state.isTopBannerVisible) {
 		return null;
 	}
 

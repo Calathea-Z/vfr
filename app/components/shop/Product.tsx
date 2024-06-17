@@ -1,5 +1,5 @@
 import { sanityImageBuilder } from "../../../utils/sanityImageBuilder";
-import { stateStorage } from "../../../utils/stateStorage";
+import { useStateStorage } from "@/utils/stateStorage";
 //---Packages---/
 import { useContext, useState } from "react";
 import Link from "next/link";
@@ -18,6 +18,7 @@ interface Product {
 			_ref: string;
 		};
 	}[];
+	shippingWeight: number;
 }
 
 interface ProductProps {
@@ -26,16 +27,10 @@ interface ProductProps {
 }
 
 const Product: React.FC<ProductProps> = ({ product }) => {
-	const context = useContext(stateStorage);
+	const { state, dispatch } = useStateStorage();
 	const [quantity, setQuantity] = useState(1);
 	const [showQuantitySelector, setShowQuantitySelector] = useState(false);
-	const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-
-	if (!context) {
-		throw new Error("stateStorage context is not available");
-	}
-
-	const { dispatch } = context;
+	const { enqueueSnackbar } = useSnackbar();
 
 	const addToCartHandler = () => {
 		dispatch({
@@ -48,9 +43,9 @@ const Product: React.FC<ProductProps> = ({ product }) => {
 				price: product.price,
 				photo: product.photo,
 				quantity: quantity,
+				shippingWeight: product.shippingWeight,
 			},
 		});
-		// Toggle cart visibility to show the cart
 		dispatch({ type: "SHOW_CART" });
 	};
 

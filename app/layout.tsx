@@ -1,6 +1,6 @@
 import "./globals.css";
 import StoreProviderWrapper from "./components/clientWrappers/StoreProviderWrapper";
-import Cart from "./components/checkout/Cart";
+import Cart from "./components/shop/Cart";
 //---Framework---//
 import type { Metadata } from "next";
 //---Packages---//

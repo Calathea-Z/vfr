@@ -16,11 +16,14 @@ export interface CartItem {
 	countInStock: number;
 	slug: string;
 	price: number;
-	photo: string;
+	photo: {
+		asset: {
+			_ref: string;
+		};
+	}[];
 	shippingWeight: number;
 	quantity: number;
 }
-
 export interface ShippingInformation {
 	address: string;
 	city: string;
@@ -55,6 +58,7 @@ export interface State {
 	};
 	userInfo: UserInfo | null;
 	isCartVisible: boolean;
+	isTopBannerVisible: boolean;
 }
 
 export type Action =
@@ -70,6 +74,8 @@ export type Action =
 	| { type: "CLEAR_PAYMENT_STATUS" }
 	| { type: "SHOW_CART" }
 	| { type: "HIDE_CART" }
+	| { type: "SHOW_TOP_BANNER" }
+	| { type: "HIDE_TOP_BANNER" }
 	| {
 			type: "INITIALIZE_STATE";
 			payload: { cartItems: CartItem[]; userInfo: UserInfo | null };
@@ -90,6 +96,7 @@ const defaultInitialState: State = {
 	},
 	userInfo: null,
 	isCartVisible: false,
+	isTopBannerVisible: true,
 };
 
 export const stateStorage = createContext<{

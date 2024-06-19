@@ -50,13 +50,18 @@ const AccountDropdown = () => {
 					<Avatar
 						src={session.user.image ?? undefined}
 						alt={session.user.name ?? undefined}
-						sx={{ width: { xs: 24, md: 36 }, height: { xs: 24, md: 36 } }}
+						sx={{ width: { xs: 20, md: 36 }, height: { xs: 20, md: 36 } }}
 					/>
 				) : (
 					<UserCircle className="w-7 h-7 lg:w-8 lg:h-8" />
 				)}
 			</IconButton>
-			<Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
+			<Menu
+				anchorEl={anchorEl}
+				open={Boolean(anchorEl)}
+				onClose={handleClose}
+				sx={{ zIndex: 9999 }}
+			>
 				{session ? (
 					[
 						<MenuItem key="greeting" disabled>

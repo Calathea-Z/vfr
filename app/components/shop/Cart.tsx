@@ -1,6 +1,7 @@
 "use client";
 import { useStateStorage, CartItem } from "@/utils/stateStorage";
 import { sanityImageBuilder } from "@/utils/sanityImageBuilder";
+import useNoScroll from "@/app/hooks/useNoScroll";
 //---Framework---//
 import { useEffect } from "react";
 //---Components---//
@@ -64,12 +65,15 @@ const Cart: React.FC = () => {
 		const cookies = new Cookies();
 		cookies.set("shippingWeight", JSON.stringify(currentWeight));
 	}, [cartItems, dispatch]);
+
+	useNoScroll();
+
 	return (
 		<div>
 			{isCartVisible && (
 				<div
 					id="cartContainer"
-					className={`fixed right-0 ${state.isTopBannerVisible ? "top-[8.5rem] sm:top-[3.14rem]" : "top-[5.2rem] sm:top-0"} w-full sm:w-[50%] h-[84%] xs:h-[86%] sm:h-[96%] bg-blue-400 z-[10000] transform transition-transform duration-1000 ease-in-out flex flex-col`}
+					className={`fixed right-0 ${state.isTopBannerVisible ? "top-[8.5rem] sm:top-[3.14rem] h-[calc(100%-138px)] sm:h-[calc(100%-35px)]" : "top-[5.2rem] sm:top-0 h-[calc(100%-84px)] sm:h-[100%]"} w-full sm:w-[50%] bg-blue-400 transform transition-transform duration-1000 ease-in-out flex flex-col z-[8000]`}
 				>
 					{/* Cart Header */}
 					<div className="hidden sm:flex justify-between items-center p-4 border-b border-black bg-white flex-shrink-0">

@@ -34,3 +34,7 @@
 .top-banner-visible {
 	padding-top: 35px; /* Adjust this value to match the height of your TopBanner */
 }
+
+.no-scroll {
+	overflow: hidden;
+}

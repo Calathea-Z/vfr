@@ -19,54 +19,41 @@ const Cart: React.FC = () => {
 
 	const { enqueueSnackbar } = useSnackbar();
 
-	const updateCartHandler = async (item: CartItem, quantity: number) => {
-		try {
-			const response = await axios.get(`/api/allproducts/${item._key}`);
-			const countInStock = response.data.countInStock;
+    const updateCartHandler = async (item: CartItem, quantity: number) => {
+        try {
+            const response = await axios.get(`/api/allproducts/${item._key}`);
+            const countInStock = response.data.countInStock;
 
-			if (countInStock < quantity) {
-				enqueueSnackbar("Sorry. Product is out of stock", { variant: "error" });
-				return;
-			}
-			if (quantity === 0) {
-				removeItemHandler(item);
-				return;
-			}
-			dispatch({
-				type: "CART_ADD_ITEM",
-				payload: {
-					...item,
-					quantity: quantity,
-				},
-			});
-			enqueueSnackbar(`Cart Updated!`, { variant: "success" });
-		} catch (error) {
-			enqueueSnackbar("Error updating cart", { variant: "error" });
-		}
-	};
+            if (countInStock < quantity) {
+                enqueueSnackbar("Sorry. Product is out of stock", { variant: "error" });
+                return;
+            }
+            if (quantity === 0) {
+                removeItemHandler(item);
+                return;
+            }
+            dispatch({
+                type: "CART_ADD_ITEM",
+                payload: {
+                    ...item,
+                    quantity: quantity,
+                },
+            });
+            enqueueSnackbar(`Cart Updated!`, { variant: "success" });
+        } catch (error) {
+            enqueueSnackbar("Error updating cart", { variant: "error" });
+        }
+    };
 
-	const removeItemHandler = (item: CartItem) => {
-		dispatch({ type: "CART_REMOVE_ITEM", payload: item });
-	};
+    const removeItemHandler = (item: CartItem) => {
+        dispatch({ type: "CART_REMOVE_ITEM", payload: item });
+    };
 
-	const closeCartHandler = () => {
-		dispatch({ type: "HIDE_CART" });
-	};
+    const closeCartHandler = () => {
+        dispatch({ type: "HIDE_CART" });
+    };
 
-	useEffect(() => {
-		const currentWeight = cartItems.reduce(
-			(a, c) => a + (c.quantity ?? 0) * (c.shippingWeight ?? 0),
-			0
-		);
-		dispatch({
-			type: "UPDATE_SHIPPING_WEIGHT",
-			payload: currentWeight,
-		});
-		const cookies = new Cookies();
-		cookies.set("shippingWeight", JSON.stringify(currentWeight));
-	}, [cartItems, dispatch]);
-
-	useNoScroll();
+    useNoScroll();
 
 	return (
 		<div>

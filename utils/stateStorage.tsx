@@ -8,7 +8,6 @@ import {
 	useMemo,
 } from "react";
 import { reducer } from "./reducer";
-import Cookies from "universal-cookie";
 
 export interface CartItem {
 	_key: string;
@@ -120,27 +119,19 @@ interface StoreProviderProps {
 	};
 }
 
-export function StoreProvider({
-	children,
-	initialCookies,
-}: StoreProviderProps) {
-	const [state, dispatch] = useReducer(reducer, defaultInitialState);
+export function StoreProvider({ children }: { children: ReactNode }) {
+    const [state, dispatch] = useReducer(reducer, defaultInitialState, initialState => {
+        const storedCartItems = localStorage.getItem('cartItems');
+        return {
+            ...initialState,
+            cart: {
+                ...initialState.cart,
+                cartItems: storedCartItems ? JSON.parse(storedCartItems) : []
+            }
+        };
+    });
 
-	useEffect(() => {
-		if (initialCookies) {
-			const cartItems = initialCookies.cartItems
-				? JSON.parse(initialCookies.cartItems)
-				: [];
-			const userInfo = initialCookies.userInfo
-				? JSON.parse(initialCookies.userInfo)
-				: null;
-			dispatch({ type: "INITIALIZE_STATE", payload: { cartItems, userInfo } });
-		}
-	}, [initialCookies]);
+    const value = useMemo(() => ({ state, dispatch }), [state, dispatch]);
 
-	const value = useMemo(() => ({ state, dispatch }), [state, dispatch]);
-
-	return (
-		<stateStorage.Provider value={value}>{children}</stateStorage.Provider>
-	);
+    return <stateStorage.Provider value={value}>{children}</stateStorage.Provider>;
 }

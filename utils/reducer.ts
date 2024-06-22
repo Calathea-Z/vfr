@@ -2,29 +2,24 @@ import { State, Action } from "./stateStorage";
 
 export const reducer = (state: State, action: Action): State => {
 	switch (action.type) {
-		case "CART_ADD_ITEM":
-			const newItem = action.payload;
-			const existItem = state.cart.cartItems.find(
-				(item) => item._key === newItem._key
-			);
-			const cartItems = existItem
-				? state.cart.cartItems.map((item) =>
-						item._key === existItem._key ? newItem : item
-					)
-				: [...state.cart.cartItems, newItem];
-			return { ...state, cart: { ...state.cart, cartItems } };
+        case "CART_ADD_ITEM":
+            const newItem = action.payload;
+            const existItem = state.cart.cartItems.find(item => item._key === newItem._key);
+            const cartItemsAfterAdd = existItem
+                ? state.cart.cartItems.map(item => item._key === existItem._key ? { ...item, quantity: item.quantity + newItem.quantity } : item)
+                : [...state.cart.cartItems, newItem];
+            localStorage.setItem('cartItems', JSON.stringify(cartItemsAfterAdd));
+            return { ...state, cart: { ...state.cart, cartItems: cartItemsAfterAdd } };
 
-		case "CART_REMOVE_ITEM":
-			return {
-				...state,
-				cart: {
-					...state.cart,
-					cartItems: state.cart.cartItems.filter(
-						(item) => item._key !== action.payload._key
-					),
-				},
-			};
+        case "CART_REMOVE_ITEM":
+            const cartItemsAfterRemove = state.cart.cartItems.filter(item => item._key !== action.payload._key);
+            localStorage.setItem('cartItems', JSON.stringify(cartItemsAfterRemove));
+            return { ...state, cart: { ...state.cart, cartItems: cartItemsAfterRemove } };
 
+        case "CART_CLEAR_ITEMS":
+            localStorage.removeItem('cartItems');
+            return { ...state, cart: { ...state.cart, cartItems: [] } };
+			
 		case "SHOW_CART":
 			return { ...state, isCartVisible: true };
 

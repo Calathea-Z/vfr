@@ -18,18 +18,18 @@ export const metadata: Metadata = {
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
 	return (
 		<html lang="en">
-			<SnackbarProvider>
-				<AppRouterCacheProvider>
-					<SessionProvider>
-						<StoreProviderWrapper>
-							<body className={playfairDisplay.className}>
+			<body className={playfairDisplay.className}>
+				<SnackbarProvider>
+					<AppRouterCacheProvider>
+						<SessionProvider>
+							<StoreProviderWrapper>
 								{children}
 								<Cart />
-							</body>
-						</StoreProviderWrapper>
-					</SessionProvider>
-				</AppRouterCacheProvider>
-			</SnackbarProvider>
+							</StoreProviderWrapper>
+						</SessionProvider>
+					</AppRouterCacheProvider>
+				</SnackbarProvider>
+			</body>
 		</html>
 	);
 };

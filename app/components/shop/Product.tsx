@@ -9,6 +9,7 @@ import { useSnackbar } from "notistack";
 
 interface Product {
 	_id: string;
+	productId: string;
 	name: string;
 	countInStock: number;
 	slug: { current: string };
@@ -37,6 +38,7 @@ const Product: React.FC<ProductProps> = ({ product }) => {
 			type: "CART_ADD_ITEM",
 			payload: {
 				_key: product._id,
+				productId: product.productId,
 				name: product.name,
 				countInStock: product.countInStock,
 				slug: product.slug.current,

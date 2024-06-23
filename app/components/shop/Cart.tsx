@@ -3,12 +3,10 @@ import { useStateStorage, CartItem } from "@/utils/stateStorage";
 import { sanityImageBuilder } from "@/utils/sanityImageBuilder";
 import useNoScroll from "@/app/hooks/useNoScroll";
 //---Framework---//
-import { useEffect } from "react";
 //---Components---//
 import axios from "axios";
 import { useSnackbar } from "notistack";
 import { PottedPlant, X, PlusCircle, MinusCircle } from "@phosphor-icons/react";
-import Cookies from "universal-cookie";
 
 const Cart: React.FC = () => {
 	const { state, dispatch } = useStateStorage();
@@ -21,8 +19,7 @@ const Cart: React.FC = () => {
 
 	const updateCartHandler = async (item: CartItem, quantity: number) => {
 		try {
-			const encodedName = encodeURIComponent(item.name);
-			const response = await axios.get(`/api/products/${encodedName}`);
+			const response = await axios.get(`/api/products/${item.productId}`);
 			const countInStock = response.data.countInStock;
 
 			if (countInStock < quantity) {
@@ -41,11 +38,13 @@ const Cart: React.FC = () => {
 				},
 			});
 			enqueueSnackbar(`Cart Updated!`, { variant: "success" });
-		} catch (error) {
-			enqueueSnackbar("Error updating cart", { variant: "error" });
+		} catch (error: any) {
+			enqueueSnackbar("Error updating cart. Please try again.", {
+				variant: "error",
+			});
+			console.log(error.message);
 		}
 	};
-
 	const removeItemHandler = (item: CartItem) => {
 		dispatch({ type: "CART_REMOVE_ITEM", payload: item });
 	};

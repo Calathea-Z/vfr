@@ -2,14 +2,10 @@
 import client from "../../../../sanity/lib/client";
 import { stateStorage } from "../../../../utils/stateStorage";
 import { sanityImageBuilder } from "../../../../utils/sanityImageBuilder";
-import { playfairDisplay, lato } from "../../../fonts/fonts"; // Importing the playfair font
-// import Modal from "@/components/store/Modal";
+import { playfairDisplay, lato } from "../../../fonts/fonts";
 //---Framework---//
 import { useEffect, useState, useContext } from "react";
-import Image from "next/image";
 //--Packages---//
-import axios from "axios";
-import { motion } from "framer-motion";
 import {
 	Card,
 	CardContent,

@@ -2,7 +2,6 @@ import {
 	createContext,
 	useContext,
 	useReducer,
-	useEffect,
 	ReactNode,
 	Dispatch,
 	useMemo,
@@ -11,6 +10,7 @@ import { reducer } from "./reducer";
 
 export interface CartItem {
 	_key: string;
+	productId: string;
 	name: string;
 	countInStock: number;
 	slug: string;
@@ -120,18 +120,27 @@ interface StoreProviderProps {
 }
 
 export function StoreProvider({ children }: { children: ReactNode }) {
-    const [state, dispatch] = useReducer(reducer, defaultInitialState, initialState => {
-        const storedCartItems = localStorage.getItem('cartItems');
-        return {
-            ...initialState,
-            cart: {
-                ...initialState.cart,
-                cartItems: storedCartItems ? JSON.parse(storedCartItems) : []
-            }
-        };
-    });
+	const [state, dispatch] = useReducer(
+		reducer,
+		defaultInitialState,
+		(initialState) => {
+			const storedCartItems = localStorage.getItem("cartItems");
+			return {
+				...initialState,
+				cart: {
+					...initialState.cart,
+					cartItems: storedCartItems ? JSON.parse(storedCartItems) : [],
+				},
+			};
+		}
+	);
 
-    const value = useMemo(() => ({ state, dispatch }), [state, dispatch]);
+	const value = useMemo(() => ({ state, dispatch }), [state, dispatch]);
 
-    return <stateStorage.Provider value={value}>{children}</stateStorage.Provider>;
+	return (
+		<stateStorage.Provider value={value}>{children}</stateStorage.Provider>
+	);
+}
+function uuidv4() {
+	throw new Error("Function not implemented.");
 }

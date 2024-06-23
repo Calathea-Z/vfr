@@ -1,4 +1,8 @@
-import { State, Action } from "./stateStorage";
+import { State, Action, CartItem } from "./stateStorage";
+
+const saveCartToLocalStorage = (cartItems: CartItem[]) => {
+	localStorage.setItem("cartItems", JSON.stringify(cartItems));
+};
 
 export const reducer = (state: State, action: Action): State => {
 	switch (action.type) {
@@ -13,12 +17,14 @@ export const reducer = (state: State, action: Action): State => {
 					)
 				: [...state.cart.cartItems, item];
 			console.log("Reducer - Updated cart items:", cartItems);
+			saveCartToLocalStorage(cartItems);
 			return { ...state, cart: { ...state.cart, cartItems } };
 		}
 		case "CART_REMOVE_ITEM": {
 			const cartItems = state.cart.cartItems.filter(
 				(x) => x.productId !== action.payload.productId
 			);
+			saveCartToLocalStorage(cartItems);
 			return { ...state, cart: { ...state.cart, cartItems } };
 		}
 

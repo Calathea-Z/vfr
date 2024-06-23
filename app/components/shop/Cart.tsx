@@ -6,7 +6,15 @@ import useNoScroll from "@/app/hooks/useNoScroll";
 //---Components---//
 import axios from "axios";
 import { useSnackbar } from "notistack";
-import { PottedPlant, X, PlusCircle, MinusCircle } from "@phosphor-icons/react";
+import {
+	PottedPlant,
+	X,
+	PlusCircle,
+	MinusCircle,
+	Recycle,
+	Trash,
+} from "@phosphor-icons/react";
+import { playfairDisplay } from "@/app/fonts/fonts";
 
 const Cart: React.FC = () => {
 	const { state, dispatch } = useStateStorage();
@@ -28,7 +36,11 @@ const Cart: React.FC = () => {
 			if (countInStock < quantity) {
 				enqueueSnackbar(
 					`We currently have only ${item.countInStock} units of ${item.name} in stock.`,
-					{ variant: "warning", autoHideDuration: 3000 }
+					{
+						variant: "warning",
+						autoHideDuration: 3000,
+						style: { zIndex: 8002 },
+					}
 				);
 				return;
 			}
@@ -44,10 +56,14 @@ const Cart: React.FC = () => {
 				},
 			});
 			console.log("Updated cart items after dispatch:", state.cart.cartItems);
-			enqueueSnackbar(`Cart Updated!`, { variant: "success" });
+			enqueueSnackbar(`Cart Updated!`, {
+				variant: "success",
+				style: { zIndex: 8002 },
+			});
 		} catch (error: any) {
 			enqueueSnackbar("Error updating cart. Please try again.", {
 				variant: "error",
+				style: { zIndex: 8002 },
 			});
 			console.log(error.message);
 		}
@@ -77,15 +93,35 @@ const Cart: React.FC = () => {
 								className={`${state.isTopBannerVisible ? "h-[3.35rem] w-[3.35rem]" : "h-[3.4rem] w-[3.4rem]"} lg:h-[4.6rem] lg:w-[4.6rem] text-black hover:bg-gray-200 rounded-full p-2`}
 							/>
 						</button>
-						<h1 className="text-sm sm:text-2xl underline decoration-primary underline-offset-4 decoration-1">
-							Cart ({cartItems.reduce((a, c) => a + c.quantity, 0)})
-						</h1>
+						<div className="flex flex-col items-center gap-2">
+							<h1 className="text-sm sm:text-2xl underline decoration-primary underline-offset-4 decoration-1">
+								Cart ({cartItems.reduce((a, c) => a + c.quantity, 0)})
+							</h1>
+							<button
+								onClick={() => dispatch({ type: "CART_CLEAR_ITEMS" })}
+								className="flex items-center text-red-500 text-xs mt-1 rounded-lg p-2 hover:bg-gray-100"
+							>
+								<Trash size={16} className="mr-1" /> Empty
+							</button>
+						</div>
 					</div>
 					{/* Cart Body */}
 					<div
 						id="cart-body"
 						className="flex overflow-y-auto flex-col bg-white flex-grow"
 					>
+						{/* Mobile Cart Header */}
+						<div className="flex sm:hidden justify-between items-center p-1 border-b border-black bg-white flex-shrink-0">
+							<button onClick={closeCartHandler} className="">
+								<X className="text-black w-8 h-8 hover:bg-gray-200 rounded-full p-1" />
+							</button>
+							<button
+								onClick={() => dispatch({ type: "CART_CLEAR_ITEMS" })}
+								className="flex items-center text-red-500 text-xs rounded-lg p-2 hover:bg-gray-100"
+							>
+								<Trash size={16} className="mr-1" /> Empty
+							</button>
+						</div>
 						{cartItems.length === 0 ? (
 							<div className="flex flex-col items-center justify-between h-full">
 								<div className="p-8 mt-2 text-center">
@@ -150,7 +186,7 @@ const Cart: React.FC = () => {
 											onClick={() => removeItemHandler(item)}
 											className="text-red-600 text-base md:text-md rounded-lg p-1 hover:bg-gray-100"
 										>
-											Remove
+											<Trash size={16} />
 										</button>
 									</div>
 								</div>

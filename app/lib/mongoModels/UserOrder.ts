@@ -26,6 +26,8 @@ interface UserOrderDocument extends Document {
 	parsedShippingCost: number;
 	taxPrice: number;
 	totalPrice: number;
+	emailVerified?: Date; // Added for Auth.js
+	image?: string; // Added for Auth.js
 }
 
 // Delete the model if it already exists to prevent OverwriteModelError
@@ -62,6 +64,8 @@ const UserOrderSchema = new Schema<UserOrderDocument>(
 		parsedShippingCost: { type: Number, default: 0 },
 		taxPrice: { type: Number, default: 0 },
 		totalPrice: { type: Number, default: 0 },
+		emailVerified: { type: Date }, // Added for Auth.js
+		image: { type: String }, // Added for Auth.js
 	},
 	{
 		timestamps: true,

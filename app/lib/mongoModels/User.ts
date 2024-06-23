@@ -15,6 +15,8 @@ interface UserDocument extends mongoose.Document {
 	city?: string;
 	zipCode?: number;
 	usState?: string;
+	emailVerified?: Date; // Added for Auth.js
+	image?: string; // Added for Auth.js
 }
 
 mongoose.deleteModel("User");
@@ -32,6 +34,7 @@ const UserSchema = new Schema<UserDocument>(
 		email: {
 			type: String,
 			required: [true, "Please provide an email"],
+			unique: true, // Ensure email is unique
 		},
 		password: {
 			type: String,
@@ -70,6 +73,12 @@ const UserSchema = new Schema<UserDocument>(
 			type: Number,
 		},
 		usState: {
+			type: String,
+		},
+		emailVerified: {
+			type: Date,
+		},
+		image: {
 			type: String,
 		},
 	},

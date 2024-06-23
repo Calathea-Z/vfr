@@ -19,6 +19,15 @@ export const providerMap = providers.map((provider) => {
 export const { handlers, signIn, signOut, auth } = NextAuth({
 	adapter: MongoDBAdapter(clientPromise),
 	providers,
+	session: {
+		strategy: "database",
+	},
+	callbacks: {
+		async session({ session, user }) {
+			session.user.id = user.id;
+			return session;
+		},
+	},
 	pages: {
 		signIn: "/user/login",
 	},

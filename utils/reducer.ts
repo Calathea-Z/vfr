@@ -2,24 +2,30 @@ import { State, Action } from "./stateStorage";
 
 export const reducer = (state: State, action: Action): State => {
 	switch (action.type) {
-        case "CART_ADD_ITEM":
-            const newItem = action.payload;
-            const existItem = state.cart.cartItems.find(item => item._key === newItem._key);
-            const cartItemsAfterAdd = existItem
-                ? state.cart.cartItems.map(item => item._key === existItem._key ? { ...item, quantity: item.quantity + newItem.quantity } : item)
-                : [...state.cart.cartItems, newItem];
-            localStorage.setItem('cartItems', JSON.stringify(cartItemsAfterAdd));
-            return { ...state, cart: { ...state.cart, cartItems: cartItemsAfterAdd } };
+		case "CART_ADD_ITEM": {
+			const item = action.payload;
+			const existItem = state.cart.cartItems.find(
+				(x) => x.productId === item.productId
+			);
+			const cartItems = existItem
+				? state.cart.cartItems.map((x) =>
+						x.productId === existItem.productId ? item : x
+					)
+				: [...state.cart.cartItems, item];
+			console.log("Reducer - Updated cart items:", cartItems);
+			return { ...state, cart: { ...state.cart, cartItems } };
+		}
+		case "CART_REMOVE_ITEM": {
+			const cartItems = state.cart.cartItems.filter(
+				(x) => x.productId !== action.payload.productId
+			);
+			return { ...state, cart: { ...state.cart, cartItems } };
+		}
 
-        case "CART_REMOVE_ITEM":
-            const cartItemsAfterRemove = state.cart.cartItems.filter(item => item._key !== action.payload._key);
-            localStorage.setItem('cartItems', JSON.stringify(cartItemsAfterRemove));
-            return { ...state, cart: { ...state.cart, cartItems: cartItemsAfterRemove } };
+		case "CART_CLEAR_ITEMS":
+			localStorage.removeItem("cartItems");
+			return { ...state, cart: { ...state.cart, cartItems: [] } };
 
-        case "CART_CLEAR_ITEMS":
-            localStorage.removeItem('cartItems');
-            return { ...state, cart: { ...state.cart, cartItems: [] } };
-			
 		case "SHOW_CART":
 			return { ...state, isCartVisible: true };
 

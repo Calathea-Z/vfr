@@ -19,11 +19,17 @@ const Cart: React.FC = () => {
 
 	const updateCartHandler = async (item: CartItem, quantity: number) => {
 		try {
+			console.log(`Updating item ${item.productId} to quantity ${quantity}`);
+			console.log("Current cart items:", cartItems);
+
 			const response = await axios.get(`/api/products/${item.productId}`);
 			const countInStock = response.data.countInStock;
 
 			if (countInStock < quantity) {
-				enqueueSnackbar("Sorry. Product is out of stock", { variant: "error" });
+				enqueueSnackbar(
+					`We currently have only ${item.countInStock} units of ${item.name} in stock.`,
+					{ variant: "warning", autoHideDuration: 3000 }
+				);
 				return;
 			}
 			if (quantity === 0) {
@@ -37,6 +43,7 @@ const Cart: React.FC = () => {
 					quantity: quantity,
 				},
 			});
+			console.log("Updated cart items after dispatch:", state.cart.cartItems);
 			enqueueSnackbar(`Cart Updated!`, { variant: "success" });
 		} catch (error: any) {
 			enqueueSnackbar("Error updating cart. Please try again.", {
@@ -45,6 +52,7 @@ const Cart: React.FC = () => {
 			console.log(error.message);
 		}
 	};
+
 	const removeItemHandler = (item: CartItem) => {
 		dispatch({ type: "CART_REMOVE_ITEM", payload: item });
 	};

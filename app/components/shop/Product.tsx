@@ -34,6 +34,9 @@ const Product: React.FC<ProductProps> = ({ product }) => {
 	const { enqueueSnackbar } = useSnackbar();
 
 	const addToCartHandler = () => {
+		console.log(
+			`PRODUCT COMPONENT - Adding ${quantity} of ${product.name} to cart`
+		);
 		dispatch({
 			type: "CART_ADD_ITEM",
 			payload: {
@@ -88,11 +91,20 @@ const Product: React.FC<ProductProps> = ({ product }) => {
 				</CardContent>
 				{product.countInStock === 0 && (
 					<Chip
-						label="Sold Out"
+						label="SOLD OUT"
 						color="error"
-						size="small"
+						size="medium"
 						className="absolute top-2 right-2"
-						style={{ fontFamily: "Arial" }}
+						style={{ fontFamily: "Arial", fontWeight: "bold" }}
+					/>
+				)}
+				{product.countInStock > 0 && product.countInStock < 10 && (
+					<Chip
+						label="LOW STOCK"
+						color="warning"
+						size="medium"
+						className="absolute top-2 right-2"
+						style={{ fontFamily: "Helvetica", fontWeight: "bold" }}
 					/>
 				)}
 				<div className="flex items-end justify-center md:justify-end w-full min-h-[3.5rem] lg:min-h-[3rem]">
@@ -114,8 +126,16 @@ const Product: React.FC<ProductProps> = ({ product }) => {
 								/>
 								<button
 									className="px-2 py-1 bg-gray-200 rounded-r hover:bg-gray-300"
-									onClick={() => setQuantity(quantity + 1)}
-									disabled={quantity >= product.countInStock}
+									onClick={() => {
+										if (quantity < product.countInStock) {
+											setQuantity(quantity + 1);
+										} else {
+											enqueueSnackbar(
+												`We currently have only ${product.countInStock} units of ${product.name} in stock.`,
+												{ variant: "warning", autoHideDuration: 3000 }
+											);
+										}
+									}}
 								>
 									<Plus />
 								</button>
@@ -138,6 +158,7 @@ const Product: React.FC<ProductProps> = ({ product }) => {
 							className={`self-end py-1 px-4 rounded flex items-center bg-slate-200 hover:bg-red-200`}
 							onClick={() =>
 								enqueueSnackbar(`${product.name} is currently out of stock.`, {
+									variant: "warning",
 									autoHideDuration: 3000,
 								})
 							}

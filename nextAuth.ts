@@ -4,8 +4,23 @@ import type { Provider } from "next-auth/providers";
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import clientPromise from "./app/lib/db";
 import Resend from "next-auth/providers/resend";
+import User from "./app/lib/mongoModels/User";
 
-const providers: Provider[] = [Google, Resend];
+const providers: Provider[] = [
+	Google({
+		profile(profile) {
+			return {
+				id: profile.sub,
+				name: profile.name,
+				email: profile.email,
+				image: profile.picture,
+				role: "user", // Set default role
+				emailVerified: profile.email_verified ? new Date() : null, // Set emailVerified based on profile
+			};
+		},
+	}),
+	Resend,
+];
 
 export const providerMap = providers.map((provider) => {
 	if (typeof provider === "function") {
@@ -16,6 +31,21 @@ export const providerMap = providers.map((provider) => {
 	}
 });
 
+declare module "next-auth" {
+	interface Session {
+		user: {
+			id: string;
+			role: string;
+			emailVerified: Date | null;
+		};
+	}
+
+	interface User {
+		role: string;
+		emailVerified?: Date; // Added emailVerified to User interface
+	}
+}
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
 	adapter: MongoDBAdapter(clientPromise),
 	providers,
@@ -25,6 +55,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 	callbacks: {
 		async session({ session, user }) {
 			session.user.id = user.id;
+			session.user.role = user.role; // Persist the role in the session
+			session.user.emailVerified = user.emailVerified; // Persist emailVerified in the session
 			return session;
 		},
 	},

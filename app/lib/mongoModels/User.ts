@@ -18,6 +18,7 @@ interface UserDocument extends mongoose.Document {
 	emailVerified?: Date; // Added for Auth.js
 	image?: string; // Added for Auth.js
 	role: string;
+	lastLogin?: Date | null;
 }
 
 // Check if the model is already registered before deleting it
@@ -84,6 +85,10 @@ const UserSchema = new Schema<UserDocument>(
 			type: String,
 			required: true,
 			default: "user", // Default role
+		},
+		lastLogin: {
+			type: Date,
+			default: null, // Set default value to null
 		},
 	},
 	{

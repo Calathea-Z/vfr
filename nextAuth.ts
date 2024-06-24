@@ -15,7 +15,7 @@ const providers: Provider[] = [
 				email: profile.email,
 				image: profile.picture,
 				role: "user", // Set default role
-				emailVerified: profile.email_verified ? new Date() : null, // Set emailVerified based on profile
+				emailVerified: profile.email_verified ? new Date() : undefined, // Set emailVerified based on profile
 			};
 		},
 	}),
@@ -58,6 +58,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 			session.user.role = user.role; // Persist the role in the session
 			session.user.emailVerified = user.emailVerified; // Persist emailVerified in the session
 			return session;
+		},
+		async signIn({ user, account, profile }) {
+			// Update lastLogin field
+			await User.findOneAndUpdate(
+				{ email: user.email },
+				{ lastLogin: new Date() }
+			);
+			return true;
 		},
 	},
 	pages: {

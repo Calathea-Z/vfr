@@ -1,36 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
+import { Product } from "@/types/types";
 import client from "../../../../sanity/lib/client";
-
-interface Product {
-	_id: string;
-	name: string;
-	price: number;
-	photo: {
-		_type: string;
-		asset: {
-			_ref: string;
-			_type: string;
-		};
-	}[];
-	tagLine?: string;
-	description?: string;
-	slug: {
-		_type: string;
-		current: string;
-	};
-	category: {
-		_ref: string;
-		_type: string;
-	};
-	subCategory?: {
-		_ref: string;
-		_type: string;
-	};
-	measurements?: string;
-	shippingWeight?: number;
-	countInStock: number;
-	featuredProduct?: boolean;
-}
+//---Framework---//
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
 	request: NextRequest,

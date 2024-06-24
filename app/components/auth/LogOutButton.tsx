@@ -1,5 +1,4 @@
 import { handleSignOut } from "../../actions/signOutAction";
-
 interface LogoutButtonProps {
 	onLogout: () => void;
 }

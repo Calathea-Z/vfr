@@ -1,34 +1,16 @@
 "use client";
 import client from "../../../sanity/lib/client";
 import ProductComponent from "../shop/Product";
+import { Product } from "@/types/types";
 //---Framework---//
 import { useEffect, useState } from "react";
-
 //---Packages---//
 import { CircularProgress } from "@mui/material";
 import { Box } from "@mui/material";
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import "@splidejs/react-splide/css";
 
-interface Product {
-	_id: string;
-	productId: string;
-	name: string;
-	price: number;
-	featuredProduct: boolean;
-	countInStock: number;
-	slug: { current: string };
-	photo: {
-		asset: {
-			_ref: string;
-		};
-	}[];
-	shippingWeight: number;
-}
-
-interface Props {}
-
-function FeaturedProducts({}: Props) {
+function FeaturedProducts() {
 	const [products, setProducts] = useState<Product[]>([]);
 	const [error, setError] = useState<string>("");
 	const [loading, setLoading] = useState<boolean>(true);

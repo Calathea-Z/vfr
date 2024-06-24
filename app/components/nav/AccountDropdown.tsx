@@ -1,5 +1,6 @@
 "use client";
 import { handleSignOut } from "../../actions/signOutAction";
+import { SessionUser } from "@/types/types";
 //---Framework---//
 import { useState, MouseEvent, useRef } from "react";
 import { useRouter } from "next/navigation";
@@ -46,10 +47,10 @@ const AccountDropdown = () => {
 	return (
 		<>
 			<IconButton ref={buttonRef} onClick={handleClick}>
-				{session?.user?.image ? (
+				{session?.user ? (
 					<Avatar
-						src={session.user.image ?? undefined}
-						alt={session.user.name ?? undefined}
+						src={(session.user as SessionUser).image ?? undefined}
+						alt={(session.user as SessionUser).name ?? undefined}
 						sx={{ width: { xs: 20, md: 36 }, height: { xs: 20, md: 36 } }}
 					/>
 				) : (
@@ -66,7 +67,7 @@ const AccountDropdown = () => {
 					[
 						<MenuItem key="greeting" disabled>
 							<span className="font-bold text-black text-xl">
-								Hi, {session?.user?.name?.split(" ")[0]}
+								Hi, {(session?.user as SessionUser)?.name?.split(" ")[0]}
 							</span>
 						</MenuItem>,
 						<MenuItem

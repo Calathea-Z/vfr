@@ -1,6 +1,7 @@
 "use client";
-import { useStateStorage, CartItem } from "@/utils/stateStorage";
+import { useStateStorage } from "@/utils/stateStorage";
 import { sanityImageBuilder } from "@/utils/sanityImageBuilder";
+import { CartItem } from "@/types/types";
 import useNoScroll from "@/app/hooks/useNoScroll";
 //---Framework---//
 //---Components---//
@@ -11,10 +12,8 @@ import {
 	X,
 	PlusCircle,
 	MinusCircle,
-	Recycle,
 	Trash,
 } from "@phosphor-icons/react";
-import { playfairDisplay } from "@/app/fonts/fonts";
 
 const Cart: React.FC = () => {
 	const { state, dispatch } = useStateStorage();
@@ -86,14 +85,14 @@ const Cart: React.FC = () => {
 					id="cartContainer"
 					className={`fixed right-0 ${state.isTopBannerVisible ? "top-[8.5rem] sm:top-[3.14rem] h-[calc(100%-138px)] sm:h-[calc(100%-35px)]" : "top-[5.2rem] sm:top-0 h-[calc(100%-84px)] sm:h-[100%]"} w-full sm:w-[50%] bg-blue-400 transform transition-transform duration-1000 ease-in-out flex flex-col z-[8000]`}
 				>
-					{/* Cart Header */}
+					{/* SM Screen >= Cart Header */}
 					<div className="hidden sm:flex justify-between items-center p-4 border-b border-black bg-white flex-shrink-0">
 						<button onClick={closeCartHandler} className="">
 							<X
 								className={`${state.isTopBannerVisible ? "h-[3.35rem] w-[3.35rem]" : "h-[3.4rem] w-[3.4rem]"} lg:h-[4.6rem] lg:w-[4.6rem] text-black hover:bg-gray-200 rounded-full p-2`}
 							/>
 						</button>
-						<div className="flex flex-col items-center gap-2">
+						<div className="flex flex-col items-center gap-1">
 							<h1 className="text-sm sm:text-2xl underline decoration-primary underline-offset-4 decoration-1">
 								Cart ({cartItems.reduce((a, c) => a + c.quantity, 0)})
 							</h1>
@@ -110,7 +109,7 @@ const Cart: React.FC = () => {
 						id="cart-body"
 						className="flex overflow-y-auto flex-col bg-white flex-grow"
 					>
-						{/* Mobile Cart Header */}
+						{/* Mobile Screen Cart Header */}
 						<div className="flex sm:hidden justify-between items-center p-1 border-b border-black bg-white flex-shrink-0">
 							<button onClick={closeCartHandler} className="">
 								<X className="text-black w-8 h-8 hover:bg-gray-200 rounded-full p-1" />

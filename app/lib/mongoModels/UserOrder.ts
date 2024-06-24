@@ -1,22 +1,6 @@
+import { OrderItem, ShippingInformation } from "@/types/types";
+//---Packages---//
 import mongoose, { Schema, model, Document, Model } from "mongoose";
-
-interface OrderItem {
-	name: string;
-	quantity: number;
-	image?: string;
-	price: number;
-}
-
-interface ShippingInformation {
-	firstNameShipping: string;
-	lastNameShipping: string;
-	company?: string;
-	address: string;
-	city: string;
-	zipCode: string;
-	usState: string;
-	shippingContactEmail: string;
-}
 
 interface UserOrderDocument extends Document {
 	user: Schema.Types.ObjectId;

@@ -1,22 +1,6 @@
+import { ShippingInformation, OrderItem } from "@/types/types";
+//---Packages---//
 import mongoose, { Schema, Model } from "mongoose";
-
-interface OrderItem {
-	name: string;
-	quantity: number;
-	image?: string;
-	price: number;
-}
-
-interface ShippingInformation {
-	firstNameShipping: string;
-	lastNameShipping: string;
-	company?: string;
-	address: string;
-	city: string;
-	zipCode: string;
-	usState: string;
-	shippingContactEmail: string;
-}
 
 interface GuestOrderDocument extends mongoose.Document {
 	orderItems: OrderItem[];

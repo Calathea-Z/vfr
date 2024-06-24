@@ -1,8 +1,5 @@
-import { State, Action, CartItem } from "./stateStorage";
-
-const saveCartToLocalStorage = (cartItems: CartItem[]) => {
-	localStorage.setItem("cartItems", JSON.stringify(cartItems));
-};
+import { State, Action } from "./stateStorage";
+import { CartItem } from "@/types/types";
 
 export const reducer = (state: State, action: Action): State => {
 	switch (action.type) {
@@ -16,22 +13,17 @@ export const reducer = (state: State, action: Action): State => {
 						x.productId === existItem.productId ? item : x
 					)
 				: [...state.cart.cartItems, item];
-			console.log("Reducer - Updated cart items:", cartItems);
-			saveCartToLocalStorage(cartItems);
 			return { ...state, cart: { ...state.cart, cartItems } };
 		}
 		case "CART_REMOVE_ITEM": {
 			const cartItems = state.cart.cartItems.filter(
 				(x) => x.productId !== action.payload.productId
 			);
-			saveCartToLocalStorage(cartItems);
 			return { ...state, cart: { ...state.cart, cartItems } };
 		}
 
 		case "CART_CLEAR_ITEMS":
-			localStorage.removeItem("cartItems");
 			return { ...state, cart: { ...state.cart, cartItems: [] } };
-
 		case "SHOW_CART":
 			return { ...state, isCartVisible: true };
 

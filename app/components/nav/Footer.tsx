@@ -1,7 +1,6 @@
 "use client";
 import { lato } from "@/app/fonts/fonts";
 //---Framework---//
-import NextLink from "next/link";
 import { useState, useEffect } from "react";
 //---Packages---//
 import { SocialIcon } from "react-social-icons";

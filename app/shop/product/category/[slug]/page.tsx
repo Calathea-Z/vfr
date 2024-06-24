@@ -5,7 +5,7 @@ import Sort from "@/app/components/shop/Sort";
 import ProductComponent from "@/app/components/shop/Product";
 //---Framework---//
 import { useEffect, useState, useCallback } from "react";
-import { useRouter, useParams } from "next/navigation";
+import { useParams } from "next/navigation";
 //---Packages---//
 import { CircularProgress } from "@mui/material";
 

@@ -1,5 +1,6 @@
 import { sanityImageBuilder } from "../../../utils/sanityImageBuilder";
 import { useStateStorage } from "@/utils/stateStorage";
+import type { Product } from "@/types/types";
 //---Packages---/
 import { useState } from "react";
 import Link from "next/link";
@@ -7,24 +8,8 @@ import { Basket, Minus, Plus } from "@phosphor-icons/react";
 import { Card, CardContent, CardMedia, Chip } from "@mui/material";
 import { useSnackbar } from "notistack";
 
-interface Product {
-	_id: string;
-	productId: string;
-	name: string;
-	countInStock: number;
-	slug: { current: string };
-	price: number;
-	photo: {
-		asset: {
-			_ref: string;
-		};
-	}[];
-	shippingWeight?: number | null;
-}
-
 interface ProductProps {
 	product: Product;
-	// addToCart: () => void;
 }
 
 const Product: React.FC<ProductProps> = ({ product }) => {

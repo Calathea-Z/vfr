@@ -3,6 +3,7 @@ import client from "../../../../sanity/lib/client";
 import { stateStorage } from "../../../../utils/stateStorage";
 import { sanityImageBuilder } from "../../../../utils/sanityImageBuilder";
 import { playfairDisplay, lato } from "../../../fonts/fonts";
+import { Product } from "@/types/types";
 //---Framework---//
 import { useEffect, useState, useContext } from "react";
 //--Packages---//
@@ -18,23 +19,6 @@ import {
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
 import { Plus, Minus, PlusCircle } from "@phosphor-icons/react";
-
-interface Product {
-	_id: string;
-	name: string;
-	countInStock: number;
-	slug: { current: string };
-	price: number;
-	photo: {
-		asset: {
-			_ref: string;
-		};
-	}[];
-	description: string;
-	tagLine: string;
-	measurements: string;
-	shippingWeight: number;
-}
 
 interface ProductScreenProps {
 	params: { slug: string };

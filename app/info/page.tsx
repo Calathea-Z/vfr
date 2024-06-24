@@ -2,17 +2,11 @@
 import client from "../../sanity/lib/client";
 import { sanityImageBuilder } from "../../utils/sanityImageBuilder";
 import bioPic from "../../public/assets/info/sydney.png";
+import { BioData } from "@/types/types";
 //---Framework---//
 import { useState, useEffect } from "react";
 //---Packages---//
 import { CardMedia } from "@mui/material";
-
-interface BioData {
-	name: string;
-	header: string;
-	image: string | null;
-	bio: string;
-}
 
 const About: React.FC = () => {
 	const [bioData, setBioData] = useState<BioData>({

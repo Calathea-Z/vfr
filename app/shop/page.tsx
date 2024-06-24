@@ -3,22 +3,11 @@ import ProductComponent from "../components/shop/Product";
 import Filter from "../components/shop/Filter";
 import Sort from "../components/shop/Sort";
 import client from "../../sanity/lib/client";
+import { Product } from "@/types/types";
 //---Framework---//
 import { useEffect, useState, useCallback } from "react";
 //---Packages---//
 import { CircularProgress } from "@mui/material";
-interface Product {
-	_id: string;
-	name: string;
-	countInStock: number;
-	slug: { current: string };
-	price: number;
-	photo: {
-		asset: {
-			_ref: string;
-		};
-	}[];
-}
 
 interface State {
 	products: Product[];

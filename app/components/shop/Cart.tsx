@@ -4,6 +4,7 @@ import { sanityImageBuilder } from "@/utils/sanityImageBuilder";
 import { CartItem } from "@/types/types";
 import useNoScroll from "@/app/hooks/useNoScroll";
 //---Framework---//
+import { useEffect, useState } from "react";
 //---Components---//
 import axios from "axios";
 import { useSnackbar } from "notistack";
@@ -21,6 +22,7 @@ const Cart: React.FC = () => {
 		cart: { cartItems },
 		isCartVisible,
 	} = state;
+	const [isMobile, setIsMobile] = useState(false);
 
 	const { enqueueSnackbar } = useSnackbar();
 
@@ -76,7 +78,20 @@ const Cart: React.FC = () => {
 		dispatch({ type: "HIDE_CART" });
 	};
 
-	useNoScroll();
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth < 640);
+        };
+
+        handleResize(); // Check immediately on mount
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+
+    useNoScroll(isMobile);
 
 	return (
 		<div>

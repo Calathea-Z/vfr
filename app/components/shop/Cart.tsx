@@ -100,7 +100,7 @@ const Cart: React.FC = () => {
 					id="cartContainer"
 					className={`fixed right-0 ${state.isTopBannerVisible ? "top-[8.5rem] sm:top-[3.14rem] h-[calc(100%-138px)] sm:h-[calc(100%-35px)]" : "top-[5.2rem] sm:top-0 h-[calc(100%-84px)] sm:h-[100%]"} w-full sm:w-[50%] bg-blue-400 transform transition-transform duration-1000 ease-in-out flex flex-col z-[8000]`}
 				>
-					{/* SM Screen >= Cart Header */}
+					{/* SM Screen and Above Cart Header */}
 					<div className="hidden sm:flex justify-between items-center p-4 border-b border-black bg-white flex-shrink-0">
 						<button onClick={closeCartHandler} className="">
 							<X

@@ -59,11 +59,13 @@ const Cart: React.FC = () => {
 			console.log("Updated cart items after dispatch:", state.cart.cartItems);
 			enqueueSnackbar(`Cart Updated!`, {
 				variant: "success",
+				autoHideDuration: 3000,
 				style: { zIndex: 8002 },
 			});
 		} catch (error: any) {
 			enqueueSnackbar("Error updating cart. Please try again.", {
 				variant: "error",
+				autoHideDuration: 3000,
 				style: { zIndex: 8002 },
 			});
 			console.log(error.message);
@@ -78,20 +80,20 @@ const Cart: React.FC = () => {
 		dispatch({ type: "HIDE_CART" });
 	};
 
-    useEffect(() => {
-        const handleResize = () => {
-            setIsMobile(window.innerWidth < 640);
-        };
+	useEffect(() => {
+		const handleResize = () => {
+			setIsMobile(window.innerWidth < 640);
+		};
 
-        handleResize(); // Check immediately on mount
-        window.addEventListener('resize', handleResize);
+		handleResize(); // Check immediately on mount
+		window.addEventListener("resize", handleResize);
 
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        };
-    }, []);
+		return () => {
+			window.removeEventListener("resize", handleResize);
+		};
+	}, []);
 
-    useNoScroll(isMobile);
+	useNoScroll(isMobile);
 
 	return (
 		<div>

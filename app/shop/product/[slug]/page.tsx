@@ -74,10 +74,11 @@ const ProductScreen: React.FC<ProductScreenProps> = ({ params }) => {
 
 		const fetchData = async () => {
 			try {
-				const product = await client.fetch(
-					`*[_type == "product" && slug.current == $slug][0]`,
-					{ slug }
-				);
+				const response = await fetch(`/api/products/${slug}`);
+				if (!response.ok) {
+					throw new Error("Product not found");
+				}
+				const product = await response.json();
 				setState((prevState) => ({ ...prevState, product, loading: false }));
 			} catch (err: any) {
 				setState((prevState) => ({

@@ -15,6 +15,7 @@ import {
 	MinusCircle,
 	Trash,
 } from "@phosphor-icons/react";
+import SuggestedItems from "./SuggestedItems";
 
 const Cart: React.FC = () => {
 	const { state, dispatch } = useStateStorage();
@@ -95,12 +96,19 @@ const Cart: React.FC = () => {
 
 	useNoScroll(isMobile);
 
+	const getSuggestedCategory = (): string => {
+		if (cartItems.length > 0) {
+			const category = cartItems[0].category;
+			return typeof category === "string" ? category : "ceramics";
+		}
+		return "ceramics";
+	};
 	return (
 		<div>
 			{isCartVisible && (
 				<div
 					id="cartContainer"
-					className={`fixed right-0 ${state.isTopBannerVisible ? "top-[8.5rem] sm:top-[3.14rem] h-[calc(100%-138px)] sm:h-[calc(100%-35px)]" : "top-[5.2rem] sm:top-0 h-[calc(100%-84px)] sm:h-[100%]"} w-full sm:w-[50%] bg-blue-400 transform transition-transform duration-1000 ease-in-out flex flex-col z-[8000]`}
+					className={`fixed right-0 ${state.isTopBannerVisible ? "top-[8.5rem] sm:top-[3.14rem] h-[calc(100%-138px)] sm:h-[calc(100%-35px)]" : "top-[5.2rem] sm:top-0 h-[calc(100%-84px)] sm:h-[100%]"} w-full sm:w-[50%] bg-white transform transition-transform duration-1000 ease-in-out flex flex-col z-[8000]`}
 				>
 					{/* SM Screen and Above Cart Header */}
 					<div className="hidden sm:flex justify-between items-center p-4 border-b border-black bg-white flex-shrink-0">
@@ -208,6 +216,16 @@ const Cart: React.FC = () => {
 								</div>
 							))
 						)}
+					</div>
+					{/* Suggested Items */}
+					<div className="p-4 w-full border-t border-gray-300">
+						<h2 className="text-md sm:text-lg font-bold">
+							You might also like...
+						</h2>
+						<SuggestedItems
+							category={getSuggestedCategory()}
+							resultsLimit={1}
+						/>
 					</div>
 					{/* Cart Checkout Buttons */}
 					<div

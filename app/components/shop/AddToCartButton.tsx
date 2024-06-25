@@ -29,6 +29,7 @@ const AddToCartButton: React.FC<AddToCartButtonProps> = ({ product }) => {
 			payload: {
 				...product,
 				quantity: quantity,
+				category: product.category,
 			},
 		});
 		dispatch({ type: "SHOW_CART" });

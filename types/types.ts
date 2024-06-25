@@ -19,6 +19,10 @@ export interface CartItem {
 	}[];
 	shippingWeight: number;
 	quantity: number;
+	category: {
+		_ref: string;
+		_type: string;
+	};
 }
 
 export interface LeftSideButtonData {

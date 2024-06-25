@@ -3,7 +3,7 @@ import client from "../../../../sanity/lib/client";
 import { stateStorage } from "../../../../utils/stateStorage";
 import { sanityImageBuilder } from "../../../../utils/sanityImageBuilder";
 import { playfairDisplay, lato } from "../../../fonts/fonts";
-import { Product } from "@/types/types";
+import { Product, CartItem } from "@/types/types";
 //---Framework---//
 import { useEffect, useState, useContext } from "react";
 //--Packages---//
@@ -18,7 +18,7 @@ import {
 } from "@mui/material";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
-import { Plus, Minus, PlusCircle } from "@phosphor-icons/react";
+import AddToCartButton from "../../../components/shop/AddToCartButton";
 
 interface ProductScreenProps {
 	params: { slug: string };
@@ -105,6 +105,18 @@ const ProductScreen: React.FC<ProductScreenProps> = ({ params }) => {
 		if (newQuantity > 0 && newQuantity <= product.countInStock) {
 			setState((prevState) => ({ ...prevState, quantity: newQuantity }));
 		}
+	};
+
+	const cartItem: CartItem = {
+		_key: product?._id || "",
+		productId: product?.productId || "",
+		name: product?.name || "",
+		countInStock: product?.countInStock || 0,
+		slug: slug,
+		price: product?.price || 0,
+		photo: product?.photo || [],
+		shippingWeight: product?.shippingWeight || 0,
+		quantity: quantity,
 	};
 
 	return loading ? (
@@ -219,49 +231,7 @@ const ProductScreen: React.FC<ProductScreenProps> = ({ params }) => {
 								<p className={`text-xl mb-2 ${lato.className}`}>
 									{product.tagLine}
 								</p>
-								<Box
-									display="flex"
-									alignItems="center"
-									justifyContent="center"
-									mt={2}
-								>
-									<span className={`text-2xl mr-2 ${lato.className}`}>
-										Quantity:
-									</span>
-									<button
-										className={`bg-blue-500 text-white font-bold rounded-xl text-[.75rem] p-1 ${quantity <= 1 ? "opacity-50 cursor-not-allowed" : ""}`}
-										onClick={() => handleQuantityChange(-1)}
-										disabled={quantity <= 1}
-									>
-										<Minus />
-									</button>
-									<span className={`font-bold text-2xl mx-2 ${lato.className}`}>
-										{quantity}
-									</span>
-									<button
-										className="bg-blue-500 text-white font-bold rounded-xl text-[.75rem] p-1"
-										onClick={() => handleQuantityChange(1)}
-									>
-										<Plus />
-									</button>
-								</Box>
-								<Box mt={4} width="100%">
-									{product.countInStock > 0 ? (
-										<div className="inline-flex items-center">
-											<button className="bg-emerald-600 text-white text-2xl py-2 px-4 rounded cursor-pointer inline-flex items-center">
-												<PlusCircle className="mr-2" />
-												Add to Cart
-											</button>
-										</div>
-									) : (
-										<button
-											className="bg-red-600 text-white text-sm py-2 px-4 rounded cursor-not-allowed inline-flex items-center"
-											disabled
-										>
-											Sold Out
-										</button>
-									)}
-								</Box>
+								<AddToCartButton product={cartItem} />
 							</CardContent>
 						</Card>
 					) : (

@@ -28,7 +28,7 @@
 		"**/*.tsx",
 		".next/types/**/*.ts",
 		"utils/sanityImageBuilder.js",
-		"app/types/react-splide.d.ts"
+		"types/react-splide.d.ts"
 	],
 	"exclude": ["node_modules"]
 }

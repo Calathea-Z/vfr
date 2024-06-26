@@ -2,19 +2,18 @@
 //---Framework---//
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useEffect, FC } from "react";
 import client from "../../../sanity/lib/client";
 import { sanityImageBuilder } from "../../../utils/sanityImageBuilder";
 //---Packages---//
 import { motion } from "framer-motion";
 
-const ShopSubMenu = ({
-	isVisible,
-	onClose,
-}: {
+interface ShopSubMenuProps {
 	isVisible: boolean;
 	onClose: () => void;
-}) => {
+}
+
+const ShopSubMenu: FC<ShopSubMenuProps> = ({ isVisible, onClose }) => {
 	const [subMenuImageToShow, setSubMenuImageToShow] = useState<string | null>(
 		null
 	);

@@ -1,30 +1,29 @@
 import { State, Action } from "./stateStorage";
+import { CartItem } from "@/types/types";
 
 export const reducer = (state: State, action: Action): State => {
 	switch (action.type) {
-		case "CART_ADD_ITEM":
-			const newItem = action.payload;
+		case "CART_ADD_ITEM": {
+			const item = action.payload;
 			const existItem = state.cart.cartItems.find(
-				(item) => item._key === newItem._key
+				(x) => x.productId === item.productId
 			);
 			const cartItems = existItem
-				? state.cart.cartItems.map((item) =>
-						item._key === existItem._key ? newItem : item
+				? state.cart.cartItems.map((x) =>
+						x.productId === existItem.productId ? item : x
 					)
-				: [...state.cart.cartItems, newItem];
+				: [...state.cart.cartItems, item];
 			return { ...state, cart: { ...state.cart, cartItems } };
+		}
+		case "CART_REMOVE_ITEM": {
+			const cartItems = state.cart.cartItems.filter(
+				(x) => x.productId !== action.payload.productId
+			);
+			return { ...state, cart: { ...state.cart, cartItems } };
+		}
 
-		case "CART_REMOVE_ITEM":
-			return {
-				...state,
-				cart: {
-					...state.cart,
-					cartItems: state.cart.cartItems.filter(
-						(item) => item._key !== action.payload._key
-					),
-				},
-			};
-
+		case "CART_CLEAR_ITEMS":
+			return { ...state, cart: { ...state.cart, cartItems: [] } };
 		case "SHOW_CART":
 			return { ...state, isCartVisible: true };
 

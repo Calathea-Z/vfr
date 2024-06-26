@@ -1,6 +1,6 @@
 "use client";
 //---Framework---//
-import { useState, useEffect } from "react";
+import { useState, useEffect, FC } from "react";
 import { usePathname } from "next/navigation";
 //---Packages---//
 import { Plus, Minus, X } from "@phosphor-icons/react";
@@ -17,7 +17,7 @@ interface CheckedStates {
 	[key: string]: boolean;
 }
 
-const Filter: React.FC<FilterProps> = ({
+const Filter: FC<FilterProps> = ({
 	productTypes = [],
 	selectedCategory,
 	onFilterChange = () => {},

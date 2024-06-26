@@ -1,15 +1,12 @@
 "use client";
-import client from "../../../../sanity/lib/client";
 import { stateStorage } from "../../../../utils/stateStorage";
 import { sanityImageBuilder } from "../../../../utils/sanityImageBuilder";
-import { playfairDisplay, lato } from "../../../fonts/fonts"; // Importing the playfair font
-// import Modal from "@/components/store/Modal";
+import { playfairDisplay, lato } from "../../../fonts/fonts";
+import { Product, CartItem } from "@/types/types";
+import AddToCartButton from "../../../components/shop/AddToCartButton";
 //---Framework---//
-import { useEffect, useState, useContext } from "react";
-import Image from "next/image";
+import { useEffect, useState, useContext, FC } from "react";
 //--Packages---//
-import axios from "axios";
-import { motion } from "framer-motion";
 import {
 	Card,
 	CardContent,
@@ -19,32 +16,14 @@ import {
 	Box,
 	CircularProgress,
 } from "@mui/material";
-import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
-import { Plus, Minus, PlusCircle } from "@phosphor-icons/react";
-
-interface Product {
-	_id: string;
-	name: string;
-	countInStock: number;
-	slug: { current: string };
-	price: number;
-	photo: {
-		asset: {
-			_ref: string;
-		};
-	}[];
-	description: string;
-	tagLine: string;
-	measurements: string;
-	shippingWeight: number;
-}
+import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 interface ProductScreenProps {
 	params: { slug: string };
 }
 
-const ProductScreen: React.FC<ProductScreenProps> = ({ params }) => {
+const ProductScreen: FC<ProductScreenProps> = ({ params }) => {
 	const slug = params.slug;
 	const context = useContext(stateStorage);
 
@@ -70,22 +49,6 @@ const ProductScreen: React.FC<ProductScreenProps> = ({ params }) => {
 	});
 
 	const { product, loading, error, quantity } = state;
-	const [selectedImage, setSelectedImage] = useState<string | null>(null);
-	const [isModalOpen, setIsModalOpen] = useState(false);
-
-	const openModal = (image: string) => {
-		setSelectedImage(image);
-		setIsModalOpen(true);
-	};
-
-	const closeModal = () => {
-		setIsModalOpen(false);
-		setSelectedImage(null);
-	};
-
-	const toggleCart = () => {
-		dispatch({ type: isCartVisible ? "HIDE_CART" : "SHOW_CART" });
-	};
 
 	useEffect(() => {
 		if (!slug) {
@@ -94,10 +57,11 @@ const ProductScreen: React.FC<ProductScreenProps> = ({ params }) => {
 
 		const fetchData = async () => {
 			try {
-				const product = await client.fetch(
-					`*[_type == "product" && slug.current == $slug][0]`,
-					{ slug }
-				);
+				const response = await fetch(`/api/products/${slug}`);
+				if (!response.ok) {
+					throw new Error("Product not found");
+				}
+				const product = await response.json();
 				setState((prevState) => ({ ...prevState, product, loading: false }));
 			} catch (err: any) {
 				setState((prevState) => ({
@@ -118,12 +82,17 @@ const ProductScreen: React.FC<ProductScreenProps> = ({ params }) => {
 			.filter((sentence) => sentence !== "");
 	};
 
-	const handleQuantityChange = (change: number) => {
-		if (!product) return;
-		const newQuantity = quantity + change;
-		if (newQuantity > 0 && newQuantity <= product.countInStock) {
-			setState((prevState) => ({ ...prevState, quantity: newQuantity }));
-		}
+	const cartItem: CartItem = {
+		_key: product?._id || "",
+		productId: product?.productId || "",
+		name: product?.name || "",
+		countInStock: product?.countInStock || 0,
+		slug: slug,
+		price: product?.price || 0,
+		photo: product?.photo || [],
+		shippingWeight: product?.shippingWeight || 0,
+		quantity: quantity,
+		category: product?.category || { _ref: "", _type: "" },
 	};
 
 	return loading ? (
@@ -238,49 +207,7 @@ const ProductScreen: React.FC<ProductScreenProps> = ({ params }) => {
 								<p className={`text-xl mb-2 ${lato.className}`}>
 									{product.tagLine}
 								</p>
-								<Box
-									display="flex"
-									alignItems="center"
-									justifyContent="center"
-									mt={2}
-								>
-									<span className={`text-2xl mr-2 ${lato.className}`}>
-										Quantity:
-									</span>
-									<button
-										className={`bg-blue-500 text-white font-bold rounded-xl text-[.75rem] p-1 ${quantity <= 1 ? "opacity-50 cursor-not-allowed" : ""}`}
-										onClick={() => handleQuantityChange(-1)}
-										disabled={quantity <= 1}
-									>
-										<Minus />
-									</button>
-									<span className={`font-bold text-2xl mx-2 ${lato.className}`}>
-										{quantity}
-									</span>
-									<button
-										className="bg-blue-500 text-white font-bold rounded-xl text-[.75rem] p-1"
-										onClick={() => handleQuantityChange(1)}
-									>
-										<Plus />
-									</button>
-								</Box>
-								<Box mt={4} width="100%">
-									{product.countInStock > 0 ? (
-										<div className="inline-flex items-center">
-											<button className="bg-emerald-600 text-white text-2xl py-2 px-4 rounded cursor-pointer inline-flex items-center">
-												<PlusCircle className="mr-2" />
-												Add to Cart
-											</button>
-										</div>
-									) : (
-										<button
-											className="bg-red-600 text-white text-sm py-2 px-4 rounded cursor-not-allowed inline-flex items-center"
-											disabled
-										>
-											Sold Out
-										</button>
-									)}
-								</Box>
+								<AddToCartButton product={cartItem} />
 							</CardContent>
 						</Card>
 					) : (

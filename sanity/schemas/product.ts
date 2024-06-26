@@ -1,4 +1,5 @@
 import { Rule } from "@sanity/types";
+import { v4 as uuidv4 } from "uuid";
 
 interface Field {
 	name: string;
@@ -37,6 +38,13 @@ const product: ProductSchema = {
 			name: "name",
 			title: "Name",
 			type: "string",
+		},
+		{
+			name: "productId",
+			title: "Product ID",
+			type: "string",
+			initialValue: uuidv4, // Generate a random GUID
+			readOnly: true,
 		},
 		{
 			name: "price",

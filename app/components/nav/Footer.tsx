@@ -1,8 +1,7 @@
 "use client";
 import { lato } from "@/app/fonts/fonts";
 //---Framework---//
-import NextLink from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, FC } from "react";
 //---Packages---//
 import { SocialIcon } from "react-social-icons";
 import {
@@ -15,7 +14,7 @@ import {
 } from "@mui/material";
 import { useSnackbar } from "notistack";
 
-const Footer = () => {
+const Footer: FC = () => {
 	const [isAtBottom, setIsAtBottom] = useState(false);
 	const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 

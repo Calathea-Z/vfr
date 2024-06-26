@@ -1,33 +1,16 @@
 "use client";
 import client from "../../../sanity/lib/client";
 import ProductComponent from "../shop/Product";
+import { Product } from "@/types/types";
 //---Framework---//
-import { useEffect, useState } from "react";
-
+import { useEffect, useState, FC } from "react";
 //---Packages---//
 import { CircularProgress } from "@mui/material";
 import { Box } from "@mui/material";
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import "@splidejs/react-splide/css";
 
-interface Product {
-	_id: string;
-	name: string;
-	price: number;
-	featuredProduct: boolean;
-	countInStock: number;
-	slug: { current: string };
-	photo: {
-		asset: {
-			_ref: string;
-		};
-	}[];
-	shippingWeight: number;
-}
-
-interface Props {}
-
-function FeaturedProducts({}: Props) {
+const FeaturedProducts: FC = () => {
 	const [products, setProducts] = useState<Product[]>([]);
 	const [error, setError] = useState<string>("");
 	const [loading, setLoading] = useState<boolean>(true);
@@ -60,7 +43,21 @@ function FeaturedProducts({}: Props) {
 				const query = `*[_type == "product" && featuredProduct == true]`;
 				const fetchedProducts: Product[] = await client.fetch(query);
 				if (fetchedProducts.length > 0) {
-					setProducts(fetchedProducts);
+					// If there are fetched products, proceed to sort them
+					const sortedProducts = fetchedProducts.sort((a, b) => {
+						// If product a is out of stock, move it to the end
+						if (a.countInStock === 0) return 1;
+						// If product b is out of stock, move it to the end
+						if (b.countInStock === 0) return -1;
+						// If product a has low stock and product b has more than 10 in stock, prioritize a
+						if (a.countInStock <= 10 && b.countInStock > 10) return -1;
+						// If product b has low stock and product a has more than 10 in stock, prioritize b
+						if (a.countInStock > 10 && b.countInStock <= 10) return 1;
+						// If both products have similar stock levels, no change in order
+						return 0;
+					});
+					// Set the sorted products to the state
+					setProducts(sortedProducts);
 					setError("");
 				} else {
 					setError("No products currently featured");
@@ -126,5 +123,5 @@ function FeaturedProducts({}: Props) {
 			</Splide>
 		</section>
 	);
-}
+};
 export default FeaturedProducts;

@@ -2,23 +2,11 @@
 import ProductComponent from "../components/shop/Product";
 import Filter from "../components/shop/Filter";
 import Sort from "../components/shop/Sort";
-import client from "../../sanity/lib/client";
+import { Product } from "@/types/types";
 //---Framework---//
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, FC } from "react";
 //---Packages---//
 import { CircularProgress } from "@mui/material";
-interface Product {
-	_id: string;
-	name: string;
-	countInStock: number;
-	slug: { current: string };
-	price: number;
-	photo: {
-		asset: {
-			_ref: string;
-		};
-	}[];
-}
 
 interface State {
 	products: Product[];
@@ -28,7 +16,7 @@ interface State {
 	sortQuery: string;
 }
 
-const ShopHome: React.FC = () => {
+const ShopHome: FC = () => {
 	const [state, setState] = useState<State>({
 		products: [],
 		error: "",
@@ -51,76 +39,26 @@ const ShopHome: React.FC = () => {
 		}));
 
 		try {
-			let baseQuery = '*[_type == "product"';
-			let filterConditions: string[] = [];
+			const queryParams = new URLSearchParams();
+			filters.forEach((filter) => queryParams.append("filters", filter));
+			queryParams.append("sortQuery", sortQuery);
 
-			// Handle category filters
-			const categoryFilters = filters.filter((f) =>
-				["Ceramics", "Bags", "Stickers", "Prints"].includes(f)
-			);
-			if (categoryFilters.length > 0) {
-				filterConditions.push(
-					`category->title in [${categoryFilters
-						.map((f) => `"${f}"`)
-						.join(", ")}]`
-				);
-			}
+			const response = await fetch(`/api/products?${queryParams.toString()}`);
+			const data = await response.json();
 
-			// Handle price range filters
-			const priceFilters = filters.filter((f) =>
-				["Under 25", "25-50", "Over 50"].includes(f)
-			);
-			if (priceFilters.length > 0) {
-				priceFilters.forEach((price) => {
-					switch (price) {
-						case "Under 25":
-							filterConditions.push("price < 25");
-							break;
-						case "25-50":
-							filterConditions.push("price >= 25 && price <= 50");
-							break;
-						case "Over 50":
-							filterConditions.push("price > 50");
-							break;
-					}
-				});
-			}
-
-			// Exclude out of stock products if the filter is active
-			if (filters.includes("Exclude Out Of Stock")) {
-				filterConditions.push("countInStock > 0");
-			}
-
-			// Combine all filter conditions
-			if (filterConditions.length > 0) {
-				baseQuery += ` && (${filterConditions.join(" && ")})`;
-			}
-			baseQuery += "]";
-
-			// Add sorting
-			if (sortQuery) {
-				baseQuery += ` | order(${sortQuery})`;
-			}
-
-			const products = await client.fetch(baseQuery);
-
-			if (!Array.isArray(products)) {
-				throw new Error("Fetch did not return an array");
-			}
-
-			if (products.length === 0) {
+			if (response.ok) {
 				setState({
+					products: data,
 					loading: false,
-					error: "No products found. Please check back later.",
-					products: [],
+					error: "",
 					filters: state.filters,
 					sortQuery: state.sortQuery,
 				});
 			} else {
 				setState({
-					products,
 					loading: false,
-					error: "",
+					error: data.error || "Error fetching products",
+					products: [],
 					filters: state.filters,
 					sortQuery: state.sortQuery,
 				});

@@ -1,22 +1,6 @@
+import { OrderItem, ShippingInformation } from "@/types/types";
+//---Packages---//
 import mongoose, { Schema, model, Document, Model } from "mongoose";
-
-interface OrderItem {
-	name: string;
-	quantity: number;
-	image?: string;
-	price: number;
-}
-
-interface ShippingInformation {
-	firstNameShipping: string;
-	lastNameShipping: string;
-	company?: string;
-	address: string;
-	city: string;
-	zipCode: string;
-	usState: string;
-	shippingContactEmail: string;
-}
 
 interface UserOrderDocument extends Document {
 	user: Schema.Types.ObjectId;
@@ -26,6 +10,8 @@ interface UserOrderDocument extends Document {
 	parsedShippingCost: number;
 	taxPrice: number;
 	totalPrice: number;
+	emailVerified?: Date; // Added for Auth.js
+	image?: string; // Added for Auth.js
 }
 
 // Delete the model if it already exists to prevent OverwriteModelError
@@ -62,6 +48,8 @@ const UserOrderSchema = new Schema<UserOrderDocument>(
 		parsedShippingCost: { type: Number, default: 0 },
 		taxPrice: { type: Number, default: 0 },
 		totalPrice: { type: Number, default: 0 },
+		emailVerified: { type: Date }, // Added for Auth.js
+		image: { type: String }, // Added for Auth.js
 	},
 	{
 		timestamps: true,

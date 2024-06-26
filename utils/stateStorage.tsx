@@ -1,52 +1,15 @@
+import { CartItem, ShippingInformation, UserInfo } from "@/types/types";
+import { reducer } from "./reducer";
+import { setCartItems, getCartItems } from "../app/actions/cartActions";
 import {
 	createContext,
 	useContext,
 	useReducer,
-	useEffect,
 	ReactNode,
 	Dispatch,
 	useMemo,
+	useEffect,
 } from "react";
-import { reducer } from "./reducer";
-import Cookies from "universal-cookie";
-
-export interface CartItem {
-	_key: string;
-	name: string;
-	countInStock: number;
-	slug: string;
-	price: number;
-	photo: {
-		asset: {
-			_ref: string;
-		};
-	}[];
-	shippingWeight: number;
-	quantity: number;
-}
-export interface ShippingInformation {
-	address: string;
-	city: string;
-	postalCode: string;
-	country: string;
-}
-
-export interface UserInfo {
-	firstName: string;
-	lastName: string;
-	email: string;
-	password: string;
-	salt: string;
-	isAdmin: boolean;
-	isWholesale: boolean;
-	shippingContactEmail?: string;
-	firstNameShipping?: string;
-	lastNameShipping?: string;
-	address?: string;
-	city?: string;
-	zipCode?: number;
-	usState?: string;
-}
 
 export interface State {
 	cart: {
@@ -85,10 +48,13 @@ const defaultInitialState: State = {
 	cart: {
 		cartItems: [],
 		shippingInformation: {
+			firstNameShipping: "",
+			lastNameShipping: "",
 			address: "",
 			city: "",
-			postalCode: "",
-			country: "",
+			zipCode: "",
+			usState: "",
+			shippingContactEmail: "",
 		},
 		shippingWeight: null,
 		shippingCost: null,
@@ -120,23 +86,23 @@ interface StoreProviderProps {
 	};
 }
 
-export function StoreProvider({
-	children,
-	initialCookies,
-}: StoreProviderProps) {
+export function StoreProvider({ children }: { children: ReactNode }) {
 	const [state, dispatch] = useReducer(reducer, defaultInitialState);
 
 	useEffect(() => {
-		if (initialCookies) {
-			const cartItems = initialCookies.cartItems
-				? JSON.parse(initialCookies.cartItems)
-				: [];
-			const userInfo = initialCookies.userInfo
-				? JSON.parse(initialCookies.userInfo)
-				: null;
-			dispatch({ type: "INITIALIZE_STATE", payload: { cartItems, userInfo } });
+		async function fetchCartItems() {
+			const storedCartItems = await getCartItems();
+			dispatch({
+				type: "INITIALIZE_STATE",
+				payload: { cartItems: storedCartItems, userInfo: null },
+			});
 		}
-	}, [initialCookies]);
+		fetchCartItems();
+	}, []);
+
+	useEffect(() => {
+		setCartItems(state.cart.cartItems);
+	}, [state.cart.cartItems]);
 
 	const value = useMemo(() => ({ state, dispatch }), [state, dispatch]);
 

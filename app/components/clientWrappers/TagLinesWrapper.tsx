@@ -1,8 +1,11 @@
 "use client";
-import { useInView } from "react-intersection-observer";
 import TagLines from "../homePage/TagLines";
+//---Framework---//
+import { FC } from "react";
+//---Packages---//
+import { useInView } from "react-intersection-observer";
 
-const TagLinesWrapper: React.FC = () => {
+const TagLinesWrapper: FC = () => {
 	const { ref, inView } = useInView({
 		threshold: 0.5,
 		triggerOnce: true,

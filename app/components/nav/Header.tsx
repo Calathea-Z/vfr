@@ -6,7 +6,7 @@ import AccountDropdown from "./AccountDropdown";
 import TopBanner from "../homePage/TopBanner";
 import { useStateStorage } from "@/utils/stateStorage";
 //--Framework--//
-import { useState, useEffect } from "react";
+import { useState, useEffect, FC } from "react";
 import { useRouter, usePathname } from "next/navigation"; // Combined imports
 import Image from "next/legacy/image";
 import Link from "next/link";
@@ -15,7 +15,7 @@ import { AppBar, Toolbar, IconButton } from "@mui/material";
 import { Binoculars, Basket, List } from "@phosphor-icons/react";
 import { motion } from "framer-motion";
 
-const Header: React.FC = () => {
+const Header: FC = () => {
 	const router = useRouter();
 	const pathname = usePathname();
 	const [isFirstLoad, setIsFirstLoad] = useState(true);

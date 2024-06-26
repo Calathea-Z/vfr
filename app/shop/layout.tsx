@@ -1,7 +1,10 @@
 import Header from "../components/nav/Header";
 import Footer from "../components/nav/Footer";
 import { playfairDisplay } from "../fonts/fonts";
-const ShopLayout = ({ children }: { children: React.ReactNode }) => {
+//---Framework---//
+import { FC } from "react";
+
+const ShopLayout: FC<{ children: React.ReactNode }> = ({ children }) => {
 	return (
 		<div className={`bg-primary`}>
 			<Header />

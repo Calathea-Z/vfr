@@ -1,31 +1,50 @@
 "use client";
-import { useStateStorage, CartItem } from "@/utils/stateStorage";
+import { useStateStorage } from "@/utils/stateStorage";
 import { sanityImageBuilder } from "@/utils/sanityImageBuilder";
+import { CartItem } from "@/types/types";
 import useNoScroll from "@/app/hooks/useNoScroll";
+
 //---Framework---//
-import { useEffect } from "react";
+import { useEffect, useState, FC } from "react";
 //---Components---//
 import axios from "axios";
 import { useSnackbar } from "notistack";
-import { PottedPlant, X, PlusCircle, MinusCircle } from "@phosphor-icons/react";
-import Cookies from "universal-cookie";
+import {
+	PottedPlant,
+	X,
+	PlusCircle,
+	MinusCircle,
+	Trash,
+} from "@phosphor-icons/react";
+import SuggestedItems from "./SuggestedItems";
 
-const Cart: React.FC = () => {
+const Cart: FC = () => {
 	const { state, dispatch } = useStateStorage();
 	const {
 		cart: { cartItems },
 		isCartVisible,
 	} = state;
+	const [isMobile, setIsMobile] = useState(false);
 
 	const { enqueueSnackbar } = useSnackbar();
 
 	const updateCartHandler = async (item: CartItem, quantity: number) => {
 		try {
-			const response = await axios.get(`/api/allproducts/${item._key}`);
+			console.log(`Updating item ${item.productId} to quantity ${quantity}`);
+			console.log("Current cart items:", cartItems);
+
+			const response = await axios.get(`/api/products/${item.productId}`);
 			const countInStock = response.data.countInStock;
 
 			if (countInStock < quantity) {
-				enqueueSnackbar("Sorry. Product is out of stock", { variant: "error" });
+				enqueueSnackbar(
+					`We currently have only ${item.countInStock} units of ${item.name} in stock.`,
+					{
+						variant: "warning",
+						autoHideDuration: 3000,
+						style: { zIndex: 8002 },
+					}
+				);
 				return;
 			}
 			if (quantity === 0) {
@@ -39,9 +58,19 @@ const Cart: React.FC = () => {
 					quantity: quantity,
 				},
 			});
-			enqueueSnackbar(`Cart Updated!`, { variant: "success" });
-		} catch (error) {
-			enqueueSnackbar("Error updating cart", { variant: "error" });
+			console.log("Updated cart items after dispatch:", state.cart.cartItems);
+			enqueueSnackbar(`Cart Updated!`, {
+				variant: "success",
+				autoHideDuration: 3000,
+				style: { zIndex: 8002 },
+			});
+		} catch (error: any) {
+			enqueueSnackbar("Error updating cart. Please try again.", {
+				variant: "error",
+				autoHideDuration: 3000,
+				style: { zIndex: 8002 },
+			});
+			console.log(error.message);
 		}
 	};
 
@@ -54,43 +83,70 @@ const Cart: React.FC = () => {
 	};
 
 	useEffect(() => {
-		const currentWeight = cartItems.reduce(
-			(a, c) => a + (c.quantity ?? 0) * (c.shippingWeight ?? 0),
-			0
-		);
-		dispatch({
-			type: "UPDATE_SHIPPING_WEIGHT",
-			payload: currentWeight,
-		});
-		const cookies = new Cookies();
-		cookies.set("shippingWeight", JSON.stringify(currentWeight));
-	}, [cartItems, dispatch]);
+		const handleResize = () => {
+			setIsMobile(window.innerWidth < 640);
+		};
 
-	useNoScroll();
+		handleResize(); // Check immediately on mount
+		window.addEventListener("resize", handleResize);
 
+		return () => {
+			window.removeEventListener("resize", handleResize);
+		};
+	}, []);
+
+	useNoScroll({ isMobile });
+
+	const getSuggestedCategory = (): string => {
+		if (cartItems.length > 0) {
+			const category = cartItems[0].category;
+			return typeof category === "string" ? category : "ceramics";
+		}
+		return "ceramics";
+	};
 	return (
 		<div>
 			{isCartVisible && (
 				<div
 					id="cartContainer"
-					className={`fixed right-0 ${state.isTopBannerVisible ? "top-[8.5rem] sm:top-[3.14rem] h-[calc(100%-138px)] sm:h-[calc(100%-35px)]" : "top-[5.2rem] sm:top-0 h-[calc(100%-84px)] sm:h-[100%]"} w-full sm:w-[50%] bg-blue-400 transform transition-transform duration-1000 ease-in-out flex flex-col z-[8000]`}
+					className={`fixed right-0 ${state.isTopBannerVisible ? "top-[8.5rem] sm:top-[3.14rem] h-[calc(100%-138px)] sm:h-[calc(100%-35px)]" : "top-[5.2rem] sm:top-0 h-[calc(100%-84px)] sm:h-[100%]"} w-full sm:w-[50%] bg-white transform transition-transform duration-1000 ease-in-out flex flex-col z-[8000]`}
 				>
-					{/* Cart Header */}
+					{/* SM Screen and Above Cart Header */}
 					<div className="hidden sm:flex justify-between items-center p-4 border-b border-black bg-white flex-shrink-0">
 						<button onClick={closeCartHandler} className="">
 							<X
 								className={`${state.isTopBannerVisible ? "h-[3.35rem] w-[3.35rem]" : "h-[3.4rem] w-[3.4rem]"} lg:h-[4.6rem] lg:w-[4.6rem] text-black hover:bg-gray-200 rounded-full p-2`}
 							/>
 						</button>
-						<h1 className="text-sm sm:text-2xl underline decoration-primary underline-offset-4 decoration-1">
-							Cart ({cartItems.reduce((a, c) => a + c.quantity, 0)})
-						</h1>
+						<div className="flex flex-col items-center gap-1">
+							<h1 className="text-sm sm:text-2xl underline decoration-primary underline-offset-4 decoration-1">
+								Cart ({cartItems.reduce((a, c) => a + c.quantity, 0)})
+							</h1>
+							<button
+								onClick={() => dispatch({ type: "CART_CLEAR_ITEMS" })}
+								className="flex items-center text-red-500 text-xs mt-1 rounded-lg p-2 hover:bg-gray-100"
+							>
+								<Trash size={16} className="mr-1" /> Empty
+							</button>
+						</div>
 					</div>
 					{/* Cart Body */}
 					<div
 						id="cart-body"
 						className="flex overflow-y-auto flex-col bg-white flex-grow"
 					>
+						{/* Mobile Screen Cart Header */}
+						<div className="flex sm:hidden justify-between items-center p-1 border-b border-black bg-white flex-shrink-0">
+							<button onClick={closeCartHandler} className="">
+								<X className="text-black w-8 h-8 hover:bg-gray-200 rounded-full p-1" />
+							</button>
+							<button
+								onClick={() => dispatch({ type: "CART_CLEAR_ITEMS" })}
+								className="flex items-center text-red-500 text-xs rounded-lg p-2 hover:bg-gray-100"
+							>
+								<Trash size={16} className="mr-1" /> Empty
+							</button>
+						</div>
 						{cartItems.length === 0 ? (
 							<div className="flex flex-col items-center justify-between h-full">
 								<div className="p-8 mt-2 text-center">
@@ -155,12 +211,22 @@ const Cart: React.FC = () => {
 											onClick={() => removeItemHandler(item)}
 											className="text-red-600 text-base md:text-md rounded-lg p-1 hover:bg-gray-100"
 										>
-											Remove
+											<Trash size={16} />
 										</button>
 									</div>
 								</div>
 							))
 						)}
+					</div>
+					{/* Suggested Items */}
+					<div className="p-4 w-full border-t border-gray-300">
+						<h2 className="text-md sm:text-lg font-bold">
+							You might also like...
+						</h2>
+						<SuggestedItems
+							category={getSuggestedCategory()}
+							resultsLimit={1}
+						/>
 					</div>
 					{/* Cart Checkout Buttons */}
 					<div

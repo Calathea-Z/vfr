@@ -1,20 +1,13 @@
 "use client";
+import { TopBannerData } from "@/types/types";
 import client from "../../../sanity/lib/client";
 import { useStateStorage } from "@/utils/stateStorage";
 //---Framework---//
-import { useEffect, useState } from "react";
+import { useEffect, useState, FC } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 
-interface TopBannerData {
-	backgroundColor: { hex: string };
-	textColor: { hex: string };
-	link: string;
-	text: string;
-	enabled: boolean;
-}
-
-const TopBanner: React.FC = () => {
+const TopBanner: FC = () => {
 	const pathname = usePathname();
 	const { state, dispatch } = useStateStorage();
 	const [topBannerData, setTopBannerData] = useState<TopBannerData | null>(

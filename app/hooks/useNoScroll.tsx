@@ -1,18 +1,31 @@
 "use client";
-import { useEffect } from "react";
 import { useStateStorage } from "@/utils/stateStorage";
+//---Framework---//
+import { useEffect, FC } from "react";
 
-const useNoScroll = () => {
+interface UseNoScrollProps {
+	isMobile: boolean;
+}
+
+const UseNoScroll: FC<UseNoScrollProps> = ({ isMobile }) => {
 	const { state } = useStateStorage();
 	const isCartVisible = state.isCartVisible;
 
 	useEffect(() => {
-		if (isCartVisible) {
+		// Apply no-scroll only if the cart is visible and it's a mobile device
+		if (isCartVisible && isMobile) {
 			document.body.classList.add("no-scroll");
 		} else {
 			document.body.classList.remove("no-scroll");
 		}
-	}, [isCartVisible]);
+
+		// Cleanup function to ensure no-scroll is removed when not needed
+		return () => {
+			document.body.classList.remove("no-scroll");
+		};
+	}, [isCartVisible, isMobile]); // React to changes in isCartVisible and isMobile
+
+	return null;
 };
 
-export default useNoScroll;
+export default UseNoScroll;

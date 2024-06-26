@@ -15,9 +15,16 @@ interface UserDocument extends mongoose.Document {
 	city?: string;
 	zipCode?: number;
 	usState?: string;
+	emailVerified?: Date; // Added for Auth.js
+	image?: string; // Added for Auth.js
+	role: string;
+	lastLogin?: Date | null;
 }
 
-mongoose.deleteModel("User");
+// Check if the model is already registered before deleting it
+if (mongoose.models.User) {
+	mongoose.deleteModel("User");
+}
 
 const UserSchema = new Schema<UserDocument>(
 	{
@@ -32,6 +39,7 @@ const UserSchema = new Schema<UserDocument>(
 		email: {
 			type: String,
 			required: [true, "Please provide an email"],
+			unique: true, // Ensure email is unique
 		},
 		password: {
 			type: String,
@@ -40,11 +48,6 @@ const UserSchema = new Schema<UserDocument>(
 		salt: {
 			type: String,
 			required: true,
-		},
-		isAdmin: {
-			type: Boolean,
-			required: true,
-			default: false,
 		},
 		isWholesale: {
 			type: Boolean,
@@ -71,6 +74,21 @@ const UserSchema = new Schema<UserDocument>(
 		},
 		usState: {
 			type: String,
+		},
+		emailVerified: {
+			type: Date,
+		},
+		image: {
+			type: String,
+		},
+		role: {
+			type: String,
+			required: true,
+			default: "user", // Default role
+		},
+		lastLogin: {
+			type: Date,
+			default: null, // Set default value to null
 		},
 	},
 	{

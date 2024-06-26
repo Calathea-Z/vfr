@@ -1,7 +1,10 @@
 "use client";
+//---Framework---//
+import { FC } from "react";
+//---Packages---//
 import { Barricade, HardHat } from "@phosphor-icons/react";
 
-const UnderConstruction = () => {
+const UnderConstruction: FC = () => {
 	return (
 		<div className="flex flex-col justify-start items-center h-screen bg-gradient-to-l from-stone-900 to-black text-yellow-500 text-4xl text-center pt-20">
 			<Barricade size={200} weight="bold" />

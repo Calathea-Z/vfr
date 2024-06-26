@@ -1,4 +1,7 @@
 "use client";
+//---Framework---//
+import { FC } from "react";
+//---Packages---//
 import {
 	Container,
 	Typography,
@@ -19,7 +22,7 @@ const FullWidthCard = styled(Card)({
 	padding: 20,
 });
 
-const PrivacyPolicy = () => {
+const PrivacyPolicy: FC = () => {
 	return (
 		<Container maxWidth="xl" style={{ padding: "20px" }}>
 			<FullWidthCard>

@@ -1,8 +1,9 @@
 "use client";
-
-import { Bug } from "@phosphor-icons/react";
+//---Framework---//
 import { useSearchParams } from "next/navigation";
-import { Suspense } from "react";
+import { Suspense, FC } from "react";
+//---Packages---//
+import { Bug } from "@phosphor-icons/react";
 
 enum Error {
 	Configuration = "Configuration",
@@ -18,7 +19,7 @@ const errorMap = {
 	),
 };
 
-function ErrorContent() {
+const ErrorContent: FC = () => {
 	const search = useSearchParams();
 	const error = search.get("error") as Error;
 
@@ -36,9 +37,9 @@ function ErrorContent() {
 			</div>
 		</a>
 	);
-}
+};
 
-export default function AuthErrorPage() {
+const AuthErrorPage: FC = () => {
 	return (
 		<div className="flex flex-col items-center justify-start pt-10 w-full h-screen bg-gradient-to-l from-red-300 to-secondary">
 			<Suspense fallback={<div>Loading...</div>}>
@@ -47,4 +48,6 @@ export default function AuthErrorPage() {
 			<div></div>
 		</div>
 	);
-}
+};
+
+export default AuthErrorPage;

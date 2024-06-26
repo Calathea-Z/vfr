@@ -1,11 +1,12 @@
 import { fullLogo } from "@/public/assets";
 //---Framework---//
 import { redirect } from "next/navigation";
+import { FC } from "react";
 //---Packages---//
 import { signIn, providerMap } from "@/nextAuth";
 import { AuthError } from "next-auth";
 
-export default function LoginPage() {
+const LoginPage: FC = () => {
 	console.log(
 		"Provider Names:",
 		Object.values(providerMap).map((provider) => provider.name)
@@ -98,4 +99,6 @@ export default function LoginPage() {
 			</div>
 		</div>
 	);
-}
+};
+
+export default LoginPage;

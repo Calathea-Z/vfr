@@ -4,8 +4,10 @@ import Footer from "./components/nav/Footer";
 import FeaturedProducts from "./components/homePage/FeaturedProducts";
 import TagLinesWrapper from "./components/clientWrappers/TagLinesWrapper";
 import { LogoBanner } from "./components/homePage/LogoBanner";
+//---Framework---//
+import { FC } from "react";
 
-const Home = () => {
+const Home: FC = () => {
 	return (
 		<>
 			<Header />

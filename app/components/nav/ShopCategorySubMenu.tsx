@@ -1,19 +1,22 @@
 "use client";
+import { sanityImageBuilder } from "../../../utils/sanityImageBuilder";
 //---Framework---//
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect, FC } from "react";
-import client from "../../../sanity/lib/client";
-import { sanityImageBuilder } from "../../../utils/sanityImageBuilder";
 //---Packages---//
 import { motion } from "framer-motion";
+import axios from "axios";
 
-interface ShopSubMenuProps {
+interface ShopCategorySubMenuProps {
 	isVisible: boolean;
 	onClose: () => void;
 }
 
-const ShopSubMenu: FC<ShopSubMenuProps> = ({ isVisible, onClose }) => {
+const ShopCategorySubMenu: FC<ShopCategorySubMenuProps> = ({
+	isVisible,
+	onClose,
+}) => {
 	const [subMenuImageToShow, setSubMenuImageToShow] = useState<string | null>(
 		null
 	);
@@ -23,17 +26,17 @@ const ShopSubMenu: FC<ShopSubMenuProps> = ({ isVisible, onClose }) => {
 
 	useEffect(() => {
 		const fetchCategories = async () => {
-			const query = `*[_type == "category" && hidden != true] | order(ordinal asc){
-                                title,
-                                "subMenuImage": subMenuImage.asset._ref,
-                                ordinal
-                            }`;
-			const fetchedCategories = await client.fetch(query);
-			setCurrentCategories(fetchedCategories);
-			if (fetchedCategories.length > 0) {
-				setSubMenuImageToShow(
-					sanityImageBuilder(fetchedCategories[0].subMenuImage).url()
-				);
+			try {
+				const response = await axios.get("/api/products/category");
+				const fetchedCategories = response.data;
+				setCurrentCategories(fetchedCategories);
+				if (fetchedCategories.length > 0) {
+					setSubMenuImageToShow(
+						sanityImageBuilder(fetchedCategories[0].subMenuImage).url()
+					);
+				}
+			} catch (error) {
+				console.error("Error fetching categories:", error);
 			}
 		};
 
@@ -41,6 +44,7 @@ const ShopSubMenu: FC<ShopSubMenuProps> = ({ isVisible, onClose }) => {
 	}, []);
 
 	if (!isVisible) return null;
+
 	return (
 		<>
 			{isVisible && (
@@ -93,4 +97,4 @@ const ShopSubMenu: FC<ShopSubMenuProps> = ({ isVisible, onClose }) => {
 	);
 };
 
-export default ShopSubMenu;
+export default ShopCategorySubMenu;

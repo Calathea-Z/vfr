@@ -5,6 +5,7 @@ import ProductComponent from "./Product";
 import { FC, useEffect, useState } from "react";
 //---Packages---//
 import { CircularProgress } from "@mui/material";
+import axios from "axios";
 
 interface SuggestedItemsProps {
 	category: string;
@@ -20,15 +21,13 @@ const SuggestedItems: FC<SuggestedItemsProps> = ({
 
 	useEffect(() => {
 		setLoading(true);
-		fetch(`/api/products/category/${category}?limit=${resultsLimit}`)
+		axios
+			.get(`/api/products/category/${category}?limit=${resultsLimit}`)
 			.then((response) => {
-				if (!response.ok) {
+				if (response.status !== 200) {
 					throw new Error(`HTTP error! status: ${response.status}`);
 				}
-				return response.json();
-			})
-			.then((data) => {
-				setSuggestedItems(data);
+				setSuggestedItems(response.data);
 				setLoading(false);
 			})
 			.catch((error) => {

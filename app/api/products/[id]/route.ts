@@ -2,6 +2,7 @@ import client from "../../../../sanity/lib/client";
 //---Framework---//
 import { NextRequest, NextResponse } from "next/server";
 
+// GET route to fetch a product by its ID or slug
 export async function GET(
 	_: NextRequest,
 	{ params }: { params: { id: string } }

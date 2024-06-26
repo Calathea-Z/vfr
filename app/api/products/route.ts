@@ -2,6 +2,7 @@ import client from "../../../sanity/lib/client";
 //---Framework---//
 import { NextRequest, NextResponse } from "next/server";
 
+// GET route to fetch products based on filters and sorting
 export async function GET(request: NextRequest) {
 	const { searchParams } = new URL(request.url);
 	const filters = searchParams.getAll("filters");

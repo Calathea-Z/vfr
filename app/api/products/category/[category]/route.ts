@@ -2,6 +2,7 @@ import client from "../../../../../sanity/lib/client";
 //---Framework---//
 import { NextRequest, NextResponse } from "next/server";
 
+// GET route to fetch products by a specific category
 export async function GET(
 	request: NextRequest,
 	{ params }: { params: { category: string } }

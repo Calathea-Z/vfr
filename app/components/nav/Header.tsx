@@ -1,7 +1,7 @@
 "use client";
 import { simpleLogo } from "@/public/assets";
 import Search from "./Search";
-import ShopSubMenu from "./ShopSubMenu";
+import ShopCategorySubMenu from "./ShopCategorySubMenu";
 import AccountDropdown from "./AccountDropdown";
 import TopBanner from "../homePage/TopBanner";
 import { useStateStorage } from "@/utils/stateStorage";
@@ -21,7 +21,8 @@ const Header: FC = () => {
 	const [isFirstLoad, setIsFirstLoad] = useState(true);
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const [isSearchOpen, setIsSearchOpen] = useState(false);
-	const [isShopSubMenuOpen, setIsShopSubMenuOpen] = useState(false);
+	const [isShopCategorySubMenuOpen, setIsShopCategorySubMenuOpen] =
+		useState(false);
 	const [isMobileSubMenuOpen, setIsMobileSubMenuOpen] = useState(false);
 	const { state, dispatch } = useStateStorage();
 	const { cart, isCartVisible } = state;
@@ -94,8 +95,8 @@ const Header: FC = () => {
 								</Link>
 								<div
 									className="relative"
-									onMouseEnter={() => setIsShopSubMenuOpen(true)}
-									onMouseLeave={() => setIsShopSubMenuOpen(false)}
+									onMouseEnter={() => setIsShopCategorySubMenuOpen(true)}
+									onMouseLeave={() => setIsShopCategorySubMenuOpen(false)}
 								>
 									<Link
 										className={`hover-underline-animation ${pathname === "/shop" ? "text-emerald-600" : ""}`}
@@ -103,10 +104,10 @@ const Header: FC = () => {
 									>
 										Shop
 									</Link>
-									{isShopSubMenuOpen && (
-										<ShopSubMenu
-											isVisible={isShopSubMenuOpen}
-											onClose={() => setIsShopSubMenuOpen(false)}
+									{isShopCategorySubMenuOpen && (
+										<ShopCategorySubMenu
+											isVisible={isShopCategorySubMenuOpen}
+											onClose={() => setIsShopCategorySubMenuOpen(false)}
 										/>
 									)}
 								</div>
@@ -246,7 +247,7 @@ const Header: FC = () => {
 											Shop
 										</div>
 										{isMobileSubMenuOpen && (
-											<ShopSubMenu
+											<ShopCategorySubMenu
 												isVisible={isMobileSubMenuOpen}
 												onClose={() => {
 													setIsMobileSubMenuOpen(false);

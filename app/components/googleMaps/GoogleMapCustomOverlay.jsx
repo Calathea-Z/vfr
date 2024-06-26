@@ -22,6 +22,7 @@ const GoogleMapCustomOverlay = ({
 	useEffect(() => {
 		// CustomOverlay constructor function, creates a new overlay instance.
 		if (!map || !google || !google.maps) return; // Ensure map and google.maps are available
+
 		function CustomOverlay(map, position) {
 			this.position = position; // Position of the overlay on the map.
 			this.div = document.createElement("div"); // Creates a new div element for the overlay content.

@@ -1,6 +1,6 @@
 "use client";
 //---Framework---//
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, FC } from "react";
 //---Packages---//
 import { ArrowUp, ArrowDown } from "@phosphor-icons/react";
 
@@ -8,7 +8,7 @@ interface SortProps {
 	onSortChange: (sortQuery: string) => void;
 }
 
-const Sort: React.FC<SortProps> = ({ onSortChange }) => {
+const Sort: FC<SortProps> = ({ onSortChange }) => {
 	const [isOpen, setIsOpen] = useState<boolean>(false);
 	const [sortSelected, setSortSelected] =
 		useState<string>("Sort: Best Selling");

@@ -3,8 +3,9 @@ import { useStateStorage } from "@/utils/stateStorage";
 import { sanityImageBuilder } from "@/utils/sanityImageBuilder";
 import { CartItem } from "@/types/types";
 import useNoScroll from "@/app/hooks/useNoScroll";
+
 //---Framework---//
-import { useEffect, useState } from "react";
+import { useEffect, useState, FC } from "react";
 //---Components---//
 import axios from "axios";
 import { useSnackbar } from "notistack";
@@ -17,7 +18,7 @@ import {
 } from "@phosphor-icons/react";
 import SuggestedItems from "./SuggestedItems";
 
-const Cart: React.FC = () => {
+const Cart: FC = () => {
 	const { state, dispatch } = useStateStorage();
 	const {
 		cart: { cartItems },
@@ -94,7 +95,7 @@ const Cart: React.FC = () => {
 		};
 	}, []);
 
-	useNoScroll(isMobile);
+	useNoScroll({ isMobile });
 
 	const getSuggestedCategory = (): string => {
 		if (cartItems.length > 0) {

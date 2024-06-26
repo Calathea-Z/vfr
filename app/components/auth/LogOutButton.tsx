@@ -1,11 +1,12 @@
 import { handleSignOut } from "../../actions/signOutAction";
+//---Framework---//
+import { FC } from "react";
+
 interface LogoutButtonProps {
 	onLogout: () => void;
 }
 
-export default function LogoutButton({
-	onLogout,
-}: LogoutButtonProps): JSX.Element {
+const LogoutButton: FC<LogoutButtonProps> = ({ onLogout }) => {
 	return (
 		<form
 			action={async (formData) => {
@@ -21,4 +22,6 @@ export default function LogoutButton({
 			</button>
 		</form>
 	);
-}
+};
+
+export default LogoutButton;

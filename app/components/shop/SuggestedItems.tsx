@@ -1,20 +1,25 @@
 "use client";
-import React from "react";
 import { Product } from "../../../types/types";
 import ProductComponent from "./Product";
+//---Framework---//
+import { FC, useEffect, useState } from "react";
+//---Packages---//
+import { CircularProgress } from "@mui/material";
 
 interface SuggestedItemsProps {
 	category: string;
 	resultsLimit: number;
 }
 
-const SuggestedItems = ({ category, resultsLimit }: SuggestedItemsProps) => {
-	const [suggestedItems, setSuggestedItems] = React.useState<Product[]>([]);
-	const [loading, setLoading] = React.useState<boolean>(true);
+const SuggestedItems: FC<SuggestedItemsProps> = ({
+	category,
+	resultsLimit,
+}) => {
+	const [suggestedItems, setSuggestedItems] = useState<Product[]>([]);
+	const [loading, setLoading] = useState<boolean>(true);
 
-	React.useEffect(() => {
+	useEffect(() => {
 		setLoading(true);
-		// Fetch items from the server or a local source based on the category
 		fetch(`/api/products/category/${category}?limit=${resultsLimit}`)
 			.then((response) => {
 				if (!response.ok) {
@@ -36,7 +41,7 @@ const SuggestedItems = ({ category, resultsLimit }: SuggestedItemsProps) => {
 		<div className="card p-2">
 			<div className="flex flex-col items-center">
 				{loading ? (
-					<div className="spinner">Loading...</div>
+					<CircularProgress />
 				) : (
 					suggestedItems.slice(0, resultsLimit).map((item) => (
 						<div key={item._id} className="w-full">

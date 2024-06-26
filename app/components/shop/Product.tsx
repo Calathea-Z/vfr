@@ -2,6 +2,7 @@ import { sanityImageBuilder } from "../../../utils/sanityImageBuilder";
 import type { Product, CartItem } from "@/types/types";
 import AddToCartButton from "./AddToCartButton";
 //---Framework---//
+import { FC } from "react";
 import Link from "next/link";
 //---Packages---/
 import { Card, CardContent, CardMedia, Chip } from "@mui/material";
@@ -10,7 +11,7 @@ interface ProductProps {
 	product: Product;
 	small?: boolean;
 }
-const Product: React.FC<ProductProps> = ({ product, small = false }) => {
+const Product: FC<ProductProps> = ({ product, small = false }) => {
 	const slug =
 		typeof product.slug === "object" ? product.slug.current : product.slug;
 

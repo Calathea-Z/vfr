@@ -1,4 +1,7 @@
 "use client";
+//---Framework---//
+import { FC } from "react";
+//---Packages---//
 import { Container, Box, Link, List, Card, styled } from "@mui/material";
 
 const FullWidthCard = styled(Card)({
@@ -9,7 +12,7 @@ const FullWidthCard = styled(Card)({
 	padding: 20,
 });
 
-const TermsOfService = () => {
+const TermsOfService: FC = () => {
 	return (
 		<Container maxWidth="xl" className="p-5">
 			<FullWidthCard>

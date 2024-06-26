@@ -1,12 +1,12 @@
 import client from "../../../sanity/lib/client";
 //---Framework---//
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, FC } from "react";
 import { useRouter } from "next/navigation"; // Change import to next/navigation
 //---Packages---//
 import { Autocomplete, TextField, IconButton } from "@mui/material";
 import { XCircle } from "@phosphor-icons/react";
 
-const Search: React.FC<{ visible: boolean; onClose: () => void }> = ({
+const Search: FC<{ visible: boolean; onClose: () => void }> = ({
 	visible,
 	onClose,
 }) => {

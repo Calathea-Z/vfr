@@ -4,12 +4,12 @@ import Filter from "@/app/components/shop/Filter";
 import Sort from "@/app/components/shop/Sort";
 import ProductComponent from "@/app/components/shop/Product";
 //---Framework---//
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, FC } from "react";
 import { useParams } from "next/navigation";
 //---Packages---//
 import { CircularProgress } from "@mui/material";
 
-const CategoryPage: React.FC = () => {
+const CategoryPage: FC = () => {
 	const { slug } = useParams();
 	const formattedCategoryName =
 		typeof slug === "string"

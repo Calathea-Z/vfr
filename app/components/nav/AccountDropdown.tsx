@@ -2,7 +2,7 @@
 import { handleSignOut } from "../../actions/signOutAction";
 import { SessionUser } from "@/types/types";
 //---Framework---//
-import { useState, MouseEvent, useRef } from "react";
+import { useState, MouseEvent, useRef, FC } from "react";
 import { useRouter } from "next/navigation";
 //---Packages---//
 import { IconButton, Menu, MenuItem, Avatar } from "@mui/material";
@@ -10,7 +10,7 @@ import { UserCircle, GearSix, HandWaving } from "@phosphor-icons/react";
 import { useSnackbar } from "notistack";
 import { useSession } from "next-auth/react";
 
-const AccountDropdown = () => {
+const AccountDropdown: FC = () => {
 	const { data: session, status, update } = useSession();
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const router = useRouter();

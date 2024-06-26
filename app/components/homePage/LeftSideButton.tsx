@@ -1,13 +1,13 @@
 "use client";
 import { LeftSideButtonData } from "@/types/types";
 //---Framework---//
-import { useEffect, useState } from "react";
+import { useEffect, useState, FC } from "react";
 import client from "../../../sanity/lib/client";
 import Link from "next/link";
 //---Fonts---//
 import { playfairDisplay } from "@/app/fonts/fonts";
 
-const LeftSideButton: React.FC = () => {
+const LeftSideButton: FC = () => {
 	const [leftSideButtonData, setLeftSideButtonData] =
 		useState<LeftSideButtonData | null>(null);
 	const [isVisible, setIsVisible] = useState(true);

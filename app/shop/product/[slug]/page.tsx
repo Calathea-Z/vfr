@@ -1,11 +1,11 @@
 "use client";
-import client from "../../../../sanity/lib/client";
 import { stateStorage } from "../../../../utils/stateStorage";
 import { sanityImageBuilder } from "../../../../utils/sanityImageBuilder";
 import { playfairDisplay, lato } from "../../../fonts/fonts";
 import { Product, CartItem } from "@/types/types";
+import AddToCartButton from "../../../components/shop/AddToCartButton";
 //---Framework---//
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, FC } from "react";
 //--Packages---//
 import {
 	Card,
@@ -16,15 +16,14 @@ import {
 	Box,
 	CircularProgress,
 } from "@mui/material";
-import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
-import AddToCartButton from "../../../components/shop/AddToCartButton";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 interface ProductScreenProps {
 	params: { slug: string };
 }
 
-const ProductScreen: React.FC<ProductScreenProps> = ({ params }) => {
+const ProductScreen: FC<ProductScreenProps> = ({ params }) => {
 	const slug = params.slug;
 	const context = useContext(stateStorage);
 
@@ -50,22 +49,6 @@ const ProductScreen: React.FC<ProductScreenProps> = ({ params }) => {
 	});
 
 	const { product, loading, error, quantity } = state;
-	const [selectedImage, setSelectedImage] = useState<string | null>(null);
-	const [isModalOpen, setIsModalOpen] = useState(false);
-
-	const openModal = (image: string) => {
-		setSelectedImage(image);
-		setIsModalOpen(true);
-	};
-
-	const closeModal = () => {
-		setIsModalOpen(false);
-		setSelectedImage(null);
-	};
-
-	const toggleCart = () => {
-		dispatch({ type: isCartVisible ? "HIDE_CART" : "SHOW_CART" });
-	};
 
 	useEffect(() => {
 		if (!slug) {
@@ -99,14 +82,6 @@ const ProductScreen: React.FC<ProductScreenProps> = ({ params }) => {
 			.filter((sentence) => sentence !== "");
 	};
 
-	const handleQuantityChange = (change: number) => {
-		if (!product) return;
-		const newQuantity = quantity + change;
-		if (newQuantity > 0 && newQuantity <= product.countInStock) {
-			setState((prevState) => ({ ...prevState, quantity: newQuantity }));
-		}
-	};
-
 	const cartItem: CartItem = {
 		_key: product?._id || "",
 		productId: product?.productId || "",
@@ -117,6 +92,7 @@ const ProductScreen: React.FC<ProductScreenProps> = ({ params }) => {
 		photo: product?.photo || [],
 		shippingWeight: product?.shippingWeight || 0,
 		quantity: quantity,
+		category: product?.category || { _ref: "", _type: "" },
 	};
 
 	return loading ? (

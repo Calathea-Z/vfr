@@ -1,12 +1,14 @@
 "use client";
+//---Framework---//
+import { FC } from "react";
+//---Packages---//
 import { motion } from "framer-motion";
-import React from "react";
 
 interface TagLinesProps {
 	inView: boolean;
 }
 
-const TagLines: React.FC<TagLinesProps> = ({ inView }) => {
+const TagLines: FC<TagLinesProps> = ({ inView }) => {
 	return (
 		<div className="flex justify-center items-center p-10 gap-2 sm:gap-6 lg:gap-20">
 			<motion.h1

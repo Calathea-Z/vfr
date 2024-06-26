@@ -3,7 +3,7 @@ import { Basket, Minus, Plus } from "@phosphor-icons/react";
 import { CartItem } from "@/types/types";
 import { useStateStorage } from "@/utils/stateStorage";
 //---Framework---//
-import { useState } from "react";
+import { useState, FC } from "react";
 import { usePathname } from "next/navigation";
 //---Packages---//
 import { useSnackbar } from "notistack";
@@ -13,7 +13,7 @@ interface AddToCartButtonProps {
 	product: CartItem;
 }
 
-const AddToCartButton: React.FC<AddToCartButtonProps> = ({ product }) => {
+const AddToCartButton: FC<AddToCartButtonProps> = ({ product }) => {
 	const { dispatch } = useStateStorage();
 	const [quantity, setQuantity] = useState(1);
 	const [showQuantitySelector, setShowQuantitySelector] = useState(false);

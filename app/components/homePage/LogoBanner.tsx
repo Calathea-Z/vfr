@@ -1,8 +1,10 @@
 import { fullLogo } from "@/public/assets";
+//---Framework---//
+import { FC } from "react";
 //---Packages---//
 import { Box } from "@mui/material";
 
-export const LogoBanner = () => {
+export const LogoBanner: FC = () => {
 	return (
 		<Box
 			display="grid"

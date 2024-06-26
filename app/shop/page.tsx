@@ -4,7 +4,7 @@ import Filter from "../components/shop/Filter";
 import Sort from "../components/shop/Sort";
 import { Product } from "@/types/types";
 //---Framework---//
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, FC } from "react";
 //---Packages---//
 import { CircularProgress } from "@mui/material";
 
@@ -16,7 +16,7 @@ interface State {
 	sortQuery: string;
 }
 
-const ShopHome: React.FC = () => {
+const ShopHome: FC = () => {
 	const [state, setState] = useState<State>({
 		products: [],
 		error: "",

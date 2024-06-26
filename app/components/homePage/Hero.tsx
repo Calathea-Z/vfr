@@ -1,8 +1,10 @@
 import { heroOne, heroTwo, cellHero } from "@/public/assets/index";
-import Image from "next/image";
 import LeftSideButton from "./LeftSideButton";
+//---Framework---//
+import Image from "next/image";
+import { FC } from "react";
 
-const Hero = () => {
+const Hero: FC = () => {
 	return (
 		<>
 			<LeftSideButton />

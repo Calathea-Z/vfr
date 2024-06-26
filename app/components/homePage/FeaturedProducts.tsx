@@ -3,14 +3,14 @@ import client from "../../../sanity/lib/client";
 import ProductComponent from "../shop/Product";
 import { Product } from "@/types/types";
 //---Framework---//
-import { useEffect, useState } from "react";
+import { useEffect, useState, FC } from "react";
 //---Packages---//
 import { CircularProgress } from "@mui/material";
 import { Box } from "@mui/material";
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import "@splidejs/react-splide/css";
 
-function FeaturedProducts() {
+const FeaturedProducts: FC = () => {
 	const [products, setProducts] = useState<Product[]>([]);
 	const [error, setError] = useState<string>("");
 	const [loading, setLoading] = useState<boolean>(true);
@@ -123,5 +123,5 @@ function FeaturedProducts() {
 			</Splide>
 		</section>
 	);
-}
+};
 export default FeaturedProducts;

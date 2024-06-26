@@ -7,6 +7,7 @@ import { useState, useEffect, useRef, useCallback, FC } from "react";
 import Link from "next/link";
 //---Packages---//
 import { GoogleMap, LoadScriptNext, Marker } from "@react-google-maps/api";
+import { CircularProgress } from "@mui/material";
 
 const Stockists: FC = () => {
 	const svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="#059669" stroke="#ffffff" stroke-width="6" d="M272 96c-78.6 0-145.1 51.5-167.7 122.5c33.6-17 71.5-26.5 111.7-26.5h88c8.8 0 16 7.2 16 16s-7.2 16-16 16H288 216s0 0 0 0c-16.6 0-32.7 1.9-48.3 5.4c-25.9 5.9-49.9 16.4-71.4 30.7c0 0 0 0 0 0C38.3 298.8 0 364.9 0 440v16c0 13.3 10.7 24 24 24s24-10.7 24-24V440c0-48.7 20.7-92.5 53.8-123.2C121.6 392.3 190.3 448 272 448l1 0c132.1-.7 239-130.9 239-291.4c0-42.6-7.5-83.1-21.1-119.6c-2.6-6.9-12.7-6.6-16.2-.1C455.9 72.1 418.7 96 376 96L272 96z"/></svg>`;
@@ -93,111 +94,116 @@ const Stockists: FC = () => {
 			googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ""}
 			onLoad={() => setIsMapsScriptLoaded(true)}
 		>
-			<GoogleMap
-				mapContainerStyle={mapContainerStyle}
-				center={mapCenter}
-				zoom={zoomLevel}
-				options={{
-					fullscreenControl: true,
-					disableDefaultUI: true,
-					gestureHandling: "cooperative",
-					styles: [
-						{
-							featureType: "poi.business",
-							elementType: "labels",
-							stylers: [{ visibility: "off" }],
-						},
-					],
-				}}
-				onLoad={(map: google.maps.Map) => {
-					mapRef.current = map as unknown as GoogleMap; // Assign the map instance to mapRef with type casting
-				}} // Assign the map instance to mapRef
-			>
-				{stockists.map((stockist) => (
-					<Marker
-						key={stockist.name}
-						position={{
-							lat: stockist.latitude,
-							lng: stockist.longitude,
-						}}
-						label={{
-							text: stockist.name,
-							color: "#ffffff",
-							fontSize: "10px",
-							fontWeight: "bold",
-							className: "bg-[#008080] rounded px-1 py-0.5", // Custom class for label styling
-						}}
-						icon={{
-							url: dataUrl, //svgIcon
-							scaledSize: new window.google.maps.Size(35, 35),
-							labelOrigin: new window.google.maps.Point(0, -20), // Position label above the icon
-						}}
-						onClick={() =>
-							handleCardClick(stockist.latitude, stockist.longitude, stockist)
-						}
-					/>
-				))}
-				{selectedStockist && isMapsScriptLoaded && (
-					<GoogleMapCustomOverlay
-						map={mapRef.current} // Use the map instance from mapRef
-						google={window.google}
-						position={{
-							lat: selectedStockist.latitude,
-							lng: selectedStockist.longitude,
-						}}
-						onClose={() => setSelectedStockist(null)}
-					>
-						<div className="bg-[#f5f5f5] p-2 rounded-lg shadow-md text-center">
-							<h2 className="text-[#3a7ca5] font-bold">
-								{selectedStockist.name}
-							</h2>
-							<p className="font-bold text-gray-800">
-								{selectedStockist.description}
-							</p>
-							<p className="italic text-[#333333]">
-								{selectedStockist.addressLineOne}
-							</p>
-							<p className="italic text-[#333333]">
-								{selectedStockist.addressLineTwo}
-							</p>
-							{selectedStockist.url && (
+			{isMapsScriptLoaded ? (
+				<GoogleMap
+					mapContainerStyle={mapContainerStyle}
+					center={mapCenter}
+					zoom={zoomLevel}
+					options={{
+						fullscreenControl: true,
+						disableDefaultUI: true,
+						gestureHandling: "cooperative",
+						styles: [
+							{
+								featureType: "poi.business",
+								elementType: "labels",
+								stylers: [{ visibility: "off" }],
+							},
+						],
+					}}
+					onLoad={(map: google.maps.Map) => {
+						mapRef.current = map as unknown as GoogleMap;
+					}}
+				>
+					{stockists.map((stockist) => (
+						<Marker
+							key={stockist.name}
+							position={{
+								lat: stockist.latitude,
+								lng: stockist.longitude,
+							}}
+							label={{
+								text: stockist.name,
+								color: "#ffffff",
+								fontSize: "10px",
+								fontWeight: "bold",
+								className: "bg-[#008080] rounded px-1 py-0.5",
+							}}
+							icon={{
+								url: dataUrl,
+								scaledSize: new window.google.maps.Size(35, 35),
+								labelOrigin: new window.google.maps.Point(0, -20),
+							}}
+							onClick={() =>
+								handleCardClick(stockist.latitude, stockist.longitude, stockist)
+							}
+						/>
+					))}
+					{selectedStockist && isMapsScriptLoaded && (
+						<GoogleMapCustomOverlay
+							map={mapRef.current}
+							google={window.google}
+							position={{
+								lat: selectedStockist.latitude,
+								lng: selectedStockist.longitude,
+							}}
+							onClose={() => setSelectedStockist(null)}
+						>
+							<div className="bg-[#f5f5f5] p-2 rounded-lg shadow-md text-center">
+								<h2 className="text-[#3a7ca5] font-bold">
+									{selectedStockist.name}
+								</h2>
+								<p className="font-bold text-gray-800">
+									{selectedStockist.description}
+								</p>
+								<p className="italic text-[#333333]">
+									{selectedStockist.addressLineOne}
+								</p>
+								<p className="italic text-[#333333]">
+									{selectedStockist.addressLineTwo}
+								</p>
+								{selectedStockist.url && (
+									<Link
+										href={selectedStockist.url}
+										target="_blank"
+										rel="noopener noreferrer"
+										className="text-[#008080] hover:underline"
+									>
+										Visit Website
+									</Link>
+								)}
 								<Link
-									href={selectedStockist.url}
+									href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
+										selectedStockist.addressLineOne +
+											" " +
+											selectedStockist.addressLineTwo
+									)}`}
 									target="_blank"
 									rel="noopener noreferrer"
-									className="text-[#008080] hover:underline"
+									className="block mt-2 text-[#008080] hover:underline"
 								>
-									Visit Website
+									Get Directions
 								</Link>
-							)}
-							<Link
-								href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
-									selectedStockist.addressLineOne +
-										" " +
-										selectedStockist.addressLineTwo
-								)}`}
-								target="_blank"
-								rel="noopener noreferrer"
-								className="block mt-2 text-[#008080] hover:underline"
-							>
-								Get Directions
-							</Link>
-						</div>
-					</GoogleMapCustomOverlay>
-				)}
-			</GoogleMap>
+							</div>
+						</GoogleMapCustomOverlay>
+					)}
+				</GoogleMap>
+			) : (
+				<div className="flex justify-center items-center h-full">
+					<CircularProgress />
+				</div>
+			)}
 		</LoadScriptNext>
 	);
+
 	return (
 		<div className="bg-primary flex flex-col min-h-screen p-0">
 			<div className="grid grid-cols-1 lg:grid-cols-4 justify-center gap-0 p-0">
-				{" "}
-				{/* Removed gap between columns */}
 				<div className="col-span-2 xl:col-span-1 order-2 lg:order-1 w-full bg-slate-200 overflow-y-auto max-h-screen">
 					{stockists.map((stockist) => (
 						<div
 							key={stockist.name}
-							className="bg-white p-6 border-b-[.1rem] border-b-gray-300  cursor-pointer"
+							className="bg-white p-6 border-b-[.1rem] border-b-gray-300 cursor-pointer"
 							onClick={() =>
 								handleCardClick(stockist.latitude, stockist.longitude, stockist)
 							}
@@ -234,4 +240,5 @@ const Stockists: FC = () => {
 		</div>
 	);
 };
+
 export default Stockists;

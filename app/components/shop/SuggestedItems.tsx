@@ -22,7 +22,7 @@ const SuggestedItems: FC<SuggestedItemsProps> = ({
 	useEffect(() => {
 		setLoading(true);
 		axios
-			.get(`/api/products/category/${category}?limit=${resultsLimit}`)
+			.get(`/api/products/categories/${category}?limit=${resultsLimit}`)
 			.then((response) => {
 				if (response.status !== 200) {
 					throw new Error(`HTTP error! status: ${response.status}`);

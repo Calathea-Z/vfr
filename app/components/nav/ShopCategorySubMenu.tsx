@@ -27,7 +27,7 @@ const ShopCategorySubMenu: FC<ShopCategorySubMenuProps> = ({
 	useEffect(() => {
 		const fetchCategories = async () => {
 			try {
-				const response = await axios.get("/api/products/category");
+				const response = await axios.get("/api/products/categories");
 				const fetchedCategories = response.data;
 				setCurrentCategories(fetchedCategories);
 				if (fetchedCategories.length > 0) {

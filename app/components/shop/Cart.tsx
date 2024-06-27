@@ -16,7 +16,6 @@ import {
 	MinusCircle,
 	Trash,
 } from "@phosphor-icons/react";
-import SuggestedItems from "./SuggestedItems";
 
 const Cart: FC = () => {
 	const { state, dispatch } = useStateStorage();
@@ -97,13 +96,6 @@ const Cart: FC = () => {
 
 	useNoScroll({ isMobile });
 
-	const getSuggestedCategory = (): string => {
-		if (cartItems.length > 0) {
-			const category = cartItems[0].category;
-			return typeof category === "string" ? category : "ceramics";
-		}
-		return "ceramics";
-	};
 	return (
 		<div>
 			{isCartVisible && (
@@ -218,57 +210,41 @@ const Cart: FC = () => {
 							))
 						)}
 					</div>
-					{/* Suggested Items */}
-					<div className="p-4 w-full border-t border-gray-300">
-						<h2 className="text-md sm:text-lg font-bold">
-							You might also like...
-						</h2>
-						<SuggestedItems
-							category={getSuggestedCategory()}
-							resultsLimit={1}
-						/>
-					</div>
-					{/* Cart Checkout Buttons */}
-					<div
-						id="cart-checkout-buttons"
-						className="bg-white shadow-lg flex-shrink-0 p-4"
-					>
-						{cartItems.length > 0 ? (
-							<div className="border-t w-full border-gray-300">
-								<div className="flex justify-between p-4 sm:p-6">
-									<span className="text-md sm:text-lg font-bold">Subtotal</span>
-									<span className="text-md sm:text-lg font-bold">
-										${cartItems.reduce((a, c) => a + c.price * c.quantity, 0)}
-									</span>
-								</div>
-								<div className="flex justify-between mt-2 gap-2">
-									<button
-										onClick={closeCartHandler}
-										className="bg-emerald-400 text-black px-2 sm:px-4 py-4 w-1/2 rounded"
-									>
-										Continue Shopping
-									</button>
-									<button
-										onClick={closeCartHandler}
-										className="bg-black text-white px-2 sm:px-4 py-4 w-1/2 rounded"
-									>
-										Checkout
-									</button>
-								</div>
+					{cartItems.length > 0 ? (
+						<div className="border-t w-full border-gray-300 mb-6 p-2">
+							<div className="flex justify-between p-4 sm:p-6">
+								<span className="text-md sm:text-lg font-bold">Subtotal</span>
+								<span className="text-md sm:text-lg font-bold">
+									${cartItems.reduce((a, c) => a + c.price * c.quantity, 0)}
+								</span>
 							</div>
-						) : (
-							<div className="border-t xs:w-full border-gray-300">
-								<div className="flex justify-center pt-8">
-									<button
-										onClick={closeCartHandler}
-										className="bg-emerald-400 text-black px-2 sm:px-4 py-4 w-1/2 rounded"
-									>
-										Continue Shopping
-									</button>
-								</div>
+							<div className="flex justify-between mt-2 gap-2">
+								<button
+									onClick={closeCartHandler}
+									className="bg-emerald-400 text-black px-2 sm:px-4 py-4 w-1/2 rounded"
+								>
+									Continue Shopping
+								</button>
+								<button
+									onClick={closeCartHandler}
+									className="bg-black text-white px-2 sm:px-4 py-4 w-1/2 rounded"
+								>
+									Checkout
+								</button>
 							</div>
-						)}
-					</div>
+						</div>
+					) : (
+						<div className="border-t xs:w-full border-gray-300 mb-6 p-2">
+							<div className="flex justify-center pt-8">
+								<button
+									onClick={closeCartHandler}
+									className="bg-emerald-400 text-black px-2 sm:px-4 py-4 w-1/2 rounded"
+								>
+									Continue Shopping
+								</button>
+							</div>
+						</div>
+					)}
 				</div>
 			)}
 		</div>

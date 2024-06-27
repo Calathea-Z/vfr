@@ -4,6 +4,7 @@ import { sanityImageBuilder } from "../../../../utils/sanityImageBuilder";
 import { playfairDisplay, lato } from "../../../fonts/fonts";
 import { Product, CartItem } from "@/types/types";
 import AddToCartButton from "../../../components/shop/AddToCartButton";
+import SuggestedItems from "../../../components/shop/SuggestedItems";
 //---Framework---//
 import { useEffect, useState, useContext, FC } from "react";
 //--Packages---//
@@ -30,11 +31,6 @@ const ProductScreen: FC<ProductScreenProps> = ({ params }) => {
 	if (!context) {
 		throw new Error("stateStorage context is not available");
 	}
-
-	const {
-		state: { cart, isCartVisible },
-		dispatch,
-	} = context;
 
 	const [state, setState] = useState<{
 		product: Product | null;
@@ -261,6 +257,14 @@ const ProductScreen: FC<ProductScreenProps> = ({ params }) => {
 							</Grid>
 						</CardContent>
 					</Card>
+				</Grid>
+				{/* Suggested Items */}
+				<Grid item xs={12} sm={12}>
+					<SuggestedItems
+						category_ref={product?.category._ref || ""}
+						resultsLimit={4}
+						referencingProduct={product?.name || ""}
+					/>
 				</Grid>
 			</Grid>
 		</Container>

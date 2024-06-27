@@ -1,11 +1,13 @@
 "use client";
 import { TopBannerData } from "@/types/types";
-import client from "../../../sanity/lib/client";
 import { useStateStorage } from "@/utils/stateStorage";
 //---Framework---//
 import { useEffect, useState, FC } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+//---Packages---//
+import axios from "axios";
+import { X } from "@phosphor-icons/react";
 
 const TopBanner: FC = () => {
 	const pathname = usePathname();
@@ -16,10 +18,13 @@ const TopBanner: FC = () => {
 
 	useEffect(() => {
 		const fetchData = async () => {
-			const query = `*[_type == "topBanner" && enabled == true][0]`;
-			const data = await client.fetch(query);
-			if (data) {
-				setTopBannerData(data);
+			try {
+				const response = await axios.get("/api/layout/top-banner");
+				if (response.data) {
+					setTopBannerData(response.data);
+				}
+			} catch (error) {
+				console.error("Error fetching top banner data:", error);
 			}
 		};
 
@@ -67,10 +72,9 @@ const TopBanner: FC = () => {
 			</Link>
 			<button
 				onClick={handleClose}
-				className="absolute right-[.2rem] md:right-4 top-[15%] md:top-1/2 transform -translate-y-1/2 text-black"
-				style={{ background: "none", border: "none", cursor: "pointer" }}
+				className="absolute right-[.2rem] md:right-4 top-[15%] md:top-1/2 transform -translate-y-1/2 text-black hover:bg-red-50 cursor-pointer rounded-full p-1"
 			>
-				&times;
+				<X className="w-3 h-3" />
 			</button>
 		</div>
 	);

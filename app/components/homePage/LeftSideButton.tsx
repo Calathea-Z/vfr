@@ -58,7 +58,7 @@ const LeftSideButton: FC = () => {
 					color: leftSideButtonData.textColor?.hex || "black",
 				}}
 			>
-				<X className="w-4 h-4" />
+				<X className="w-3 h-3" />
 			</button>
 		</div>
 	);

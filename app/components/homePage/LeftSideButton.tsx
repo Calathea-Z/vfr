@@ -5,7 +5,7 @@ import { useEffect, useState, FC } from "react";
 import axios from "axios";
 import Link from "next/link";
 //---Fonts---//
-import { playfairDisplay } from "@/app/fonts/fonts";
+import { lato } from "@/app/fonts/fonts";
 import { X } from "@phosphor-icons/react";
 
 const LeftSideButton: FC = () => {
@@ -44,7 +44,7 @@ const LeftSideButton: FC = () => {
 						color: leftSideButtonData.textColor?.hex || "black",
 					}}
 				>
-					<span className={`tracking-widest ${playfairDisplay.className}`}>
+					<span className={`tracking-widest ${lato.className}`}>
 						{leftSideButtonData.text}
 					</span>
 				</button>

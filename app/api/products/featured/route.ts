@@ -3,7 +3,7 @@ import { Product } from "@/types/types";
 //---Framework---//
 import { NextRequest, NextResponse } from "next/server";
 
-// GET route to fetch all featured products.
+// GET route to fetch all featured products and sort them in order from Low Stock -> In Stock -> Sold Out
 export async function GET(request: NextRequest) {
 	try {
 		let baseQuery = `*[_type == "product" && featuredProduct == true]`;

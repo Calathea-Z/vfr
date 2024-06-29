@@ -7,6 +7,7 @@ import { sanityImageBuilder } from "../../utils/sanityImageBuilder";
 //---Framework---//
 import { useEffect, useState } from "react";
 import { CaretDown, CaretUp } from "@phosphor-icons/react";
+import PaymentWithSquare from "../components/checkout/PaymentWithSquare";
 
 const CheckoutPage = () => {
 	const { state } = useStateStorage();
@@ -95,6 +96,8 @@ const CheckoutPage = () => {
 				</div>
 				<div className="flex flex-col sm:flex-1 order-2 sm:order-1">
 					<div className="flex flex-col sm:w-full p-8">
+						<h6 className="text-center mb-2 text-gray-500">Express Checkout</h6>
+						<PaymentWithSquare />
 						<div className="flex items-center my-4">
 							<hr className="flex-grow border-t border-gray-300" />
 							<span className="mx-2 text-gray-500">OR</span>

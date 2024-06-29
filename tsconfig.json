@@ -28,7 +28,8 @@
 		"**/*.tsx",
 		".next/types/**/*.ts",
 		"utils/sanityImageBuilder.js",
-		"types/react-splide.d.ts"
+		"types/react-splide.d.ts",
+		"app/components/checkout/PaymentWithSquare.jsx"
 	],
 	"exclude": ["node_modules"]
 }

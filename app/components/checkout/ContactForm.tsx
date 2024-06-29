@@ -19,7 +19,7 @@ const ContactForm = () => {
 	const router = useRouter();
 	const handleLogout = async () => {
 		try {
-			await handleSignOut();
+			await handleSignOut(); ///
 			enqueueSnackbar("Successfully logged out", { variant: "success" });
 			window.location.reload();
 		} catch (error) {

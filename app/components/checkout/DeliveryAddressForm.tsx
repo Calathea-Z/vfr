@@ -197,7 +197,7 @@ const DeliveryAddressForm = () => {
 						name="city"
 						control={control}
 						defaultValue=""
-						rules={{ required: "City is required" }}
+						rules={{ required: "City is required" }} ////
 						render={({ field }) => (
 							<TextField
 								{...field}

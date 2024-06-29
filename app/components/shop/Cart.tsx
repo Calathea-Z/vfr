@@ -3,9 +3,11 @@ import { useStateStorage } from "@/utils/stateStorage";
 import { sanityImageBuilder } from "@/utils/sanityImageBuilder";
 import { CartItem } from "@/types/types";
 import useNoScroll from "@/app/hooks/useNoScroll";
+import { lato } from "@/app/fonts/fonts";
 
 //---Framework---//
 import { useEffect, useState, FC } from "react";
+import { useRouter } from "next/navigation";
 //---Components---//
 import axios from "axios";
 import { useSnackbar } from "notistack";
@@ -16,6 +18,7 @@ import {
 	MinusCircle,
 	Trash,
 } from "@phosphor-icons/react";
+import { ClipLoader } from "react-spinners";
 
 const Cart: FC = () => {
 	const { state, dispatch } = useStateStorage();
@@ -24,8 +27,10 @@ const Cart: FC = () => {
 		isCartVisible,
 	} = state;
 	const [isMobile, setIsMobile] = useState(false);
+	const [isCartItemsLoading, setIsCartItemsLoading] = useState(true);
 
 	const { enqueueSnackbar } = useSnackbar();
+	const router = useRouter();
 
 	const updateCartHandler = async (item: CartItem, quantity: number) => {
 		try {
@@ -81,6 +86,11 @@ const Cart: FC = () => {
 		dispatch({ type: "HIDE_CART" });
 	};
 
+	const checkoutHandler = () => {
+		closeCartHandler();
+		router.push("/checkout");
+	};
+
 	useEffect(() => {
 		const handleResize = () => {
 			setIsMobile(window.innerWidth < 640);
@@ -94,10 +104,22 @@ const Cart: FC = () => {
 		};
 	}, []);
 
+	useEffect(() => {
+		if (isCartVisible) {
+			setIsCartItemsLoading(true);
+		}
+	}, [isCartVisible]);
+
+	useEffect(() => {
+		if (cartItems.length > 0 || !isCartVisible) {
+			setIsCartItemsLoading(false);
+		}
+	}, [cartItems, isCartVisible]);
+
 	useNoScroll({ isMobile });
 
 	return (
-		<div>
+		<div className={lato.className}>
 			{isCartVisible && (
 				<div
 					id="cartContainer"
@@ -139,7 +161,16 @@ const Cart: FC = () => {
 								<Trash size={16} className="mr-1" /> Empty
 							</button>
 						</div>
-						{cartItems.length === 0 ? (
+						{isCartItemsLoading ? (
+							<div className="flex flex-col items-center justify-center h-full">
+								<ClipLoader
+									size={50}
+									color={"#36D7B7"}
+									loading={isCartItemsLoading}
+								/>
+								<p className="mt-4 text-lg">Gathering your cart...</p>
+							</div>
+						) : cartItems.length === 0 ? (
 							<div className="flex flex-col items-center justify-between h-full">
 								<div className="p-8 mt-2 text-center">
 									<span className="flex items-center justify-center gap-2 text-emerald-400">
@@ -210,7 +241,7 @@ const Cart: FC = () => {
 							))
 						)}
 					</div>
-					{cartItems.length > 0 ? (
+					{cartItems.length > 0 && !isCartItemsLoading ? (
 						<div className="border-t w-full border-gray-300 mb-6 p-2">
 							<div className="flex justify-between p-4 sm:p-6">
 								<span className="text-md sm:text-lg font-bold">Subtotal</span>
@@ -218,19 +249,25 @@ const Cart: FC = () => {
 									${cartItems.reduce((a, c) => a + c.price * c.quantity, 0)}
 								</span>
 							</div>
-							<div className="flex justify-between mt-2 gap-2">
-								<button
-									onClick={closeCartHandler}
-									className="bg-emerald-400 text-black px-2 sm:px-4 py-4 w-1/2 rounded"
-								>
-									Continue Shopping
-								</button>
-								<button
-									onClick={closeCartHandler}
-									className="bg-black text-white px-2 sm:px-4 py-4 w-1/2 rounded"
-								>
-									Checkout
-								</button>
+							<div className="flex flex-col items-center mt-2 gap-2">
+								<div className="flex justify-between w-full gap-2">
+									<button
+										onClick={closeCartHandler}
+										className="bg-emerald-400 text-black px-2 sm:px-4 py-4 w-1/2 rounded"
+									>
+										Continue Shopping
+									</button>
+									<button
+										onClick={checkoutHandler}
+										className="bg-black text-white px-2 sm:px-4 py-4 w-1/2 rounded"
+									>
+										Checkout
+									</button>
+								</div>
+								<p className="text-center text-sm mt-2">
+									Shipping, taxes and discounts will be displayed in the
+									checkout
+								</p>
 							</div>
 						</div>
 					) : (

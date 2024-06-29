@@ -14,8 +14,8 @@ const providers: Provider[] = [
 				name: profile.name,
 				email: profile.email,
 				image: profile.picture,
-				role: "user", // Set default role
-				emailVerified: profile.email_verified ? new Date() : undefined, // Set emailVerified based on profile
+				role: "user",
+				emailVerified: profile.email_verified ? new Date() : undefined,
 			};
 		},
 	}),

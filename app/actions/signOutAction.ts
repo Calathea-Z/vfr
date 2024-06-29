@@ -3,5 +3,5 @@
 import { signOut } from "@/nextAuth";
 
 export async function handleSignOut() {
-	await signOut({ redirectTo: "/" });
+	await signOut();
 }

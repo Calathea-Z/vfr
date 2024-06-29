@@ -18,6 +18,7 @@ import {
 	MinusCircle,
 	Trash,
 } from "@phosphor-icons/react";
+import { ClipLoader } from "react-spinners";
 
 const Cart: FC = () => {
 	const { state, dispatch } = useStateStorage();
@@ -26,6 +27,7 @@ const Cart: FC = () => {
 		isCartVisible,
 	} = state;
 	const [isMobile, setIsMobile] = useState(false);
+	const [isCartItemsLoading, setIsCartItemsLoading] = useState(true);
 
 	const { enqueueSnackbar } = useSnackbar();
 	const router = useRouter();
@@ -102,6 +104,18 @@ const Cart: FC = () => {
 		};
 	}, []);
 
+	useEffect(() => {
+		if (isCartVisible) {
+			setIsCartItemsLoading(true);
+		}
+	}, [isCartVisible]);
+
+	useEffect(() => {
+		if (cartItems.length > 0 || !isCartVisible) {
+			setIsCartItemsLoading(false);
+		}
+	}, [cartItems, isCartVisible]);
+
 	useNoScroll({ isMobile });
 
 	return (
@@ -147,7 +161,16 @@ const Cart: FC = () => {
 								<Trash size={16} className="mr-1" /> Empty
 							</button>
 						</div>
-						{cartItems.length === 0 ? (
+						{isCartItemsLoading ? (
+							<div className="flex flex-col items-center justify-center h-full">
+								<ClipLoader
+									size={50}
+									color={"#36D7B7"}
+									loading={isCartItemsLoading}
+								/>
+								<p className="mt-4 text-lg">Gathering your cart...</p>
+							</div>
+						) : cartItems.length === 0 ? (
 							<div className="flex flex-col items-center justify-between h-full">
 								<div className="p-8 mt-2 text-center">
 									<span className="flex items-center justify-center gap-2 text-emerald-400">
@@ -218,7 +241,7 @@ const Cart: FC = () => {
 							))
 						)}
 					</div>
-					{cartItems.length > 0 ? (
+					{cartItems.length > 0 && !isCartItemsLoading ? (
 						<div className="border-t w-full border-gray-300 mb-6 p-2">
 							<div className="flex justify-between p-4 sm:p-6">
 								<span className="text-md sm:text-lg font-bold">Subtotal</span>

@@ -1,13 +1,11 @@
 "use client";
+
 //---Framework---//
 import React from "react";
 import { useForm, Controller } from "react-hook-form";
 //---Packages---//
 import {
 	TextField,
-	Button,
-	Checkbox,
-	FormControlLabel,
 	MenuItem,
 	Select,
 	InputLabel,
@@ -15,6 +13,7 @@ import {
 	FormHelperText,
 } from "@mui/material";
 import states from "states-us";
+import MaskedInput from "react-text-mask";
 
 const DeliveryAddressForm = () => {
 	const {
@@ -32,7 +31,7 @@ const DeliveryAddressForm = () => {
 			onSubmit={handleSubmit(onSubmit)}
 			className="flex flex-col items-center justify-center"
 		>
-			<h1 className="text-2xl font-bold self-start">Delivery</h1>
+			<h1 className="text-2xl font-bold self-start mb-3">Delivery</h1>
 
 			{/* Country */}
 			<FormControl
@@ -109,25 +108,20 @@ const DeliveryAddressForm = () => {
 			</div>
 
 			{/* Company */}
-			<FormControl fullWidth margin="dense" error={!!errors.company}>
+			<FormControl fullWidth margin="dense">
 				<Controller
 					name="company"
 					control={control}
 					defaultValue=""
-					rules={{ required: "Company is required" }}
 					render={({ field }) => (
 						<TextField
 							{...field}
 							label="Company (optional)"
 							fullWidth
 							margin="dense"
-							error={!!errors.company}
 						/>
 					)}
 				/>
-				{errors.company && (
-					<FormHelperText>{String(errors.company.message)}</FormHelperText>
-				)}
 			</FormControl>
 
 			{/* Address */}
@@ -170,7 +164,7 @@ const DeliveryAddressForm = () => {
 			</FormControl>
 
 			{/* ZIP code, city, state */}
-			<div className="flex flex-row w-full gap-4">
+			<div className="flex flex-row w-full gap-2 items-center">
 				<FormControl fullWidth margin="dense" error={!!errors.zipCode}>
 					<Controller
 						name="zipCode"
@@ -197,7 +191,7 @@ const DeliveryAddressForm = () => {
 						name="city"
 						control={control}
 						defaultValue=""
-						rules={{ required: "City is required" }} ////
+						rules={{ required: "City is required" }}
 						render={({ field }) => (
 							<TextField
 								{...field}
@@ -213,23 +207,21 @@ const DeliveryAddressForm = () => {
 					)}
 				</FormControl>
 
-				<FormControl
-					fullWidth
-					margin="dense"
-					style={{ minWidth: "200px", maxWidth: "300px" }}
-					error={!!errors.state}
-				>
-					<InputLabel style={{ fontSize: "0.875rem" }}>State</InputLabel>
+				<FormControl fullWidth margin="dense" error={!!errors.state}>
+					<InputLabel style={{ fontSize: "0.9rem" }}>State</InputLabel>
 					<Controller
 						name="state"
 						control={control}
 						defaultValue=""
 						rules={{ required: "State is required" }}
-						render={({ field }: { field: any }) => (
+						render={({ field }) => (
 							<Select
 								{...field}
 								label="State"
-								style={{ fontSize: "0.875rem" }}
+								style={{
+									fontSize: "0.9rem",
+									paddingBottom: ".1rem",
+								}}
 								MenuProps={{
 									anchorOrigin: {
 										vertical: "bottom",
@@ -245,7 +237,7 @@ const DeliveryAddressForm = () => {
 									<MenuItem
 										key={i}
 										value={state.name}
-										style={{ fontSize: "0.875rem" }}
+										style={{ fontSize: "0.9rem" }}
 									>
 										{state.name}
 									</MenuItem>
@@ -266,19 +258,42 @@ const DeliveryAddressForm = () => {
 					control={control}
 					defaultValue=""
 					rules={{
-						required: "Phone number is required",
 						pattern: {
 							value: /^[0-9]{10}$/,
 							message: "Phone number must be 10 digits",
 						},
 					}}
+					// Render function for the phone number input field
 					render={({ field }) => (
-						<TextField
+						<MaskedInput
+							// Mask pattern for the phone number input
+							mask={[
+								"(",
+								/[1-9]/,
+								/\d/,
+								/\d/,
+								")",
+								" ",
+								/\d/,
+								/\d/,
+								/\d/,
+								"-",
+								/\d/,
+								/\d/,
+								/\d/,
+								/\d/,
+							]}
 							{...field}
-							label="Phone"
-							fullWidth
-							margin="dense"
-							error={!!errors.phone}
+							render={(ref: any, props: any) => (
+								<TextField
+									{...props}
+									inputRef={ref}
+									label="Phone"
+									fullWidth
+									margin="dense"
+									error={!!errors.phone}
+								/>
+							)}
 						/>
 					)}
 				/>

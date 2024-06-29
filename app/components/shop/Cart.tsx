@@ -3,6 +3,7 @@ import { useStateStorage } from "@/utils/stateStorage";
 import { sanityImageBuilder } from "@/utils/sanityImageBuilder";
 import { CartItem } from "@/types/types";
 import useNoScroll from "@/app/hooks/useNoScroll";
+import { lato } from "@/app/fonts/fonts";
 
 //---Framework---//
 import { useEffect, useState, FC } from "react";
@@ -104,7 +105,7 @@ const Cart: FC = () => {
 	useNoScroll({ isMobile });
 
 	return (
-		<div>
+		<div className={lato.className}>
 			{isCartVisible && (
 				<div
 					id="cartContainer"
@@ -225,19 +226,25 @@ const Cart: FC = () => {
 									${cartItems.reduce((a, c) => a + c.price * c.quantity, 0)}
 								</span>
 							</div>
-							<div className="flex justify-between mt-2 gap-2">
-								<button
-									onClick={closeCartHandler}
-									className="bg-emerald-400 text-black px-2 sm:px-4 py-4 w-1/2 rounded"
-								>
-									Continue Shopping
-								</button>
-								<button
-									onClick={checkoutHandler}
-									className="bg-black text-white px-2 sm:px-4 py-4 w-1/2 rounded"
-								>
-									Checkout
-								</button>
+							<div className="flex flex-col items-center mt-2 gap-2">
+								<div className="flex justify-between w-full gap-2">
+									<button
+										onClick={closeCartHandler}
+										className="bg-emerald-400 text-black px-2 sm:px-4 py-4 w-1/2 rounded"
+									>
+										Continue Shopping
+									</button>
+									<button
+										onClick={checkoutHandler}
+										className="bg-black text-white px-2 sm:px-4 py-4 w-1/2 rounded"
+									>
+										Checkout
+									</button>
+								</div>
+								<p className="text-center text-sm mt-2">
+									Shipping, taxes and discounts will be displayed in the
+									checkout
+								</p>
 							</div>
 						</div>
 					) : (

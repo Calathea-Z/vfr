@@ -6,6 +6,7 @@ import useNoScroll from "@/app/hooks/useNoScroll";
 
 //---Framework---//
 import { useEffect, useState, FC } from "react";
+import { useRouter } from "next/navigation";
 //---Components---//
 import axios from "axios";
 import { useSnackbar } from "notistack";
@@ -26,6 +27,7 @@ const Cart: FC = () => {
 	const [isMobile, setIsMobile] = useState(false);
 
 	const { enqueueSnackbar } = useSnackbar();
+	const router = useRouter();
 
 	const updateCartHandler = async (item: CartItem, quantity: number) => {
 		try {
@@ -79,6 +81,11 @@ const Cart: FC = () => {
 
 	const closeCartHandler = () => {
 		dispatch({ type: "HIDE_CART" });
+	};
+
+	const checkoutHandler = () => {
+		closeCartHandler();
+		router.push("/checkout");
 	};
 
 	useEffect(() => {
@@ -226,7 +233,7 @@ const Cart: FC = () => {
 									Continue Shopping
 								</button>
 								<button
-									onClick={closeCartHandler}
+									onClick={checkoutHandler}
 									className="bg-black text-white px-2 sm:px-4 py-4 w-1/2 rounded"
 								>
 									Checkout

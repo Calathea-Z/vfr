@@ -1,9 +1,11 @@
 "use client";
-import { useEffect, useState } from "react";
 import DeliveryAddressForm from "../components/checkout/DeliveryAddressForm";
 import ContactForm from "../components/checkout/ContactForm";
-import { useStateStorage } from "../../utils/stateStorage";
 import { lato } from "../fonts/fonts";
+import { useStateStorage } from "../../utils/stateStorage";
+import { sanityImageBuilder } from "../../utils/sanityImageBuilder";
+//---Framework---//
+import { useEffect, useState } from "react";
 
 const CheckoutPage = () => {
 	const { state } = useStateStorage();
@@ -46,11 +48,33 @@ const CheckoutPage = () => {
 					</div>
 				</div>
 				<div className="flex flex-1 flex-col p-5 bg-slate-200">
-					<ul>
+					<div className="flex flex-col gap-4">
 						{state.cart.cartItems.map((item, index) => (
-							<li key={index}>{item.name}</li>
+							<div
+								className="flex justify-between items-center p-4 border-b border-gray-300"
+								key={item._key || index}
+							>
+								<div className="flex items-center space-x-4">
+									<img
+										src={sanityImageBuilder(item.photo[0]).url()}
+										alt={item.name}
+										width={80}
+										height={80}
+										className="rounded-md"
+									/>
+									<div className="flex flex-col gap-1">
+										<h2 className="text-lg font-bold">{item.name}</h2>
+										<p className="text-sm text-gray-500">
+											Quantity: {item.quantity}
+										</p>
+									</div>
+								</div>
+								<p className="text-lg font-bold">
+									${item.price * item.quantity}
+								</p>
+							</div>
 						))}
-					</ul>
+					</div>
 				</div>
 			</div>
 		</div>

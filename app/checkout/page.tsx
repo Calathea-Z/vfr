@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { CaretDown, CaretUp } from "@phosphor-icons/react";
 import DeliveryAddressForm from "../components/checkout/DeliveryAddressForm";
 import ContactForm from "../components/checkout/ContactForm";
@@ -10,25 +10,7 @@ import PaymentWithSquare from "../components/checkout/PaymentWithSquare";
 
 const CheckoutPage = () => {
 	const { state } = useStateStorage();
-	const [isHeaderVisible, setIsHeaderVisible] = useState(true);
 	const [isOrderSummaryOpen, setIsOrderSummaryOpen] = useState(false);
-
-	const handleScroll = () => {
-		if (window.scrollY > 50) {
-			setIsHeaderVisible(false);
-		} else {
-			setIsHeaderVisible(true);
-		}
-	};
-
-	useEffect(() => {
-		if (typeof window !== "undefined") {
-			window.addEventListener("scroll", handleScroll);
-			return () => {
-				window.removeEventListener("scroll", handleScroll);
-			};
-		}
-	}, []);
 
 	const toggleOrderSummary = () => {
 		setIsOrderSummaryOpen(!isOrderSummaryOpen);
@@ -36,17 +18,15 @@ const CheckoutPage = () => {
 
 	return (
 		<div className={`flex flex-col min-h-screen ${lato.className}`}>
-			{isHeaderVisible && (
-				<div className="flex justify-center items-center h-20 bg-gradient-to-tr from-white to-slate-100 border-b border-gray-200">
-					<img
-						src="/assets/logos/simpleLogo.png"
-						alt="Logo"
-						className="h-[4rem]"
-					/>
-				</div>
-			)}
-			<div className="flex flex-1 flex-col sm:flex-row">
-				<div className="flex flex-col sm:flex-1 p-5 bg-slate-200 order-1 sm:order-2">
+			<div className="flex justify-center items-center h-20 bg-gradient-to-tr from-white to-slate-100 border-b border-gray-200 snap-start">
+				<img
+					src="/assets/logos/simpleLogo.png"
+					alt="Logo"
+					className="h-[4rem]"
+				/>
+			</div>
+			<div className="flex flex-1 flex-col sm:flex-row snap-y">
+				<div className="flex flex-col sm:flex-1 p-5 bg-slate-200 order-1 sm:order-2 snap-start sm:sticky sm:top-0 sm:h-screen sm:overflow-y-auto">
 					<div className="flex justify-between items-center p-4 border-b border-gray-300 sm:hidden">
 						<button onClick={toggleOrderSummary} className="flex items-center">
 							<span className="mr-2">Show order summary</span>
@@ -95,7 +75,7 @@ const CheckoutPage = () => {
 						))}
 					</div>
 				</div>
-				<div className="flex flex-col sm:flex-1 order-2 sm:order-1">
+				<div className="flex flex-col sm:flex-1 order-2 sm:order-1 snap-start overflow-y-auto">
 					<div className="flex flex-col sm:w-full p-8">
 						<h6 className="text-center mb-2 text-gray-500">Express Checkout</h6>
 						<PaymentWithSquare />

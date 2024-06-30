@@ -39,6 +39,7 @@ export type Action =
 	| { type: "HIDE_CART" }
 	| { type: "SHOW_TOP_BANNER" }
 	| { type: "HIDE_TOP_BANNER" }
+	| { type: "SET_CART_ITEMS"; payload: CartItem[] }
 	| {
 			type: "INITIALIZE_STATE";
 			payload: { cartItems: CartItem[]; userInfo: UserInfo | null };

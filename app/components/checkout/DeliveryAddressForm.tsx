@@ -208,7 +208,9 @@ const DeliveryAddressForm = () => {
 				</FormControl>
 
 				<FormControl fullWidth margin="dense" error={!!errors.state}>
-					<InputLabel style={{ fontSize: "0.9rem" }}>State</InputLabel>
+					<InputLabel style={{ fontSize: "0.9rem", marginTop: ".4rem" }}>
+						State
+					</InputLabel>
 					<Controller
 						name="state"
 						control={control}
@@ -219,8 +221,9 @@ const DeliveryAddressForm = () => {
 								{...field}
 								label="State"
 								style={{
-									fontSize: "0.9rem",
+									fontSize: ".9rem",
 									paddingBottom: ".1rem",
+									marginTop: ".4rem",
 								}}
 								MenuProps={{
 									anchorOrigin: {

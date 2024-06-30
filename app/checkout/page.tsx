@@ -1,12 +1,11 @@
 "use client";
+import { useEffect, useState } from "react";
+import { CaretDown, CaretUp } from "@phosphor-icons/react";
 import DeliveryAddressForm from "../components/checkout/DeliveryAddressForm";
 import ContactForm from "../components/checkout/ContactForm";
 import { lato } from "../fonts/fonts";
 import { useStateStorage } from "../../utils/stateStorage";
 import { sanityImageBuilder } from "../../utils/sanityImageBuilder";
-//---Framework---//
-import { useEffect, useState } from "react";
-import { CaretDown, CaretUp } from "@phosphor-icons/react";
 import PaymentWithSquare from "../components/checkout/PaymentWithSquare";
 
 const CheckoutPage = () => {
@@ -23,10 +22,12 @@ const CheckoutPage = () => {
 	};
 
 	useEffect(() => {
-		window.addEventListener("scroll", handleScroll);
-		return () => {
-			window.removeEventListener("scroll", handleScroll);
-		};
+		if (typeof window !== "undefined") {
+			window.addEventListener("scroll", handleScroll);
+			return () => {
+				window.removeEventListener("scroll", handleScroll);
+			};
+		}
 	}, []);
 
 	const toggleOrderSummary = () => {

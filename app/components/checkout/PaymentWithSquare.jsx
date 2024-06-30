@@ -35,16 +35,16 @@ const PaymentWithSquare = () => {
 
 	return (
 		<div className="flex flex-col items-center w-full px-4">
-			<div className="flex flex-col space-y-4 mb-6 w-full">
+			<div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 mb-6 w-full">
 				<button
-					className="flex items-center justify-center w-full h-16 border p-4 border-gray-300 rounded-md bg-blue-400"
+					className="flex items-center justify-center w-full sm:w-1/2 h-16 border p-4 border-gray-300 rounded-md bg-blue-400"
 					onClick={() => handlePaymentMethodClick("CreditCard")}
 				>
 					<CreditCardIcon size={32} color="#4B5563" />
 					<span className="ml-2 text-lg text-stone-700">Credit Card</span>
 				</button>
 				<button
-					className="flex items-center justify-center w-full h-16 p-4 border border-gray-300 rounded-md bg-green-400"
+					className="flex items-center justify-center w-full sm:w-1/2 h-16 p-4 border border-gray-300 rounded-md bg-green-400"
 					onClick={() => handlePaymentMethodClick("GooglePay")}
 				>
 					<GoogleChromeLogo size={32} color="#4B5563" />

@@ -62,37 +62,37 @@ const CheckoutPage = () => {
 								.toFixed(2)}
 						</span>
 					</div>
-					{(isOrderSummaryOpen || window.innerWidth >= 640) && (
-						<div className="flex flex-col gap-4">
-							{state.cart.cartItems.map((item, index) => (
-								<div
-									className="flex justify-between items-center p-4 border-b border-gray-300"
-									key={item._key || index}
-								>
-									<div className="flex items-center space-x-4">
-										<img
-											src={sanityImageBuilder(item.photo[0]).url()}
-											alt={item.name}
-											width={80}
-											height={80}
-											className="rounded-md"
-										/>
-										<div className="flex flex-col gap-1">
-											<h2 className="text-md md:text-lg font-bold">
-												{item.name}
-											</h2>
-											<p className="text-sm text-gray-500">
-												Quantity: {item.quantity}
-											</p>
-										</div>
+					<div
+						className={`flex flex-col gap-4 ${isOrderSummaryOpen ? "block" : "hidden"} sm:block`}
+					>
+						{state.cart.cartItems.map((item, index) => (
+							<div
+								className="flex justify-between items-center p-4 border-b border-gray-300"
+								key={item._key || index}
+							>
+								<div className="flex items-center space-x-4">
+									<img
+										src={sanityImageBuilder(item.photo[0]).url()}
+										alt={item.name}
+										width={80}
+										height={80}
+										className="rounded-md"
+									/>
+									<div className="flex flex-col gap-1">
+										<h2 className="text-md md:text-lg font-bold">
+											{item.name}
+										</h2>
+										<p className="text-sm text-gray-500">
+											Quantity: {item.quantity}
+										</p>
 									</div>
-									<p className="text-lg font-bold">
-										${item.price * item.quantity}
-									</p>
 								</div>
-							))}
-						</div>
-					)}
+								<p className="text-lg font-bold">
+									${item.price * item.quantity}
+								</p>
+							</div>
+						))}
+					</div>
 				</div>
 				<div className="flex flex-col sm:flex-1 order-2 sm:order-1">
 					<div className="flex flex-col sm:w-full p-8">

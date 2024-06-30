@@ -1,7 +1,5 @@
 "use client";
-import { useState } from "react";
-import { submitPayment } from "../../actions/squarePaymentAction";
-//---Packages--///
+import { useState, useEffect } from "react";
 import {
 	CreditCard,
 	PaymentForm,
@@ -11,6 +9,14 @@ import { CreditCard, GoogleChromeLogo } from "@phosphor-icons/react";
 
 const PaymentWithSquare = () => {
 	const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
+	const [isClient, setIsClient] = useState(false);
+
+	useEffect(() => {
+		if (typeof window !== "undefined") {
+			setIsClient(true);
+		}
+	}, []);
+
 	const appId = process.env.NEXT_PUBLIC_SQUARE_APP_ID;
 	const locationId = process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID;
 
@@ -29,6 +35,10 @@ const PaymentWithSquare = () => {
 			},
 		};
 	};
+
+	if (!isClient) {
+		return null; // or a loading spinner
+	}
 
 	return (
 		<div className="flex flex-col items-center w-full px-4">

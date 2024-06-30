@@ -111,10 +111,32 @@ const Cart: FC = () => {
 	}, [isCartVisible]);
 
 	useEffect(() => {
-		if (cartItems.length > 0 || !isCartVisible) {
+		// Load cart items from cookies or local storage
+		const loadCartItems = async () => {
+			// Simulate a delay for loading
+			await new Promise((resolve) => setTimeout(resolve, 1000));
+			// Load cart items from local storage or cookies
+			const storedCartItems = JSON.parse(
+				localStorage.getItem("cartItems") || "[]"
+			);
+			if (storedCartItems.length > 0) {
+				dispatch({
+					type: "SET_CART_ITEMS",
+					payload: storedCartItems,
+				});
+			}
+			console.log("Cart state on startup:", state.cart);
 			setIsCartItemsLoading(false);
+		};
+
+		loadCartItems();
+	}, [dispatch, isCartVisible]);
+
+	useEffect(() => {
+		if (!isCartItemsLoading) {
+			console.log("Cart state after loading:", state.cart);
 		}
-	}, [cartItems, isCartVisible]);
+	}, [isCartItemsLoading]);
 
 	useNoScroll({ isMobile });
 
@@ -170,75 +192,79 @@ const Cart: FC = () => {
 								/>
 								<p className="mt-4 text-lg">Gathering your cart...</p>
 							</div>
-						) : cartItems.length === 0 ? (
-							<div className="flex flex-col items-center justify-between h-full">
-								<div className="p-8 mt-2 text-center">
-									<span className="flex items-center justify-center gap-2 text-emerald-400">
-										<PottedPlant className="w-16 h-16 lg:w-20 lg:h-20" />
-									</span>
-									<h1 className="text-2xl md:text-3xl text-black mt-2">
-										Your cart is empty..
-									</h1>
-								</div>
-							</div>
 						) : (
-							cartItems.map((item, index) => (
-								<div
-									className="flex justify-between items-center p-8 border-b border-gray-300"
-									key={item._key || index}
-								>
-									<div className="flex items-center space-x-4 sm:space-x-6">
-										<a href={`/shop/product/${item.slug}`}>
-											<img
-												src={sanityImageBuilder(item.photo[0]).url()}
-												alt={item.name}
-												width={80}
-												height={80}
-												className="rounded-md"
-											/>
-										</a>
-										<div className="flex flex-col gap-1 sm:gap-2">
-											<h2 className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-3xl font-bold">
-												{item.name}
-											</h2>
-											<div className="flex items-center gap-2 sm:gap-3">
-												<div className="flex items-center space-x-1 sm:space-x-2">
-													<button
-														onClick={() =>
-															updateCartHandler(item, item.quantity - 1)
-														}
-														className="rounded-full p-1 hover:bg-emerald-200 text-lg sm:text-xl font-bold flex items-center justify-center"
-													>
-														<MinusCircle className="w-8 h-8" />
-													</button>
-													<p className="text-2xl sm:text-4xl font-serif">
-														{item.quantity}
-													</p>
-													<button
-														onClick={() =>
-															updateCartHandler(item, item.quantity + 1)
-														}
-														className="rounded-full p-1 hover:bg-emerald-200 text-lg sm:text-xl font-bold flex items-center justify-center"
-													>
-														<PlusCircle className="w-8 h-8" />
-													</button>
-												</div>
-											</div>
+							<>
+								{cartItems.length === 0 ? (
+									<div className="flex flex-col items-center justify-between h-full">
+										<div className="p-8 mt-2 text-center">
+											<span className="flex items-center justify-center gap-2 text-emerald-400">
+												<PottedPlant className="w-16 h-16 lg:w-20 lg:h-20" />
+											</span>
+											<h1 className="text-2xl md:text-3xl text-black mt-2">
+												Your cart is empty..
+											</h1>
 										</div>
 									</div>
-									<div className="flex flex-col items-end gap-2 sm:gap-4">
-										<p className="text-lg md:text-2xl font-bold">
-											${item.price * item.quantity}
-										</p>
-										<button
-											onClick={() => removeItemHandler(item)}
-											className="text-red-600 text-base md:text-md rounded-lg p-1 hover:bg-gray-100"
+								) : (
+									cartItems.map((item, index) => (
+										<div
+											className="flex justify-between items-center p-8 border-b border-gray-300"
+											key={item._key || index}
 										>
-											<Trash size={16} />
-										</button>
-									</div>
-								</div>
-							))
+											<div className="flex items-center space-x-4 sm:space-x-6">
+												<a href={`/shop/product/${item.slug}`}>
+													<img
+														src={sanityImageBuilder(item.photo[0]).url()}
+														alt={item.name}
+														width={80}
+														height={80}
+														className="rounded-md"
+													/>
+												</a>
+												<div className="flex flex-col gap-1 sm:gap-2">
+													<h2 className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-3xl font-bold">
+														{item.name}
+													</h2>
+													<div className="flex items-center gap-2 sm:gap-3">
+														<div className="flex items-center space-x-1 sm:space-x-2">
+															<button
+																onClick={() =>
+																	updateCartHandler(item, item.quantity - 1)
+																}
+																className="rounded-full p-1 hover:bg-emerald-200 text-lg sm:text-xl font-bold flex items-center justify-center"
+															>
+																<MinusCircle className="w-8 h-8" />
+															</button>
+															<p className="text-2xl sm:text-4xl font-serif">
+																{item.quantity}
+															</p>
+															<button
+																onClick={() =>
+																	updateCartHandler(item, item.quantity + 1)
+																}
+																className="rounded-full p-1 hover:bg-emerald-200 text-lg sm:text-xl font-bold flex items-center justify-center"
+															>
+																<PlusCircle className="w-8 h-8" />
+															</button>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div className="flex flex-col items-end gap-2 sm:gap-4">
+												<p className="text-lg md:text-2xl font-bold">
+													${item.price * item.quantity}
+												</p>
+												<button
+													onClick={() => removeItemHandler(item)}
+													className="text-red-600 text-base md:text-md rounded-lg p-1 hover:bg-gray-100"
+												>
+													<Trash size={16} />
+												</button>
+											</div>
+										</div>
+									))
+								)}
+							</>
 						)}
 					</div>
 					{cartItems.length > 0 && !isCartItemsLoading ? (

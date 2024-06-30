@@ -1,5 +1,4 @@
 import { State, Action } from "./stateStorage";
-import { CartItem } from "@/types/types";
 
 export const reducer = (state: State, action: Action): State => {
 	switch (action.type) {
@@ -24,6 +23,12 @@ export const reducer = (state: State, action: Action): State => {
 
 		case "CART_CLEAR_ITEMS":
 			return { ...state, cart: { ...state.cart, cartItems: [] } };
+
+		case "SET_CART_ITEMS": {
+			const cartItems = action.payload;
+			return { ...state, cart: { ...state.cart, cartItems } };
+		}
+
 		case "SHOW_CART":
 			return { ...state, isCartVisible: true };
 

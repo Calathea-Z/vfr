@@ -5,7 +5,10 @@ import {
 	PaymentForm,
 	GooglePay,
 } from "react-square-web-payments-sdk";
-import { CreditCard, GoogleChromeLogo } from "@phosphor-icons/react";
+import {
+	CreditCard as CreditCardIcon,
+	GoogleChromeLogo,
+} from "@phosphor-icons/react";
 
 const PaymentWithSquare = () => {
 	const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
@@ -47,7 +50,7 @@ const PaymentWithSquare = () => {
 					className="flex items-center justify-center w-full sm:w-1/2 h-16 border p-4 border-gray-300 rounded-md bg-blue-400"
 					onClick={() => handlePaymentMethodClick("CreditCard")}
 				>
-					<CreditCard size={32} color="#4B5563" />
+					<CreditCardIcon size={32} color="#4B5563" />
 					<span className="ml-2 text-lg text-stone-700">Credit Card</span>
 				</button>
 				<button

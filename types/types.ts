@@ -1,3 +1,12 @@
+export interface Address {
+	company?: string | null;
+	street: string;
+	streetTwo?: string | null;
+	city: string;
+	state: string;
+	zipCode: string;
+	phoneNumber?: string | null;
+}
 export interface BioData {
 	name: string;
 	header: string;
@@ -82,10 +91,7 @@ export interface ShippingInformation {
 	firstNameShipping: string;
 	lastNameShipping: string;
 	company?: string;
-	address: string;
-	city: string;
-	zipCode: string;
-	usState: string;
+	address: Address;
 	shippingContactEmail: string;
 }
 
@@ -123,8 +129,5 @@ export interface UserInfo {
 	shippingContactEmail?: string;
 	firstNameShipping?: string;
 	lastNameShipping?: string;
-	address?: string;
-	city?: string;
-	zipCode?: number;
-	usState?: string;
+	addresses: Address[];
 }

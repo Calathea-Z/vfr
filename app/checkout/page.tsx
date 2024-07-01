@@ -7,6 +7,7 @@ import { lato } from "../fonts/fonts";
 import { useStateStorage } from "../../utils/stateStorage";
 import { sanityImageBuilder } from "../../utils/sanityImageBuilder";
 import PaymentWithSquare from "../components/checkout/PaymentWithSquare";
+import ShippingRate from "../components/checkout/ShippingRate";
 
 const CheckoutPage = () => {
 	const { state } = useStateStorage();
@@ -90,6 +91,7 @@ const CheckoutPage = () => {
 					</div>
 				</div>
 			</div>
+			<ShippingRate />
 		</div>
 	);
 };

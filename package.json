@@ -34,6 +34,7 @@
     "next-sanity": "^9.3.10",
     "notistack": "^3.0.1",
     "preact": "^10.22.0",
+    "qs": "^6.12.1",
     "react": "^18",
     "react-dom": "^18",
     "react-hook-form": "^7.52.0",
@@ -50,16 +51,19 @@
     "styled-components": "^6.1.11",
     "universal-cookie": "^7.1.4",
     "uuid": "^10.0.0",
-    "ws": "^8.17.1"
+    "ws": "^8.17.1",
+    "xml2js": "^0.6.2"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
     "@types/is-hotkey": "^0.1.10",
     "@types/node": "^20",
+    "@types/qs": "^6.9.15",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@types/react-slick": "^0.23.13",
     "@types/react-text-mask": "^5.4.14",
+    "@types/xml2js": "^0.4.14",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"

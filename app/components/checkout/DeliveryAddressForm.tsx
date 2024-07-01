@@ -1,7 +1,10 @@
 "use client";
+import { Address } from "@/types/types";
 //---Framework---//
-import React from "react";
+import React, { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
+import { useStateStorage } from "../../../utils/stateStorage";
+import axios from "axios";
 //---Packages---//
 import {
 	TextField,
@@ -10,19 +13,59 @@ import {
 	InputLabel,
 	FormControl,
 	FormHelperText,
+	Button,
+	Checkbox,
+	FormControlLabel,
 } from "@mui/material";
 import states from "states-us";
 import MaskedInput from "react-text-mask";
 
 const DeliveryAddressForm = () => {
+	const { dispatch } = useStateStorage();
 	const {
 		control,
 		handleSubmit,
 		formState: { errors },
+		setValue,
 	} = useForm();
 
+	const [suggestedAddress, setSuggestedAddress] = useState<Address | null>(
+		null
+	);
+	const [isValid, setIsValid] = useState(true);
+
+	const validateAddress = async (data: any) => {
+		try {
+			const res = await axios.post("/api/address-validation", data);
+			setIsValid(res.data.valid);
+			setSuggestedAddress(res.data.suggestedAddress);
+		} catch (error) {
+			console.error("Error validating address", error);
+		}
+	};
+
+	const handleUseSuggestedAddress = () => {
+		if (suggestedAddress) {
+			setValue("address", suggestedAddress.street);
+			setValue("city", suggestedAddress.city);
+			setValue("state", suggestedAddress.state);
+			setValue("zipCode", suggestedAddress.zipCode);
+			setSuggestedAddress(null);
+			setIsValid(true);
+		}
+	};
+
 	const onSubmit = (data: any) => {
-		console.log(data);
+		validateAddress(data);
+		dispatch({
+			type: "SAVE_SHIPPING_ADDRESS",
+			payload: {
+				address: data,
+				firstNameShipping: data.firstName,
+				lastNameShipping: data.lastName,
+				shippingContactEmail: data.email,
+			},
+		});
 	};
 
 	return (
@@ -265,10 +308,8 @@ const DeliveryAddressForm = () => {
 							message: "Phone number must be 10 digits",
 						},
 					}}
-					// Render function for the phone number input field
 					render={({ field }) => (
 						<MaskedInput
-							// Mask pattern for the phone number input
 							mask={[
 								"(",
 								/[1-9]/,
@@ -303,6 +344,22 @@ const DeliveryAddressForm = () => {
 					<FormHelperText>{String(errors.phone.message)}</FormHelperText>
 				)}
 			</FormControl>
+
+			{!isValid && suggestedAddress && (
+				<div>
+					<p>Did you mean:</p>
+					<p>{`${suggestedAddress.street}, ${suggestedAddress.city}, ${suggestedAddress.state} ${suggestedAddress.zipCode}`}</p>
+					<Button type="button" onClick={handleUseSuggestedAddress}>
+						Use Suggested Address
+					</Button>
+				</div>
+			)}
+
+			<FormControlLabel
+				control={<Checkbox name="useAsBillingAddress" />}
+				label="Use as Billing Address"
+				className="self-start"
+			/>
 		</form>
 	);
 };

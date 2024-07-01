@@ -1,5 +1,8 @@
-import { useState, useEffect } from "react";
 import { useStateStorage } from "../../../utils/stateStorage";
+import { ShippingInformation } from "@/types/types";
+//---Framework---//
+import { useState, useEffect } from "react";
+//---Packages---//
 import axios from "axios";
 import ClipLoader from "react-spinners/ClipLoader";
 import Cookies from "universal-cookie";
@@ -12,7 +15,8 @@ const ShippingCostCalculator = () => {
 		dispatch,
 	} = useStateStorage();
 
-	const [shippingRate, setShippingRate] = useState(null);
+	const [shippingRate, setShippingRate] = useState<number | null>(null);
+
 	const cookies = new Cookies();
 
 	useEffect(() => {
@@ -20,11 +24,11 @@ const ShippingCostCalculator = () => {
 			const data = {
 				cartItems,
 				shippingWeight,
-				zipCode: shippingInformation?.zipCode,
+				zipCode: (shippingInformation as ShippingInformation)?.address.zipCode,
 			};
 
 			try {
-				const res = await axios.post("/api/shippingRate", data);
+				const res = await axios.post("/api/shipping-rate", data);
 				if (res.data.rate) {
 					dispatch({
 						type: "UPDATE_SHIPPING_COST",
@@ -42,7 +46,7 @@ const ShippingCostCalculator = () => {
 			}
 		};
 
-		if (shippingInformation?.zipCode) {
+		if ((shippingInformation as ShippingInformation)?.address.zipCode) {
 			getShippingRates();
 		}
 	}, [cartItems, shippingWeight, shippingInformation, dispatch]);

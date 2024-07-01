@@ -2,7 +2,6 @@ import axios from "axios";
 import qs from "qs";
 import { parseStringPromise } from "xml2js";
 import { NextApiRequest, NextApiResponse } from "next";
-import { Address } from "@/types/types";
 
 export default async function handler(
 	req: NextApiRequest,
@@ -34,8 +33,7 @@ export default async function handler(
 				explicitArray: false,
 				ignoreAttrs: true,
 			});
-			const address: Address | undefined =
-				result.AddressValidateResponse.Address;
+			const address = result.AddressValidateResponse.Address;
 
 			const valid = address && !address.Error;
 			const suggestedAddress = valid
@@ -51,7 +49,7 @@ export default async function handler(
 			console.error(error);
 			res.status(500).json({
 				error: "An error occurred while verifying the address.",
-				details: error.message,
+				details: (error as Error).message,
 			});
 		}
 	} else {

@@ -1,4 +1,4 @@
-import { OrderItem, ShippingInformation } from "@/types/types";
+import { OrderItem, ShippingInformation, Address } from "@/types/types";
 //---Packages---//
 import mongoose, { Schema, model, Document, Model } from "mongoose";
 
@@ -19,6 +19,24 @@ if (mongoose.models.UserOrder) {
 	delete mongoose.models.UserOrder;
 }
 
+const AddressSchema = new Schema<Address>({
+	company: { type: String, default: null },
+	street: { type: String, required: true },
+	streetTwo: { type: String, default: null },
+	city: { type: String, required: true },
+	state: { type: String, required: true },
+	zipCode: { type: String, required: true },
+	phoneNumber: { type: String, default: null },
+});
+
+const ShippingInformationSchema = new Schema<ShippingInformation>({
+	firstNameShipping: { type: String, required: true },
+	lastNameShipping: { type: String, required: true },
+	company: { type: String },
+	address: { type: AddressSchema, required: true },
+	shippingContactEmail: { type: String, required: true },
+});
+
 const UserOrderSchema = new Schema<UserOrderDocument>(
 	{
 		user: {
@@ -34,16 +52,7 @@ const UserOrderSchema = new Schema<UserOrderDocument>(
 				price: { type: Number, required: true },
 			},
 		],
-		shippingInformation: {
-			firstNameShipping: { type: String, required: true },
-			lastNameShipping: { type: String, required: true },
-			company: { type: String },
-			address: { type: String, required: true },
-			city: { type: String, required: true },
-			zipCode: { type: String, required: true },
-			usState: { type: String, required: true },
-			shippingContactEmail: { type: String, required: true },
-		},
+		shippingInformation: { type: ShippingInformationSchema, required: true },
 		itemsPrice: { type: Number, default: 0 },
 		parsedShippingCost: { type: Number, default: 0 },
 		taxPrice: { type: Number, default: 0 },

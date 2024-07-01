@@ -1,48 +1,66 @@
 "use client";
+import { useState, useEffect } from "react";
 import { CreditCard, PaymentForm } from "react-square-web-payments-sdk";
-import { CreditCard as CreditCardIcon } from "@phosphor-icons/react";
 
-const CreditCardPay = ({
-	appId,
-	locationId,
-	handlePaymentMethodClick,
-	selectedPaymentMethod,
-}) => {
-	const createPaymentRequest = () => {
-		return {
-			countryCode: "US",
-			currencyCode: "USD",
-			total: {
-				label: "Total",
-				amount: "1.00",
-				pending: false,
-			},
-		};
-	};
+const CreditCardPay = () => {
+	const appId = process.env.NEXT_PUBLIC_SQUARE_APP_ID;
+	const locationId = process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID;
+
+	const [isClient, setIsClient] = useState(false);
+
+	useEffect(() => {
+		if (typeof window !== "undefined") {
+			setIsClient(true);
+		}
+	}, []);
+
+	if (!isClient) {
+		return null;
+	}
 
 	return (
-		<>
-			<button
-				className="flex items-center justify-center w-full sm:w-1/2 h-16 border p-4 border-gray-300 rounded-md bg-blue-400"
-				onClick={() => handlePaymentMethodClick("CreditCard")}
-			>
-				<CreditCardIcon size={32} color="#4B5563" />
-				<span className="ml-2 text-lg text-stone-700">Credit Card</span>
-			</button>
-			{selectedPaymentMethod === "CreditCard" && (
-				<PaymentForm
-					applicationId={appId}
-					locationId={locationId}
-					cardTokenizeResponseReceived={async (token) => {
-						const result = await submitPayment(token.token);
-						console.log(result);
+		<PaymentForm
+			applicationId={appId}
+			locationId={locationId}
+			cardTokenizeResponseReceived={async (token) => {
+				const result = await submitPayment(token.token);
+				console.log(result);
+			}}
+		>
+			<div>
+				<h1 className="text-2xl font-bold self-start">Payment</h1>
+				<p className="text-sm text-gray-500 mb-4">
+					All transactions are secure and encrypted
+				</p>
+				<CreditCard
+					buttonProps={{
+						css: {
+							"[data-theme='dark'] &": {
+								backgroundColor: "#61dafb",
+								color: "var(--ifm-color-emphasis-100)",
+								"&:hover": {
+									backgroundColor: "#0091ea",
+								},
+							},
+							backgroundColor: "#f2c88c",
+							fontSize: "14px",
+							color: "#fff",
+							"&:hover": {
+								backgroundColor: "#d1a06b",
+							},
+						},
 					}}
-					createPaymentRequest={createPaymentRequest}
-				>
-					<CreditCard />
-				</PaymentForm>
-			)}
-		</>
+					style={{
+						input: {
+							fontSize: "14px",
+						},
+						"input::placeholder": {
+							color: "#781520",
+						},
+					}}
+				/>
+			</div>
+		</PaymentForm>
 	);
 };
 

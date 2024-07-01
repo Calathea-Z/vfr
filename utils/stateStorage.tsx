@@ -51,10 +51,12 @@ const defaultInitialState: State = {
 		shippingInformation: {
 			firstNameShipping: "",
 			lastNameShipping: "",
-			address: "",
-			city: "",
-			zipCode: "",
-			usState: "",
+			address: {
+				street: "",
+				city: "",
+				state: "",
+				zipCode: "",
+			},
 			shippingContactEmail: "",
 		},
 		shippingWeight: null,
@@ -84,6 +86,8 @@ interface StoreProviderProps {
 	initialCookies: {
 		cartItems?: string;
 		userInfo?: string;
+		shippingWeight?: string;
+		shippingCost?: string;
 	};
 }
 

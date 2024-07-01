@@ -15,15 +15,10 @@ import { fullLogo } from "@/public/assets";
 const CheckoutPage = () => {
 	const { state } = useStateStorage();
 	const [isTopOrderSummaryOpen, setIsTopOrderSummaryOpen] = useState(false);
-	const [isBottomOrderSummaryOpen, setIsBottomOrderSummaryOpen] =
-		useState(false);
+	const [postalCode, setPostalCode] = useState("");
 
 	const toggleTopOrderSummary = () => {
 		setIsTopOrderSummaryOpen(!isTopOrderSummaryOpen);
-	};
-
-	const toggleBottomOrderSummary = () => {
-		setIsBottomOrderSummaryOpen(!isBottomOrderSummaryOpen);
 	};
 
 	return (
@@ -107,7 +102,7 @@ const CheckoutPage = () => {
 							</div>
 							<div className="flex justify-between items-center mt-1">
 								<span className="text-md text-gray-500">Shipping</span>
-								<span className="text-md text-gray-500">$15.00</span>
+								<ShippingRate postalCode={postalCode} />
 							</div>
 							<div className="flex justify-between items-center mt-1">
 								<span className="text-md text-gray-500">Estimated taxes</span>
@@ -141,8 +136,13 @@ const CheckoutPage = () => {
 						</div>
 						<ContactForm />
 						<hr className="my-4" />
-						<DeliveryAddressForm />
+						<DeliveryAddressForm setPostalCode={setPostalCode} />
 						<MobileOrderSummary />
+						<div className="flex justify-center items-center mt-4">
+							<div className="w-full">
+								<CreditCardPay />
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>

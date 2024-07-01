@@ -20,7 +20,11 @@ import {
 import states from "states-us";
 import MaskedInput from "react-text-mask";
 
-const DeliveryAddressForm = () => {
+const DeliveryAddressForm = ({
+	setPostalCode,
+}: {
+	setPostalCode: (code: string) => void;
+}) => {
 	const { dispatch } = useStateStorage();
 	const {
 		control,
@@ -220,6 +224,13 @@ const DeliveryAddressForm = () => {
 								fullWidth
 								margin="dense"
 								error={!!errors.zipCode}
+								onChange={(e) => {
+									field.onChange(e);
+									const value = e.target.value;
+									if (value.length === 5) {
+										setPostalCode(value);
+									}
+								}}
 							/>
 						)}
 					/>
@@ -354,12 +365,12 @@ const DeliveryAddressForm = () => {
 					</Button>
 				</div>
 			)}
-
+			{/* 
 			<FormControlLabel
 				control={<Checkbox name="useAsBillingAddress" />}
 				label="Use as Billing Address"
 				className="self-start"
-			/>
+			/> */}
 		</form>
 	);
 };

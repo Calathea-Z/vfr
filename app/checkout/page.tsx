@@ -133,7 +133,7 @@ const CheckoutPage = () => {
 										) * 0.07
 									).toFixed(2)}{" "}
 									{/* Ensure taxes are displayed as a string */}
-								</span<GooglePayComponent totalAmount={total} /> 
+								</span>
 							</div>
 							<div className="flex justify-between items-center font-bold mt-2 text-lg">
 								<span>Total</span>

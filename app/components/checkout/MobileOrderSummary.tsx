@@ -3,8 +3,9 @@ import { useState } from "react";
 import { CaretDown, CaretUp } from "@phosphor-icons/react";
 import { sanityImageBuilder } from "../../../utils/sanityImageBuilder";
 import { useStateStorage } from "../../../utils/stateStorage";
+import ShippingRate from "./ShippingRate";
 
-const MobileOrderSummary = () => {
+const MobileOrderSummary = ({ postalCode }: { postalCode: string }) => {
 	const { state } = useStateStorage();
 	const [isBottomOrderSummaryOpen, setIsBottomOrderSummaryOpen] =
 		useState(false);
@@ -84,11 +85,19 @@ const MobileOrderSummary = () => {
 					</div>
 					<div className="flex justify-between items-center">
 						<span className="text-sm text-gray-500">Shipping</span>
-						<span className="text-sm text-gray-500">$15.00</span>
+						<ShippingRate postalCode={postalCode} />
 					</div>
 					<div className="flex justify-between items-center">
 						<span className="text-sm text-gray-500">Estimated taxes</span>
-						<span className="text-sm text-gray-500">$17.79</span>
+						<span className="text-sm text-gray-500">
+							$
+							{(
+								state.cart.cartItems.reduce(
+									(total, item) => total + item.price * item.quantity,
+									0
+								) * 0.07
+							).toFixed(2)}
+						</span>
 					</div>
 					<div className="flex justify-between items-center font-bold">
 						<span>Total</span>
@@ -100,7 +109,11 @@ const MobileOrderSummary = () => {
 									0
 								) +
 								15 +
-								17.79
+								state.cart.cartItems.reduce(
+									(total, item) => total + item.price * item.quantity,
+									0
+								) *
+									0.07
 							).toFixed(2)}
 						</span>
 					</div>

@@ -106,7 +106,15 @@ const CheckoutPage = () => {
 							</div>
 							<div className="flex justify-between items-center mt-1">
 								<span className="text-md text-gray-500">Estimated taxes</span>
-								<span className="text-md text-gray-500">$17.79</span>
+								<span className="text-md text-gray-500">
+									$
+									{(
+										state.cart.cartItems.reduce(
+											(total, item) => total + item.price * item.quantity,
+											0
+										) * 0.07
+									).toFixed(2)}
+								</span>
 							</div>
 							<div className="flex justify-between items-center font-bold mt-2 text-lg">
 								<span>Total</span>
@@ -118,7 +126,11 @@ const CheckoutPage = () => {
 											0
 										) +
 										15 +
-										17.79
+										state.cart.cartItems.reduce(
+											(total, item) => total + item.price * item.quantity,
+											0
+										) *
+											0.07
 									).toFixed(2)}
 								</span>
 							</div>
@@ -137,7 +149,7 @@ const CheckoutPage = () => {
 						<ContactForm />
 						<hr className="my-4" />
 						<DeliveryAddressForm setPostalCode={setPostalCode} />
-						<MobileOrderSummary />
+						<MobileOrderSummary postalCode={postalCode} />
 						<div className="flex justify-center items-center mt-4">
 							<div className="w-full">
 								<CreditCardPay />

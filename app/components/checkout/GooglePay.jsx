@@ -24,7 +24,7 @@ const GooglePayComponent = ({ totalAmount }) => {
 			currencyCode: "USD",
 			total: {
 				label: "Total",
-				amount: totalAmountInCents, // Use the converted amount
+				amount: totalAmount.toString(),
 				pending: false,
 			},
 		};

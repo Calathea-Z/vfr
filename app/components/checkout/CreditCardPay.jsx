@@ -9,7 +9,6 @@ const CreditCardPay = ({ totalAmount }) => {
 	const locationId = process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID;
 
 	const [isClient, setIsClient] = useState(false);
-	const { state } = useStateStorage();
 
 	useEffect(() => {
 		if (typeof window !== "undefined") {

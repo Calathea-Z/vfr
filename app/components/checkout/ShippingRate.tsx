@@ -6,7 +6,13 @@ import axios from "axios";
 import ClipLoader from "react-spinners/ClipLoader";
 import Cookies from "universal-cookie";
 
-const ShippingCostCalculator = ({ postalCode }: { postalCode: string }) => {
+const ShippingCostCalculator = ({
+	postalCode,
+	setShippingRate,
+}: {
+	postalCode: string;
+	setShippingRate: (rate: number) => void;
+}) => {
 	const {
 		state: {
 			cart: { cartItems, shippingWeight },
@@ -14,7 +20,9 @@ const ShippingCostCalculator = ({ postalCode }: { postalCode: string }) => {
 		dispatch,
 	} = useStateStorage();
 
-	const [shippingRate, setShippingRate] = useState<number | null>(null);
+	const [localShippingRate, setLocalShippingRate] = useState<number | null>(
+		null
+	);
 	const [isLoading, setIsLoading] = useState(false);
 	const [boxLength, setBoxLength] = useState<number | null>(null);
 	const [boxWidth, setBoxWidth] = useState<number | null>(null);
@@ -62,7 +70,8 @@ const ShippingCostCalculator = ({ postalCode }: { postalCode: string }) => {
 					cookies.set("shippingCost", JSON.stringify(res.data.rate), {
 						path: "/",
 					});
-					setShippingRate(res.data.rate);
+					setLocalShippingRate(res.data.rate);
+					setShippingRate(res.data.rate); // Call the callback to update the parent component's state
 				} else {
 					console.error(res.data.error);
 				}
@@ -94,8 +103,8 @@ const ShippingCostCalculator = ({ postalCode }: { postalCode: string }) => {
 			<p className="text-md text-gray-500">
 				{isLoading ? (
 					<ClipLoader />
-				) : shippingRate !== null ? (
-					`$${shippingRate}`
+				) : localShippingRate !== null ? (
+					`$${localShippingRate}`
 				) : (
 					"$ 00.00"
 				)}

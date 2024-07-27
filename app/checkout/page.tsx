@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CaretDown, CaretUp } from "@phosphor-icons/react";
 import DeliveryAddressForm from "../components/checkout/DeliveryAddressForm";
 import ContactForm from "../components/checkout/ContactForm";
@@ -16,10 +16,27 @@ const CheckoutPage = () => {
 	const { state } = useStateStorage();
 	const [isTopOrderSummaryOpen, setIsTopOrderSummaryOpen] = useState(false);
 	const [postalCode, setPostalCode] = useState("");
+	const [shippingRate, setShippingRate] = useState(0);
+	const [total, setTotal] = useState(0);
 
 	const toggleTopOrderSummary = () => {
 		setIsTopOrderSummaryOpen(!isTopOrderSummaryOpen);
 	};
+
+	const calculateTotal = () => {
+		const subtotal = state.cart.cartItems.reduce(
+			(total, item) => total + item.price * item.quantity,
+			0
+		);
+		const shippingRateNumber = Number(shippingRate); // Ensure shippingRate is a number
+		const taxes = subtotal * 0.07; // Assuming a 7% tax rate
+		const totalAmount = subtotal + shippingRateNumber + taxes;
+		setTotal(parseFloat(totalAmount.toFixed(2))); // Ensure total is formatted to two decimal places
+	};
+
+	useEffect(() => {
+		calculateTotal();
+	}, [state.cart.cartItems, shippingRate]);
 
 	return (
 		<div className={`flex flex-col min-h-screen ${lato.className}`}>
@@ -40,12 +57,8 @@ const CheckoutPage = () => {
 								<CaretDown size={24} />
 							)}
 						</button>
-						<span className="text-lg font-bold">
-							$
-							{state.cart.cartItems
-								.reduce((total, item) => total + item.price * item.quantity, 0)
-								.toFixed(2)}
-						</span>
+						<span className="text-lg font-bold">${total.toFixed(2)}</span>{" "}
+						{/* Ensure total is displayed as a string */}
 					</div>
 					<div
 						className={`flex flex-col gap-4 ${isTopOrderSummaryOpen ? "block" : "hidden"} sm:block`}
@@ -73,7 +86,8 @@ const CheckoutPage = () => {
 									</div>
 								</div>
 								<p className="text-lg font-bold">
-									${item.price * item.quantity}
+									${(item.price * item.quantity).toFixed(2)}{" "}
+									{/* Ensure item total is displayed as a string */}
 								</p>
 							</div>
 						))}
@@ -97,12 +111,16 @@ const CheckoutPage = () => {
 											(total, item) => total + item.price * item.quantity,
 											0
 										)
-										.toFixed(2)}
+										.toFixed(2)}{" "}
+									{/* Ensure subtotal is displayed as a string */}
 								</span>
 							</div>
 							<div className="flex justify-between items-center mt-1">
 								<span className="text-md text-gray-500">Shipping</span>
-								<ShippingRate postalCode={postalCode} />
+								<ShippingRate
+									postalCode={postalCode}
+									setShippingRate={setShippingRate}
+								/>
 							</div>
 							<div className="flex justify-between items-center mt-1">
 								<span className="text-md text-gray-500">Estimated taxes</span>
@@ -113,26 +131,14 @@ const CheckoutPage = () => {
 											(total, item) => total + item.price * item.quantity,
 											0
 										) * 0.07
-									).toFixed(2)}
+									).toFixed(2)}{" "}
+									{/* Ensure taxes are displayed as a string */}
 								</span>
 							</div>
 							<div className="flex justify-between items-center font-bold mt-2 text-lg">
 								<span>Total</span>
-								<span>
-									$
-									{(
-										state.cart.cartItems.reduce(
-											(total, item) => total + item.price * item.quantity,
-											0
-										) +
-										15 +
-										state.cart.cartItems.reduce(
-											(total, item) => total + item.price * item.quantity,
-											0
-										) *
-											0.07
-									).toFixed(2)}
-								</span>
+								<span>${total.toFixed(2)}</span>{" "}
+								{/* Ensure total is displayed as a string */}
 							</div>
 						</div>
 					</div>
@@ -152,13 +158,12 @@ const CheckoutPage = () => {
 						<MobileOrderSummary postalCode={postalCode} />
 						<div className="flex justify-center items-center mt-4">
 							<div className="w-full">
-								<CreditCardPay />
+								<CreditCardPay totalAmount={total} />
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-			{/* <ShippingRate /> */}
 		</div>
 	);
 };

@@ -1,12 +1,15 @@
 "use client";
 import { useState, useEffect } from "react";
 import { CreditCard, PaymentForm } from "react-square-web-payments-sdk";
+import { useStateStorage } from "../../../utils/stateStorage";
+import { submitPayment } from "../../actions/squarePaymentAction";
 
-const CreditCardPay = () => {
+const CreditCardPay = ({ totalAmount }) => {
 	const appId = process.env.NEXT_PUBLIC_SQUARE_APP_ID;
 	const locationId = process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID;
 
 	const [isClient, setIsClient] = useState(false);
+	const { state } = useStateStorage();
 
 	useEffect(() => {
 		if (typeof window !== "undefined") {
@@ -18,14 +21,22 @@ const CreditCardPay = () => {
 		return null;
 	}
 
+	const handlePayment = async (token) => {
+		try {
+			const amount = totalAmount * 100; // Convert to cents
+
+			const result = await submitPayment(token.token, amount);
+			console.log(result);
+		} catch (error) {
+			console.error("Error processing payment:", error);
+		}
+	};
+
 	return (
 		<PaymentForm
 			applicationId={appId}
 			locationId={locationId}
-			cardTokenizeResponseReceived={async (token) => {
-				const result = await submitPayment(token.token);
-				console.log(result);
-			}}
+			cardTokenizeResponseReceived={handlePayment} // This prop receives the token
 		>
 			<div>
 				<h1 className="text-2xl font-bold self-start">Payment</h1>

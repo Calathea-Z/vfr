@@ -18,6 +18,8 @@ const CheckoutPage = () => {
 	const [postalCode, setPostalCode] = useState("");
 	const [shippingRate, setShippingRate] = useState(0);
 	const [total, setTotal] = useState(0);
+	const [shippingAddressFromGoogle, setShippingAddressFromGoogle] =
+		useState(null);
 
 	const toggleTopOrderSummary = () => {
 		setIsTopOrderSummaryOpen(!isTopOrderSummaryOpen);
@@ -116,11 +118,15 @@ const CheckoutPage = () => {
 								</span>
 							</div>
 							<div className="flex justify-between items-center mt-1">
-								<span className="text-md text-gray-500">Shipping</span>
-								<ShippingRate
-									postalCode={postalCode}
-									setShippingRate={setShippingRate}
-								/>
+								<span className="text-md text-gray-500">
+									Shipping - USPS Priority
+								</span>
+								<span className="text-md text-gray-500">
+									<ShippingRate
+										postalCode={postalCode}
+										setShippingRate={setShippingRate}
+									/>
+								</span>
 							</div>
 							<div className="flex justify-between items-center mt-1">
 								<span className="text-md text-gray-500">Estimated taxes</span>
@@ -145,13 +151,6 @@ const CheckoutPage = () => {
 				</div>
 				<div className="flex flex-col sm:flex-1 order-2 sm:order-1 snap-start overflow-y-auto">
 					<div className="flex flex-col sm:w-full p-8">
-						<h6 className="text-center mb-2 text-gray-500">Express Checkout</h6>
-						<GooglePayComponent totalAmount={total} />
-						<div className="flex items-center my-4">
-							<hr className="flex-grow border-t border-gray-300" />
-							<span className="mx-2 text-gray-500">OR</span>
-							<hr className="flex-grow border-t border-gray-300" />
-						</div>
 						<ContactForm />
 						<hr className="my-4" />
 						<DeliveryAddressForm setPostalCode={setPostalCode} />

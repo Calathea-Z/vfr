@@ -2,9 +2,9 @@ import { useStateStorage } from "../../../utils/stateStorage";
 //---Framework---//
 import { useState, useEffect } from "react";
 //---Packages---//
-import axios from "axios";
 import ClipLoader from "react-spinners/ClipLoader";
 import Cookies from "universal-cookie";
+import { calculateShippingRate } from "../../../utils/calculateShippingRate";
 
 const ShippingCostCalculator = ({
 	postalCode,
@@ -52,34 +52,27 @@ const ShippingCostCalculator = ({
 	useEffect(() => {
 		const getShippingRates = async () => {
 			setIsLoading(true);
-			const data = {
-				shippingWeight,
-				zipCode: postalCode.substring(0, 5),
-				boxLength,
-				boxWidth,
-				boxHeight,
-			};
-
-			try {
-				const res = await axios.post("/api/shipping-rate", data);
-				if (res.data.rate) {
-					dispatch({
-						type: "UPDATE_SHIPPING_COST",
-						payload: res.data.rate,
-					});
-					cookies.set("shippingCost", JSON.stringify(res.data.rate), {
-						path: "/",
-					});
-					setLocalShippingRate(res.data.rate);
-					setShippingRate(res.data.rate); // Call the callback to update the parent component's state
-				} else {
-					console.error(res.data.error);
+			const rate = await calculateShippingRate(
+				postalCode,
+				shippingWeight ?? 0,
+				boxLength ?? 0,
+				boxWidth ?? 0,
+				boxHeight ?? 0
+			);
+			if (rate !== null) {
+				dispatch({
+					type: "UPDATE_SHIPPING_COST",
+					payload: rate,
+				});
+				cookies.set("shippingCost", JSON.stringify(rate), {
+					path: "/",
+				});
+				setLocalShippingRate(rate);
+				if (typeof setShippingRate === "function") {
+					setShippingRate(rate); // Call the callback to update the parent component's state
 				}
-			} catch (error) {
-				console.error("Error fetching shipping rates", error);
-			} finally {
-				setIsLoading(false);
 			}
+			setIsLoading(false);
 		};
 
 		if (postalCode && boxLength && boxWidth && boxHeight) {
@@ -96,19 +89,16 @@ const ShippingCostCalculator = ({
 	]);
 
 	return (
-		<div className="flex justify-start mr-2">
-			<h1 className="font-sans text-bold mr-5 text-md text-gray-600">
-				USPS Priority Mail
-			</h1>
-			<p className="text-md text-gray-500">
+		<div className="flex justify-between items-center">
+			<span className="text-md text-gray-500">
 				{isLoading ? (
 					<ClipLoader />
 				) : localShippingRate !== null ? (
 					`$${localShippingRate}`
 				) : (
-					"$ 00.00"
+					"$00.00"
 				)}
-			</p>
+			</span>
 		</div>
 	);
 };

@@ -5,7 +5,13 @@ import { sanityImageBuilder } from "../../../utils/sanityImageBuilder";
 import { useStateStorage } from "../../../utils/stateStorage";
 import ShippingRate from "./ShippingRate";
 
-const MobileOrderSummary = ({ postalCode }: { postalCode: string }) => {
+const MobileOrderSummary = ({
+	postalCode,
+	setShippingRate,
+}: {
+	postalCode: string;
+	setShippingRate: (rate: number) => void;
+}) => {
 	const { state } = useStateStorage();
 	const [isBottomOrderSummaryOpen, setIsBottomOrderSummaryOpen] =
 		useState(false);
@@ -85,7 +91,10 @@ const MobileOrderSummary = ({ postalCode }: { postalCode: string }) => {
 					</div>
 					<div className="flex justify-between items-center">
 						<span className="text-sm text-gray-500">Shipping</span>
-						<ShippingRate postalCode={postalCode} />
+						<ShippingRate
+							postalCode={postalCode}
+							setShippingRate={setShippingRate}
+						/>
 					</div>
 					<div className="flex justify-between items-center">
 						<span className="text-sm text-gray-500">Estimated taxes</span>

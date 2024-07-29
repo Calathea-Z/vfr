@@ -119,7 +119,7 @@ const CheckoutPage = () => {
 							</div>
 							<div className="flex justify-between items-center mt-1">
 								<span className="text-md text-gray-500">
-									Shipping - USPS Priority
+									Shipping - <span className="italic">USPS Priority</span>
 								</span>
 								<span className="text-md text-gray-500">
 									<ShippingRate
@@ -154,7 +154,10 @@ const CheckoutPage = () => {
 						<ContactForm />
 						<hr className="my-4" />
 						<DeliveryAddressForm setPostalCode={setPostalCode} />
-						<MobileOrderSummary postalCode={postalCode} />
+						<MobileOrderSummary
+							postalCode={postalCode}
+							setShippingRate={setShippingRate}
+						/>
 						<div className="flex justify-center items-center mt-4">
 							<div className="w-full">
 								<CreditCardPay totalAmount={total} />

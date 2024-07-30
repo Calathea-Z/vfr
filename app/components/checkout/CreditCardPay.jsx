@@ -1,10 +1,11 @@
 "use client";
-import { useState, useEffect } from "react";
-import { CreditCard, PaymentForm } from "react-square-web-payments-sdk";
-import { useStateStorage } from "../../../utils/stateStorage";
 import { submitPayment } from "../../actions/squarePaymentAction";
+//Framework
+import { useState, useEffect } from "react";
+//Packages
+import { CreditCard, PaymentForm } from "react-square-web-payments-sdk";
 
-const CreditCardPay = ({ totalAmount }) => {
+const CreditCardPay = ({ totalAmount, disabled }) => {
 	const appId = process.env.NEXT_PUBLIC_SQUARE_APP_ID;
 	const locationId = process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID;
 
@@ -31,15 +32,28 @@ const CreditCardPay = ({ totalAmount }) => {
 		}
 	};
 
+	if (disabled) {
+		return (
+			<div className="flex justify-center items-center h-full">
+				<div className="bg-gray-100 rounded-lg p-4">
+					<p className="text-center text-gray-500 font-bold">
+						Please fill out Delivery Address and Contact Information before
+						payment is taken.
+					</p>
+				</div>
+			</div>
+		);
+	}
+
 	return (
 		<PaymentForm
 			applicationId={appId}
 			locationId={locationId}
-			cardTokenizeResponseReceived={handlePayment} // This prop receives the token
+			cardTokenizeResponseReceived={handlePayment}
 		>
 			<div>
-				<h1 className="text-2xl font-bold self-start">Payment</h1>
-				<p className="text-sm text-gray-500 mb-4">
+				<h1 className="text-2xl font-bold text-left">Payment</h1>
+				<p className="text-sm text-gray-500 mb-4 text-left">
 					All transactions are secure and encrypted
 				</p>
 				<CreditCard

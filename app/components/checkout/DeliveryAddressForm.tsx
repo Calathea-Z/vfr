@@ -1,7 +1,7 @@
 "use client";
 import { Address } from "@/types/types";
 //---Framework---//
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { useStateStorage } from "../../../utils/stateStorage";
 import axios from "axios";
@@ -14,20 +14,21 @@ import {
 	FormControl,
 	FormHelperText,
 	Button,
-	Checkbox,
-	FormControlLabel,
 } from "@mui/material";
 import states from "states-us";
 import MaskedInput from "react-text-mask";
 
 const DeliveryAddressForm = ({
 	setPostalCode,
+	setIsDeliveryFormFilled,
 }: {
 	setPostalCode: (code: string) => void;
+	setIsDeliveryFormFilled: (filled: boolean) => void;
 }) => {
 	const { dispatch } = useStateStorage();
 	const {
 		control,
+		watch,
 		handleSubmit,
 		formState: { errors },
 		setValue,
@@ -70,7 +71,24 @@ const DeliveryAddressForm = ({
 				shippingContactEmail: data.email,
 			},
 		});
+		setIsDeliveryFormFilled(true);
 	};
+
+	// Watch form fields to determine if the form is filled out
+	const watchFields = watch([
+		"firstName",
+		"lastName",
+		"address",
+		"city",
+		"state",
+		"zipCode",
+	]);
+	useEffect(() => {
+		const isFormFilled = watchFields.every(
+			(field) => field && field.trim() !== ""
+		);
+		setIsDeliveryFormFilled(isFormFilled);
+	}, [watchFields, setIsDeliveryFormFilled]);
 
 	return (
 		<form

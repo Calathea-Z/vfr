@@ -1,16 +1,17 @@
 "use client";
-import { useState, useEffect } from "react";
-import { CaretDown, CaretUp } from "@phosphor-icons/react";
 import DeliveryAddressForm from "../components/checkout/DeliveryAddressForm";
 import ContactForm from "../components/checkout/ContactForm";
 import { lato } from "../fonts/fonts";
 import { useStateStorage } from "../../utils/stateStorage";
 import { sanityImageBuilder } from "../../utils/sanityImageBuilder";
-import GooglePayComponent from "../components/checkout/GooglePay";
 import ShippingRate from "../components/checkout/ShippingRate";
 import CreditCardPay from "../components/checkout/CreditCardPay";
 import MobileOrderSummary from "../components/checkout/MobileOrderSummary";
 import { fullLogo } from "@/public/assets";
+//Framework
+import { useState, useEffect } from "react";
+//Packages
+import { CaretDown, CaretUp } from "@phosphor-icons/react";
 
 const CheckoutPage = () => {
 	const { state } = useStateStorage();
@@ -18,8 +19,8 @@ const CheckoutPage = () => {
 	const [postalCode, setPostalCode] = useState("");
 	const [shippingRate, setShippingRate] = useState(0);
 	const [total, setTotal] = useState(0);
-	const [shippingAddressFromGoogle, setShippingAddressFromGoogle] =
-		useState(null);
+	const [isContactFormFilled, setIsContactFormFilled] = useState(false);
+	const [isDeliveryFormFilled, setIsDeliveryFormFilled] = useState(false);
 
 	const toggleTopOrderSummary = () => {
 		setIsTopOrderSummaryOpen(!isTopOrderSummaryOpen);
@@ -151,17 +152,22 @@ const CheckoutPage = () => {
 				</div>
 				<div className="flex flex-col sm:flex-1 order-2 sm:order-1 snap-start overflow-y-auto">
 					<div className="flex flex-col sm:w-full p-8">
-						<ContactForm />
+						<ContactForm setIsContactFormFilled={setIsContactFormFilled} />
 						<hr className="my-4" />
-						<DeliveryAddressForm setPostalCode={setPostalCode} />
+						<DeliveryAddressForm
+							setPostalCode={setPostalCode}
+							setIsDeliveryFormFilled={setIsDeliveryFormFilled}
+						/>
 						<MobileOrderSummary
 							postalCode={postalCode}
 							setShippingRate={setShippingRate}
 						/>
-						<div className="flex justify-center items-center mt-4">
-							<div className="w-full">
-								<CreditCardPay totalAmount={total} />
-							</div>
+						<hr className="my-4" />
+						<div className="flex justify-center items-center">
+							<CreditCardPay
+								totalAmount={total}
+								disabled={!isContactFormFilled || !isDeliveryFormFilled}
+							/>
 						</div>
 					</div>
 				</div>

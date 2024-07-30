@@ -163,7 +163,7 @@ const CheckoutPage = () => {
 							setShippingRate={setShippingRate}
 						/>
 						<hr className="my-4" />
-						<div className="flex justify-center items-center">
+						<div className="w-full">
 							<CreditCardPay
 								totalAmount={total}
 								disabled={!isContactFormFilled || !isDeliveryFormFilled}

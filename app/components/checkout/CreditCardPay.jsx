@@ -67,7 +67,7 @@ const CreditCardPay = ({ totalAmount, disabled }) => {
 								},
 							},
 							backgroundColor: "#f2c88c",
-							fontSize: "14px",
+							fontSize: "20px",
 							color: "#fff",
 							"&:hover": {
 								backgroundColor: "#d1a06b",
@@ -76,7 +76,7 @@ const CreditCardPay = ({ totalAmount, disabled }) => {
 					}}
 					style={{
 						input: {
-							fontSize: "14px",
+							fontSize: "20px",
 						},
 						"input::placeholder": {
 							color: "#781520",

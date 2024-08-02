@@ -19,9 +19,11 @@ export async function POST(request: NextRequest) {
 			shippingStatus,
 		} = await request.json();
 
-		// Convert userId to ObjectId if it's not a guest
+		// Convert userId to ObjectId if it's not a guest and is a valid ObjectId
 		const userObjectId =
-			userId !== "guest" ? ObjectId.createFromHexString(userId) : userId;
+			userId !== "guest" && ObjectId.isValid(userId)
+				? ObjectId.createFromHexString(userId)
+				: userId;
 
 		// Convert productId to ObjectId if valid
 		const itemsWithObjectId = items.map((item: Item) => ({

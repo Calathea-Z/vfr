@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document, Model, ObjectId } from "mongoose";
 
 interface OrderItem {
-	productId: ObjectId;
+	productId: ObjectId | string; // Allow string for non-ObjectId product IDs
 	name: string;
 	quantity: number;
 	price: number;
@@ -40,7 +40,7 @@ interface OrderDocument extends Document {
 }
 
 const orderItemSchema = new Schema<OrderItem>({
-	productId: { type: mongoose.Schema.Types.ObjectId, required: true },
+	productId: { type: mongoose.Schema.Types.Mixed, required: true }, // Allow mixed types
 	name: { type: String, required: true },
 	quantity: { type: Number, required: true },
 	price: { type: Number, required: true },
@@ -69,11 +69,7 @@ const customerSchema = new Schema<Customer>({
 const orderSchema = new Schema<OrderDocument>(
 	{
 		orderNumber: { type: String, required: true },
-		userId: {
-			type: mongoose.Schema.Types.ObjectId,
-			ref: "User",
-			required: true,
-		}, // Reference to the User
+		userId: { type: mongoose.Schema.Types.Mixed, required: true }, // Allow mixed types
 		customer: { type: customerSchema, required: true },
 		items: { type: [orderItemSchema], required: true },
 		fees: { type: feesSchema, required: true },

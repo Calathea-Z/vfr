@@ -8,11 +8,13 @@ import ShippingRate from "../components/checkout/ShippingRate";
 import CreditCardPay from "../components/checkout/CreditCardPay";
 import MobileOrderSummary from "../components/checkout/MobileOrderSummary";
 import { fullLogo } from "@/public/assets";
+import { useCalculateTotal } from "../hooks/useCalculateTotal";
+import { useHandlePayment } from "../hooks/useHandlePayment";
+
 //Framework
 import { useState, useEffect } from "react";
 //Packages
 import { CaretDown, CaretUp } from "@phosphor-icons/react";
-import axios from "axios";
 
 const CheckoutPage = () => {
 	const { state, dispatch } = useStateStorage();
@@ -27,87 +29,16 @@ const CheckoutPage = () => {
 		setIsTopOrderSummaryOpen(!isTopOrderSummaryOpen);
 	};
 
-	const calculateTotal = () => {
-		const subtotal = state.cart.cartItems.reduce(
-			(total, item) => total + item.price * item.quantity,
-			0
-		);
-		const shippingRateNumber = Number(shippingRate); // Ensure shippingRate is a number
-		const taxes = subtotal * 0.07; // 7% tax rate
-		const totalAmount = subtotal + shippingRateNumber + taxes;
-		setTotal(parseFloat(totalAmount.toFixed(2))); // Ensure total is formatted to two decimal places
-	};
+	const calculatedTotal = useCalculateTotal(state.cart.cartItems, shippingRate);
 
 	useEffect(() => {
-		calculateTotal();
-	}, [state.cart.cartItems, shippingRate]);
+		setTotal(calculatedTotal);
+	}, [calculatedTotal]);
 
-	const handlePaymentSuccess = async () => {
-		try {
-			const { userInfo, cart } = state;
-			const { shippingInformation, cartItems, shippingCost } = cart;
+	const { handlePaymentSuccess } = useHandlePayment(state, total, dispatch);
 
-			// Prepare order data
-			const orderData = {
-				orderNumber: `ORD-${new Date().toISOString().split("T")[0]}-${crypto.randomUUID()}`,
-				userId: userInfo?.id || "guest",
-				customer: {
-					name: `${shippingInformation.firstNameShipping} ${shippingInformation.lastNameShipping}`,
-					email: shippingInformation.shippingContactEmail,
-					company: shippingInformation.company,
-					address: {
-						street: shippingInformation.address.street,
-						streetTwo: shippingInformation.address.streetTwo,
-						city: shippingInformation.address.city,
-						state: shippingInformation.address.state,
-						zipCode: shippingInformation.address.zipCode,
-					},
-				},
-				items: cartItems.map((item) => ({
-					productId: item.productId,
-					name: item.name,
-					quantity: item.quantity,
-					price: item.price,
-				})),
-				fees: {
-					subtotal: cartItems.reduce(
-						(acc, item) => acc + item.price * item.quantity,
-						0
-					),
-					tax:
-						cartItems.reduce(
-							(acc, item) => acc + item.price * item.quantity,
-							0
-						) * 0.07,
-					shipping: shippingCost || 0,
-					total: total,
-				},
-				paymentStatus: "Completed",
-				shippingStatus: "Not Shipped",
-			};
-
-			console.log("Order data prepared:", orderData);
-
-			const response = await axios.post("/api/checkout", orderData, {
-				headers: {
-					"Content-Type": "application/json",
-				},
-			});
-
-			console.log("API response:", response);
-
-			if (response.status !== 201) {
-				throw new Error("Failed to create order");
-			}
-
-			const newOrder = response.data;
-			console.log("Order created successfully:", newOrder);
-
-			dispatch({ type: "UPDATE_PAYMENT_SUCCESS", payload: true });
-			dispatch({ type: "CART_CLEAR_ITEMS" });
-		} catch (error) {
-			console.error("Error processing payment:", error);
-		}
+	const handlePayment = () => {
+		handlePaymentSuccess();
 	};
 
 	return (
@@ -232,7 +163,7 @@ const CheckoutPage = () => {
 							<CreditCardPay
 								totalAmount={total}
 								disabled={!isContactFormFilled || !isDeliveryFormFilled}
-								onPaymentSuccess={handlePaymentSuccess}
+								onPaymentSuccess={handlePayment}
 							/>
 						</div>
 					</div>

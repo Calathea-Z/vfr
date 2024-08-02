@@ -8,7 +8,6 @@ interface Item {
 
 export async function POST(request: NextRequest) {
 	try {
-		console.log("API endpoint /api/checkout called");
 		const {
 			orderNumber,
 			userId,

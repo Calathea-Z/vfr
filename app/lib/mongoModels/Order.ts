@@ -1,7 +1,7 @@
-import mongoose, { Schema, Document, Model } from "mongoose";
+import mongoose, { Schema, Document, Model, ObjectId } from "mongoose";
 
 interface OrderItem {
-	productId: mongoose.Schema.Types.ObjectId;
+	productId: ObjectId;
 	name: string;
 	quantity: number;
 	price: number;
@@ -29,7 +29,7 @@ interface Customer {
 
 interface OrderDocument extends Document {
 	orderNumber: string;
-	userId: mongoose.Schema.Types.ObjectId; // Reference to the User
+	userId: ObjectId | string; // Allow string for guest users
 	customer: Customer;
 	items: OrderItem[];
 	fees: Fees;

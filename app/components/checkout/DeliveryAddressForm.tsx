@@ -1,7 +1,7 @@
 "use client";
 import { Address } from "@/types/types";
 //---Framework---//
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { useStateStorage } from "../../../utils/stateStorage";
 import axios from "axios";
@@ -18,6 +18,15 @@ import {
 import states from "states-us";
 import MaskedInput from "react-text-mask";
 
+type FormFields = {
+	firstName: string;
+	lastName: string;
+	address: string;
+	city: string;
+	state: string;
+	zipCode: string;
+};
+
 const DeliveryAddressForm = ({
 	setPostalCode,
 	setIsDeliveryFormFilled,
@@ -25,7 +34,7 @@ const DeliveryAddressForm = ({
 	setPostalCode: (code: string) => void;
 	setIsDeliveryFormFilled: (filled: boolean) => void;
 }) => {
-	const { dispatch } = useStateStorage();
+	const { dispatch, state } = useStateStorage();
 	const {
 		control,
 		watch,
@@ -62,15 +71,6 @@ const DeliveryAddressForm = ({
 
 	const onSubmit = (data: any) => {
 		validateAddress(data);
-		dispatch({
-			type: "SAVE_SHIPPING_ADDRESS",
-			payload: {
-				address: data,
-				firstNameShipping: data.firstName,
-				lastNameShipping: data.lastName,
-				shippingContactEmail: data.email,
-			},
-		});
 		setIsDeliveryFormFilled(true);
 	};
 
@@ -83,12 +83,70 @@ const DeliveryAddressForm = ({
 		"state",
 		"zipCode",
 	]);
+
+	const prevFieldsRef = useRef<FormFields>({
+		firstName: "",
+		lastName: "",
+		address: "",
+		city: "",
+		state: "",
+		zipCode: "",
+	});
+
 	useEffect(() => {
 		const isFormFilled = watchFields.every(
 			(field) => field && field.trim() !== ""
 		);
 		setIsDeliveryFormFilled(isFormFilled);
-	}, [watchFields, setIsDeliveryFormFilled]);
+
+		// Update global state whenever the form fields change
+		const currentFields = {
+			firstName: watch("firstName"),
+			lastName: watch("lastName"),
+			address: watch("address"),
+			apartment: watch("apartment"),
+			company: watch("company"),
+			city: watch("city"),
+			state: watch("state"),
+			zipCode: watch("zipCode"),
+		};
+
+		const prevFields = prevFieldsRef.current;
+
+		// Check if any field has changed
+		const hasChanged = Object.keys(currentFields).some(
+			(key) =>
+				currentFields[key as keyof FormFields] !==
+				prevFields[key as keyof FormFields]
+		);
+		if (isFormFilled && hasChanged) {
+			dispatch({
+				type: "SET_SHIPPING_INFO",
+				payload: {
+					...state.cart.shippingInformation,
+					firstNameShipping: currentFields.firstName,
+					lastNameShipping: currentFields.lastName,
+					company: currentFields.company,
+					address: {
+						street: currentFields.address,
+						streetTwo: currentFields.apartment,
+						city: currentFields.city,
+						state: currentFields.state,
+						zipCode: currentFields.zipCode,
+					},
+					shippingContactEmail:
+						state.cart.shippingInformation.shippingContactEmail,
+				},
+			});
+			// Update the previous fields reference
+			prevFieldsRef.current = currentFields;
+		}
+	}, [
+		watchFields,
+		setIsDeliveryFormFilled,
+		dispatch,
+		state.cart.shippingInformation,
+	]);
 
 	return (
 		<form
@@ -96,7 +154,6 @@ const DeliveryAddressForm = ({
 			className="flex flex-col items-center justify-center"
 		>
 			<h1 className="text-2xl font-bold self-start mb-3">Delivery</h1>
-
 			{/* Country */}
 			<FormControl
 				fullWidth
@@ -120,7 +177,6 @@ const DeliveryAddressForm = ({
 					<FormHelperText>{String(errors.country.message)}</FormHelperText>
 				)}
 			</FormControl>
-
 			{/* First name, last name, company */}
 			<div className="flex flex-row w-full gap-4">
 				<FormControl
@@ -170,7 +226,6 @@ const DeliveryAddressForm = ({
 					)}
 				</FormControl>
 			</div>
-
 			{/* Company */}
 			<FormControl fullWidth margin="dense">
 				<Controller
@@ -187,7 +242,6 @@ const DeliveryAddressForm = ({
 					)}
 				/>
 			</FormControl>
-
 			{/* Address */}
 			<FormControl fullWidth margin="dense" error={!!errors.address}>
 				<Controller
@@ -209,7 +263,6 @@ const DeliveryAddressForm = ({
 					<FormHelperText>{String(errors.address.message)}</FormHelperText>
 				)}
 			</FormControl>
-
 			{/* Apartment, suite, etc. */}
 			<FormControl fullWidth margin="dense">
 				<Controller
@@ -226,7 +279,6 @@ const DeliveryAddressForm = ({
 					)}
 				/>
 			</FormControl>
-
 			{/* ZIP code, city, state */}
 			<div className="flex flex-row w-full gap-2 items-center">
 				<FormControl fullWidth margin="dense" error={!!errors.zipCode}>
@@ -324,7 +376,6 @@ const DeliveryAddressForm = ({
 					)}
 				</FormControl>
 			</div>
-
 			{/* Phone */}
 			<FormControl fullWidth margin="dense" error={!!errors.phone}>
 				<Controller
@@ -383,12 +434,6 @@ const DeliveryAddressForm = ({
 					</Button>
 				</div>
 			)}
-			{/* 
-			<FormControlLabel
-				control={<Checkbox name="useAsBillingAddress" />}
-				label="Use as Billing Address"
-				className="self-start"
-			/> */}
 		</form>
 	);
 };

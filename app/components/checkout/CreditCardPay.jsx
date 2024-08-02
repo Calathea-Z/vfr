@@ -1,15 +1,19 @@
 "use client";
 import { submitPayment } from "../../actions/squarePaymentAction";
+import { useStateStorage } from "../../../utils/stateStorage";
 //Framework
 import { useState, useEffect } from "react";
 //Packages
 import { CreditCard, PaymentForm } from "react-square-web-payments-sdk";
 
-const CreditCardPay = ({ totalAmount, disabled }) => {
+const CreditCardPay = ({ totalAmount, disabled, onPaymentSuccess }) => {
 	const appId = process.env.NEXT_PUBLIC_SQUARE_APP_ID;
 	const locationId = process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID;
 
 	const [isClient, setIsClient] = useState(false);
+	const { state, dispatch } = useStateStorage();
+	const { userInfo, cart } = state;
+	const { shippingInformation, cartItems, shippingCost } = cart;
 
 	useEffect(() => {
 		if (typeof window !== "undefined") {
@@ -23,10 +27,15 @@ const CreditCardPay = ({ totalAmount, disabled }) => {
 
 	const handlePayment = async (token) => {
 		try {
-			const amount = totalAmount * 100; // Convert to cents
-
+			const amount = totalAmount * 100;
 			const result = await submitPayment(token.token, amount);
-			console.log(result);
+			console.log("Payment result:", result);
+
+			if (result.payment.status === "COMPLETED") {
+				onPaymentSuccess();
+			} else {
+				console.log("Payment not completed, status:", result.payment.status);
+			}
 		} catch (error) {
 			console.error("Error processing payment:", error);
 		}

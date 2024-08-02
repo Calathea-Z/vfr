@@ -30,7 +30,7 @@ export type Action =
 	| { type: "CART_CLEAR_ITEMS" }
 	| { type: "USER_LOGIN"; payload: UserInfo }
 	| { type: "USER_LOGOUT" }
-	| { type: "SAVE_SHIPPING_ADDRESS"; payload: ShippingInformation }
+	| { type: "SET_SHIPPING_INFO"; payload: ShippingInformation }
 	| { type: "UPDATE_SHIPPING_WEIGHT"; payload: number }
 	| { type: "UPDATE_SHIPPING_COST"; payload: number }
 	| { type: "UPDATE_PAYMENT_SUCCESS"; payload: boolean }

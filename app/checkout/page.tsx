@@ -12,9 +12,10 @@ import { fullLogo } from "@/public/assets";
 import { useState, useEffect } from "react";
 //Packages
 import { CaretDown, CaretUp } from "@phosphor-icons/react";
+import axios from "axios";
 
 const CheckoutPage = () => {
-	const { state } = useStateStorage();
+	const { state, dispatch } = useStateStorage();
 	const [isTopOrderSummaryOpen, setIsTopOrderSummaryOpen] = useState(false);
 	const [postalCode, setPostalCode] = useState("");
 	const [shippingRate, setShippingRate] = useState(0);
@@ -32,7 +33,7 @@ const CheckoutPage = () => {
 			0
 		);
 		const shippingRateNumber = Number(shippingRate); // Ensure shippingRate is a number
-		const taxes = subtotal * 0.07; // Assuming a 7% tax rate
+		const taxes = subtotal * 0.07; // 7% tax rate
 		const totalAmount = subtotal + shippingRateNumber + taxes;
 		setTotal(parseFloat(totalAmount.toFixed(2))); // Ensure total is formatted to two decimal places
 	};
@@ -40,6 +41,74 @@ const CheckoutPage = () => {
 	useEffect(() => {
 		calculateTotal();
 	}, [state.cart.cartItems, shippingRate]);
+
+	const handlePaymentSuccess = async () => {
+		try {
+			const { userInfo, cart } = state;
+			const { shippingInformation, cartItems, shippingCost } = cart;
+
+			// Prepare order data
+			const orderData = {
+				orderNumber: `ORD-${new Date().toISOString().split("T")[0]}-${crypto.randomUUID()}`,
+				userId: userInfo?.id || "guest",
+				customer: {
+					name: `${shippingInformation.firstNameShipping} ${shippingInformation.lastNameShipping}`,
+					email: shippingInformation.shippingContactEmail,
+					company: shippingInformation.company,
+					address: {
+						street: shippingInformation.address.street,
+						streetTwo: shippingInformation.address.streetTwo,
+						city: shippingInformation.address.city,
+						state: shippingInformation.address.state,
+						zipCode: shippingInformation.address.zipCode,
+					},
+				},
+				items: cartItems.map((item) => ({
+					productId: item.productId,
+					name: item.name,
+					quantity: item.quantity,
+					price: item.price,
+				})),
+				fees: {
+					subtotal: cartItems.reduce(
+						(acc, item) => acc + item.price * item.quantity,
+						0
+					),
+					tax:
+						cartItems.reduce(
+							(acc, item) => acc + item.price * item.quantity,
+							0
+						) * 0.07,
+					shipping: shippingCost || 0,
+					total: total,
+				},
+				paymentStatus: "Completed",
+				shippingStatus: "Not Shipped",
+			};
+
+			console.log("Order data prepared:", orderData);
+
+			const response = await axios.post("/api/checkout", orderData, {
+				headers: {
+					"Content-Type": "application/json",
+				},
+			});
+
+			console.log("API response:", response);
+
+			if (response.status !== 201) {
+				throw new Error("Failed to create order");
+			}
+
+			const newOrder = response.data;
+			console.log("Order created successfully:", newOrder);
+
+			dispatch({ type: "UPDATE_PAYMENT_SUCCESS", payload: true });
+			dispatch({ type: "CART_CLEAR_ITEMS" });
+		} catch (error) {
+			console.error("Error processing payment:", error);
+		}
+	};
 
 	return (
 		<div className={`flex flex-col min-h-screen ${lato.className}`}>
@@ -61,7 +130,6 @@ const CheckoutPage = () => {
 							)}
 						</button>
 						<span className="text-lg font-bold">${total.toFixed(2)}</span>{" "}
-						{/* Ensure total is displayed as a string */}
 					</div>
 					<div
 						className={`flex flex-col gap-4 ${isTopOrderSummaryOpen ? "block" : "hidden"} sm:block`}
@@ -90,7 +158,6 @@ const CheckoutPage = () => {
 								</div>
 								<p className="text-lg font-bold">
 									${(item.price * item.quantity).toFixed(2)}{" "}
-									{/* Ensure item total is displayed as a string */}
 								</p>
 							</div>
 						))}
@@ -139,13 +206,11 @@ const CheckoutPage = () => {
 											0
 										) * 0.07
 									).toFixed(2)}{" "}
-									{/* Ensure taxes are displayed as a string */}
 								</span>
 							</div>
 							<div className="flex justify-between items-center font-bold mt-2 text-lg">
 								<span>Total</span>
 								<span>${total.toFixed(2)}</span>{" "}
-								{/* Ensure total is displayed as a string */}
 							</div>
 						</div>
 					</div>
@@ -167,6 +232,7 @@ const CheckoutPage = () => {
 							<CreditCardPay
 								totalAmount={total}
 								disabled={!isContactFormFilled || !isDeliveryFormFilled}
+								onPaymentSuccess={handlePaymentSuccess}
 							/>
 						</div>
 					</div>

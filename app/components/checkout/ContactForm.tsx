@@ -9,6 +9,7 @@ import { useSession } from "next-auth/react";
 import { useSnackbar } from "notistack";
 import { TextField, Checkbox, FormControlLabel, Button } from "@mui/material";
 import { SessionUser } from "@/types/types";
+import { useStateStorage } from "../../../utils/stateStorage";
 
 interface ContactFormProps {
 	setIsContactFormFilled: Dispatch<SetStateAction<boolean>>;
@@ -24,6 +25,7 @@ const ContactForm = ({ setIsContactFormFilled }: ContactFormProps) => {
 	} = useForm();
 	const [isSubscribed, setIsSubscribed] = useState(false);
 	const router = useRouter();
+	const { dispatch, state } = useStateStorage();
 
 	const handleLogout = async () => {
 		try {
@@ -40,10 +42,19 @@ const ContactForm = ({ setIsContactFormFilled }: ContactFormProps) => {
 	useEffect(() => {
 		if (session || email) {
 			setIsContactFormFilled(true);
+			dispatch({
+				type: "SET_SHIPPING_INFO",
+				payload: {
+					...state.cart.shippingInformation,
+					shippingContactEmail: session
+						? (session.user as SessionUser).email
+						: email,
+				},
+			});
 		} else {
 			setIsContactFormFilled(false);
 		}
-	}, [session, email, setIsContactFormFilled]);
+	}, [session, email, setIsContactFormFilled, dispatch]);
 
 	return (
 		<div className="flex flex-col items-start">

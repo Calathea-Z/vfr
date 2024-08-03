@@ -43,10 +43,31 @@ export interface LeftSideButtonData {
 }
 
 export interface OrderItem {
+	productId: string;
 	name: string;
 	quantity: number;
 	image?: string;
 	price: number;
+}
+
+export interface OrderData {
+	orderNumber: string;
+	userId: string;
+	customer: {
+		name: string;
+		email: string;
+		company?: string;
+		address: ShippingInformation["address"];
+	};
+	items: OrderItem[];
+	fees: {
+		subtotal: number;
+		tax: number;
+		shipping: number;
+		total: number;
+	};
+	paymentStatus: string;
+	shippingStatus: string;
 }
 
 export interface Product {
@@ -122,8 +143,8 @@ export interface UserInfo {
 	name?: string;
 	firstName: string;
 	lastName: string;
+	providerId: string;
 	email: string;
-	password: string;
 	isAdmin: boolean;
 	isWholesale: boolean;
 	shippingContactEmail?: string;

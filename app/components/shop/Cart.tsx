@@ -130,18 +130,11 @@ const Cart: FC = () => {
 					payload: storedCartItems,
 				});
 			}
-			console.log("Cart state on startup:", state.cart);
 			setIsCartItemsLoading(false);
 		};
 
 		loadCartItems();
 	}, [dispatch, isCartVisible]);
-
-	useEffect(() => {
-		if (!isCartItemsLoading) {
-			console.log("Cart state after loading:", state.cart);
-		}
-	}, [isCartItemsLoading, state.cart]);
 
 	useEffect(() => {
 		const currentWeight = cartItems.reduce(

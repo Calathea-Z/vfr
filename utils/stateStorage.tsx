@@ -81,16 +81,6 @@ export function useStateStorage() {
 	return context;
 }
 
-interface StoreProviderProps {
-	children: ReactNode;
-	initialCookies: {
-		cartItems?: string;
-		userInfo?: string;
-		shippingWeight?: string;
-		shippingCost?: string;
-	};
-}
-
 export function StoreProvider({ children }: { children: ReactNode }) {
 	const [state, dispatch] = useReducer(reducer, defaultInitialState);
 

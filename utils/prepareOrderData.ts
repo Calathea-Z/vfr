@@ -1,9 +1,17 @@
-import { UserInfo, ShippingInformation, CartItem } from "../types/types";
+import {
+	CartItem,
+	ShippingInformation,
+	UserInfo,
+	OrderData,
+	OrderItem,
+} from "../types/types";
 import { State } from "../utils/stateStorage";
 
 export const prepareOrderData = (state: State, total: number) => {
 	const { userInfo, cart } = state;
 	const { shippingInformation, cartItems, shippingCost } = cart;
+
+	console.log("User Info:", userInfo); // Debugging line
 
 	return {
 		orderNumber: `ORD-${new Date().toISOString().split("T")[0]}-${crypto.randomUUID()}`,
@@ -12,20 +20,16 @@ export const prepareOrderData = (state: State, total: number) => {
 			name: `${shippingInformation.firstNameShipping} ${shippingInformation.lastNameShipping}`,
 			email: shippingInformation.shippingContactEmail,
 			company: shippingInformation.company,
-			address: {
-				street: shippingInformation.address.street,
-				streetTwo: shippingInformation.address.streetTwo,
-				city: shippingInformation.address.city,
-				state: shippingInformation.address.state,
-				zipCode: shippingInformation.address.zipCode,
-			},
+			address: shippingInformation.address,
 		},
-		items: cartItems.map((item: CartItem) => ({
-			productId: item.productId,
-			name: item.name,
-			quantity: item.quantity,
-			price: item.price,
-		})),
+		items: cartItems.map(
+			(item: CartItem): OrderItem => ({
+				productId: item.productId,
+				name: item.name,
+				quantity: item.quantity,
+				price: item.price,
+			})
+		),
 		fees: {
 			subtotal: cartItems.reduce(
 				(acc: number, item: CartItem) => acc + item.price * item.quantity,

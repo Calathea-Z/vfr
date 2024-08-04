@@ -1,3 +1,12 @@
+export interface Address {
+	company?: string | null;
+	street: string;
+	streetTwo?: string | null;
+	city: string;
+	state: string;
+	zipCode: string;
+	phoneNumber?: string | null;
+}
 export interface BioData {
 	name: string;
 	header: string;
@@ -34,10 +43,32 @@ export interface LeftSideButtonData {
 }
 
 export interface OrderItem {
+	productId: string;
 	name: string;
 	quantity: number;
 	image?: string;
 	price: number;
+}
+
+export interface OrderData {
+	orderNumber: string;
+	userId: string;
+	customer: {
+		name: string;
+		email: string;
+		company?: string;
+		address: ShippingInformation["address"];
+	};
+	items: OrderItem[];
+	fees: {
+		subtotal: number;
+		tax: number;
+		shipping: number;
+		total: number;
+	};
+	paymentStatus: string;
+	shippingStatus: string;
+	paymentType: string;
 }
 
 export interface Product {
@@ -82,10 +113,7 @@ export interface ShippingInformation {
 	firstNameShipping: string;
 	lastNameShipping: string;
 	company?: string;
-	address: string;
-	city: string;
-	zipCode: string;
-	usState: string;
+	address: Address;
 	shippingContactEmail: string;
 }
 
@@ -116,15 +144,12 @@ export interface UserInfo {
 	name?: string;
 	firstName: string;
 	lastName: string;
+	providerId: string;
 	email: string;
-	password: string;
 	isAdmin: boolean;
 	isWholesale: boolean;
 	shippingContactEmail?: string;
 	firstNameShipping?: string;
 	lastNameShipping?: string;
-	address?: string;
-	city?: string;
-	zipCode?: number;
-	usState?: string;
+	addresses: Address[];
 }

@@ -1,8 +1,10 @@
 "use client";
-
+import { Address } from "@/types/types";
 //---Framework---//
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useForm, Controller } from "react-hook-form";
+import { useStateStorage } from "../../../utils/stateStorage";
+import axios from "axios";
 //---Packages---//
 import {
 	TextField,
@@ -11,20 +13,140 @@ import {
 	InputLabel,
 	FormControl,
 	FormHelperText,
+	Button,
 } from "@mui/material";
 import states from "states-us";
 import MaskedInput from "react-text-mask";
 
-const DeliveryAddressForm = () => {
+type FormFields = {
+	firstName: string;
+	lastName: string;
+	address: string;
+	city: string;
+	state: string;
+	zipCode: string;
+};
+
+const DeliveryAddressForm = ({
+	setPostalCode,
+	setIsDeliveryFormFilled,
+}: {
+	setPostalCode: (code: string) => void;
+	setIsDeliveryFormFilled: (filled: boolean) => void;
+}) => {
+	const { dispatch, state } = useStateStorage();
 	const {
 		control,
+		watch,
 		handleSubmit,
 		formState: { errors },
+		setValue,
 	} = useForm();
 
-	const onSubmit = (data: any) => {
-		console.log(data);
+	const [suggestedAddress, setSuggestedAddress] = useState<Address | null>(
+		null
+	);
+	const [isValid, setIsValid] = useState(true);
+
+	const validateAddress = async (data: any) => {
+		try {
+			const res = await axios.post("/api/address-validation", data);
+			setIsValid(res.data.valid);
+			setSuggestedAddress(res.data.suggestedAddress);
+		} catch (error) {
+			console.error("Error validating address", error);
+		}
 	};
+
+	const handleUseSuggestedAddress = () => {
+		if (suggestedAddress) {
+			setValue("address", suggestedAddress.street);
+			setValue("city", suggestedAddress.city);
+			setValue("state", suggestedAddress.state);
+			setValue("zipCode", suggestedAddress.zipCode);
+			setSuggestedAddress(null);
+			setIsValid(true);
+		}
+	};
+
+	const onSubmit = (data: any) => {
+		validateAddress(data);
+		setIsDeliveryFormFilled(true);
+	};
+
+	// Watch form fields to determine if the form is filled out
+	const watchFields = watch([
+		"firstName",
+		"lastName",
+		"address",
+		"city",
+		"state",
+		"zipCode",
+	]);
+
+	const prevFieldsRef = useRef<FormFields>({
+		firstName: "",
+		lastName: "",
+		address: "",
+		city: "",
+		state: "",
+		zipCode: "",
+	});
+
+	useEffect(() => {
+		const isFormFilled = watchFields.every(
+			(field) => field && field.trim() !== ""
+		);
+		setIsDeliveryFormFilled(isFormFilled);
+
+		// Update global state whenever the form fields change
+		const currentFields = {
+			firstName: watch("firstName"),
+			lastName: watch("lastName"),
+			address: watch("address"),
+			apartment: watch("apartment"),
+			company: watch("company"),
+			city: watch("city"),
+			state: watch("state"),
+			zipCode: watch("zipCode"),
+		};
+
+		const prevFields = prevFieldsRef.current;
+
+		// Check if any field has changed
+		const hasChanged = Object.keys(currentFields).some(
+			(key) =>
+				currentFields[key as keyof FormFields] !==
+				prevFields[key as keyof FormFields]
+		);
+		if (isFormFilled && hasChanged) {
+			dispatch({
+				type: "SET_SHIPPING_INFO",
+				payload: {
+					...state.cart.shippingInformation,
+					firstNameShipping: currentFields.firstName,
+					lastNameShipping: currentFields.lastName,
+					company: currentFields.company,
+					address: {
+						street: currentFields.address,
+						streetTwo: currentFields.apartment,
+						city: currentFields.city,
+						state: currentFields.state,
+						zipCode: currentFields.zipCode,
+					},
+					shippingContactEmail:
+						state.cart.shippingInformation.shippingContactEmail,
+				},
+			});
+			// Update the previous fields reference
+			prevFieldsRef.current = currentFields;
+		}
+	}, [
+		watchFields,
+		setIsDeliveryFormFilled,
+		dispatch,
+		state.cart.shippingInformation,
+	]);
 
 	return (
 		<form
@@ -32,7 +154,6 @@ const DeliveryAddressForm = () => {
 			className="flex flex-col items-center justify-center"
 		>
 			<h1 className="text-2xl font-bold self-start mb-3">Delivery</h1>
-
 			{/* Country */}
 			<FormControl
 				fullWidth
@@ -56,7 +177,6 @@ const DeliveryAddressForm = () => {
 					<FormHelperText>{String(errors.country.message)}</FormHelperText>
 				)}
 			</FormControl>
-
 			{/* First name, last name, company */}
 			<div className="flex flex-row w-full gap-4">
 				<FormControl
@@ -106,7 +226,6 @@ const DeliveryAddressForm = () => {
 					)}
 				</FormControl>
 			</div>
-
 			{/* Company */}
 			<FormControl fullWidth margin="dense">
 				<Controller
@@ -123,7 +242,6 @@ const DeliveryAddressForm = () => {
 					)}
 				/>
 			</FormControl>
-
 			{/* Address */}
 			<FormControl fullWidth margin="dense" error={!!errors.address}>
 				<Controller
@@ -145,7 +263,6 @@ const DeliveryAddressForm = () => {
 					<FormHelperText>{String(errors.address.message)}</FormHelperText>
 				)}
 			</FormControl>
-
 			{/* Apartment, suite, etc. */}
 			<FormControl fullWidth margin="dense">
 				<Controller
@@ -162,7 +279,6 @@ const DeliveryAddressForm = () => {
 					)}
 				/>
 			</FormControl>
-
 			{/* ZIP code, city, state */}
 			<div className="flex flex-row w-full gap-2 items-center">
 				<FormControl fullWidth margin="dense" error={!!errors.zipCode}>
@@ -178,6 +294,13 @@ const DeliveryAddressForm = () => {
 								fullWidth
 								margin="dense"
 								error={!!errors.zipCode}
+								onChange={(e) => {
+									field.onChange(e);
+									const value = e.target.value;
+									if (value.length === 5) {
+										setPostalCode(value);
+									}
+								}}
 							/>
 						)}
 					/>
@@ -253,7 +376,6 @@ const DeliveryAddressForm = () => {
 					)}
 				</FormControl>
 			</div>
-
 			{/* Phone */}
 			<FormControl fullWidth margin="dense" error={!!errors.phone}>
 				<Controller
@@ -266,10 +388,8 @@ const DeliveryAddressForm = () => {
 							message: "Phone number must be 10 digits",
 						},
 					}}
-					// Render function for the phone number input field
 					render={({ field }) => (
 						<MaskedInput
-							// Mask pattern for the phone number input
 							mask={[
 								"(",
 								/[1-9]/,
@@ -304,6 +424,16 @@ const DeliveryAddressForm = () => {
 					<FormHelperText>{String(errors.phone.message)}</FormHelperText>
 				)}
 			</FormControl>
+
+			{!isValid && suggestedAddress && (
+				<div>
+					<p>Did you mean:</p>
+					<p>{`${suggestedAddress.street}, ${suggestedAddress.city}, ${suggestedAddress.state} ${suggestedAddress.zipCode}`}</p>
+					<Button type="button" onClick={handleUseSuggestedAddress}>
+						Use Suggested Address
+					</Button>
+				</div>
+			)}
 		</form>
 	);
 };

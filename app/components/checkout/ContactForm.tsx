@@ -1,22 +1,32 @@
 "use client";
+import { handleSignOut } from "../../actions/signOutAction";
+//Framework
+import { useState, useEffect, Dispatch, SetStateAction } from "react";
+import { useRouter } from "next/navigation";
+//Packages
 import { useForm, Controller } from "react-hook-form";
 import { useSession } from "next-auth/react";
-import { useState } from "react";
 import { useSnackbar } from "notistack";
 import { TextField, Checkbox, FormControlLabel, Button } from "@mui/material";
 import { SessionUser } from "@/types/types";
-import { handleSignOut } from "../../actions/signOutAction";
-import { useRouter } from "next/navigation";
+import { useStateStorage } from "../../../utils/stateStorage";
 
-const ContactForm = () => {
+interface ContactFormProps {
+	setIsContactFormFilled: Dispatch<SetStateAction<boolean>>;
+}
+
+const ContactForm = ({ setIsContactFormFilled }: ContactFormProps) => {
 	const { data: session } = useSession();
 	const { enqueueSnackbar } = useSnackbar();
 	const {
 		control,
 		formState: { errors },
+		watch,
 	} = useForm();
 	const [isSubscribed, setIsSubscribed] = useState(false);
 	const router = useRouter();
+	const { dispatch, state } = useStateStorage();
+
 	const handleLogout = async () => {
 		try {
 			await handleSignOut(); ///
@@ -26,6 +36,26 @@ const ContactForm = () => {
 			enqueueSnackbar("Failed to log out", { variant: "error" });
 		}
 	};
+
+	const email = watch("email");
+
+	useEffect(() => {
+		if (session || email) {
+			setIsContactFormFilled(true);
+			dispatch({
+				type: "SET_SHIPPING_INFO",
+				payload: {
+					...state.cart.shippingInformation,
+					shippingContactEmail: session
+						? (session.user as SessionUser).email
+						: email,
+				},
+			});
+		} else {
+			setIsContactFormFilled(false);
+		}
+	}, [session, email, setIsContactFormFilled, dispatch]);
+
 	return (
 		<div className="flex flex-col items-start">
 			<div className="flex justify-between w-full mb-2">

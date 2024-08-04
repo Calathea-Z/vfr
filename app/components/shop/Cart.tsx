@@ -19,6 +19,9 @@ import {
 	Trash,
 } from "@phosphor-icons/react";
 import { ClipLoader } from "react-spinners";
+import Cookies from "universal-cookie";
+
+const cookies = new Cookies();
 
 const Cart: FC = () => {
 	const { state, dispatch } = useStateStorage();
@@ -39,10 +42,11 @@ const Cart: FC = () => {
 
 			const response = await axios.get(`/api/products/${item.productId}`);
 			const countInStock = response.data.countInStock;
+			const itemWeight = response.data.shippingWeight;
 
 			if (countInStock < quantity) {
 				enqueueSnackbar(
-					`We currently have only ${item.countInStock} units of ${item.name} in stock.`,
+					`We currently have only ${countInStock} units of ${item.name} in stock.`,
 					{
 						variant: "warning",
 						autoHideDuration: 3000,
@@ -60,6 +64,7 @@ const Cart: FC = () => {
 				payload: {
 					...item,
 					quantity: quantity,
+					shippingWeight: itemWeight,
 				},
 			});
 			console.log("Updated cart items after dispatch:", state.cart.cartItems);
@@ -125,7 +130,6 @@ const Cart: FC = () => {
 					payload: storedCartItems,
 				});
 			}
-			console.log("Cart state on startup:", state.cart);
 			setIsCartItemsLoading(false);
 		};
 
@@ -133,10 +137,16 @@ const Cart: FC = () => {
 	}, [dispatch, isCartVisible]);
 
 	useEffect(() => {
-		if (!isCartItemsLoading) {
-			console.log("Cart state after loading:", state.cart);
-		}
-	}, [isCartItemsLoading]);
+		const currentWeight = cartItems.reduce(
+			(a, c) => a + c.quantity * c.shippingWeight,
+			0
+		);
+		dispatch({
+			type: "UPDATE_SHIPPING_WEIGHT",
+			payload: currentWeight,
+		});
+		cookies.set("shippingWeight", JSON.stringify(currentWeight), { path: "/" });
+	}, [cartItems, dispatch]);
 
 	useNoScroll({ isMobile });
 

@@ -29,7 +29,7 @@
 		".next/types/**/*.ts",
 		"utils/sanityImageBuilder.js",
 		"types/react-splide.d.ts",
-		"app/components/checkout/PaymentWithSquare.jsx"
+		"app/components/checkout/CreditCardPay.jsx"
 	],
 	"exclude": ["node_modules"]
 }

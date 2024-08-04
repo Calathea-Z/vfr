@@ -30,7 +30,7 @@ export type Action =
 	| { type: "CART_CLEAR_ITEMS" }
 	| { type: "USER_LOGIN"; payload: UserInfo }
 	| { type: "USER_LOGOUT" }
-	| { type: "SAVE_SHIPPING_ADDRESS"; payload: ShippingInformation }
+	| { type: "SET_SHIPPING_INFO"; payload: ShippingInformation }
 	| { type: "UPDATE_SHIPPING_WEIGHT"; payload: number }
 	| { type: "UPDATE_SHIPPING_COST"; payload: number }
 	| { type: "UPDATE_PAYMENT_SUCCESS"; payload: boolean }
@@ -51,10 +51,12 @@ const defaultInitialState: State = {
 		shippingInformation: {
 			firstNameShipping: "",
 			lastNameShipping: "",
-			address: "",
-			city: "",
-			zipCode: "",
-			usState: "",
+			address: {
+				street: "",
+				city: "",
+				state: "",
+				zipCode: "",
+			},
 			shippingContactEmail: "",
 		},
 		shippingWeight: null,
@@ -77,14 +79,6 @@ export function useStateStorage() {
 		throw new Error("useStateStorage must be used within a StoreProvider");
 	}
 	return context;
-}
-
-interface StoreProviderProps {
-	children: ReactNode;
-	initialCookies: {
-		cartItems?: string;
-		userInfo?: string;
-	};
 }
 
 export function StoreProvider({ children }: { children: ReactNode }) {

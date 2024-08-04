@@ -12,9 +12,10 @@ export const useHandlePayment = (
 	state: State,
 	total: number,
 	dispatch: React.Dispatch<Action>,
-	session: Session | null
+	session: Session | null,
+	onPaymentSuccess: (orderNumber: string) => void // Pass callback as an argument
 ) => {
-	const handlePaymentSuccess = async () => {
+	const handlePayment = async () => {
 		try {
 			const orderData = prepareOrderData(
 				state,
@@ -41,11 +42,14 @@ export const useHandlePayment = (
 
 			dispatch({ type: "UPDATE_PAYMENT_SUCCESS", payload: true });
 			dispatch({ type: "CART_CLEAR_ITEMS" });
+
+			// Call the callback with the order number
+			onPaymentSuccess(newOrder.orderNumber);
 		} catch (error) {
 			console.error("Error processing payment:", error);
 			dispatch({ type: "UPDATE_PAYMENT_SUCCESS", payload: false });
 		}
 	};
 
-	return { handlePaymentSuccess };
+	return { handlePayment };
 };

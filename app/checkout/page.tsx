@@ -10,15 +10,18 @@ import MobileOrderSummary from "../components/checkout/MobileOrderSummary";
 import { fullLogo } from "@/public/assets";
 import { useCalculateTotal } from "../hooks/useCalculateTotal";
 import { useHandlePayment } from "../hooks/useHandlePayment";
+import navigateWithDelay from "../../utils/navigateWithDelay";
 //Framework
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 //Packages
 import { CaretDown, CaretUp } from "@phosphor-icons/react";
 
 const CheckoutPage = () => {
 	const { state, dispatch } = useStateStorage();
-	const { data: session, status } = useSession();
+	const { data: session } = useSession();
+	const router = useRouter(); // Ensure this is within the component
 	const [isTopOrderSummaryOpen, setIsTopOrderSummaryOpen] = useState(false);
 	const [postalCode, setPostalCode] = useState("");
 	const [shippingRate, setShippingRate] = useState(0);
@@ -36,16 +39,22 @@ const CheckoutPage = () => {
 		setTotal(calculatedTotal);
 	}, [calculatedTotal]);
 
-	const { handlePaymentSuccess } = useHandlePayment(
+	const handlePaymentSuccess = async (orderNumber: string) => {
+		const url = `/checkout/summary?orderNumber=${orderNumber}`;
+		await navigateWithDelay(router, url);
+	};
+
+	const { handlePayment } = useHandlePayment(
 		state,
 		total,
 		dispatch,
-		session
+		session,
+		handlePaymentSuccess
 	);
 
-	const handlePayment = () => {
-		handlePaymentSuccess();
-	};
+	const handleSetShippingRate = useCallback((rate: number) => {
+		setShippingRate(rate);
+	}, []);
 
 	return (
 		<div className={`flex flex-col min-h-screen ${lato.className}`}>
@@ -129,7 +138,7 @@ const CheckoutPage = () => {
 								<span className="text-md text-gray-500">
 									<ShippingRate
 										postalCode={postalCode}
-										setShippingRate={setShippingRate}
+										setShippingRate={handleSetShippingRate}
 									/>
 								</span>
 							</div>
@@ -162,7 +171,7 @@ const CheckoutPage = () => {
 						/>
 						<MobileOrderSummary
 							postalCode={postalCode}
-							setShippingRate={setShippingRate}
+							setShippingRate={handleSetShippingRate}
 						/>
 						<hr className="my-4" />
 						<div className="w-full">

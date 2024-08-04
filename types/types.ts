@@ -68,6 +68,7 @@ export interface OrderData {
 	};
 	paymentStatus: string;
 	shippingStatus: string;
+	paymentType: string;
 }
 
 export interface Product {

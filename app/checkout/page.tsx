@@ -10,14 +10,15 @@ import MobileOrderSummary from "../components/checkout/MobileOrderSummary";
 import { fullLogo } from "@/public/assets";
 import { useCalculateTotal } from "../hooks/useCalculateTotal";
 import { useHandlePayment } from "../hooks/useHandlePayment";
-
 //Framework
 import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 //Packages
 import { CaretDown, CaretUp } from "@phosphor-icons/react";
 
 const CheckoutPage = () => {
 	const { state, dispatch } = useStateStorage();
+	const { data: session, status } = useSession();
 	const [isTopOrderSummaryOpen, setIsTopOrderSummaryOpen] = useState(false);
 	const [postalCode, setPostalCode] = useState("");
 	const [shippingRate, setShippingRate] = useState(0);
@@ -35,7 +36,12 @@ const CheckoutPage = () => {
 		setTotal(calculatedTotal);
 	}, [calculatedTotal]);
 
-	const { handlePaymentSuccess } = useHandlePayment(state, total, dispatch);
+	const { handlePaymentSuccess } = useHandlePayment(
+		state,
+		total,
+		dispatch,
+		session
+	);
 
 	const handlePayment = () => {
 		handlePaymentSuccess();

@@ -1,21 +1,18 @@
-import {
-	CartItem,
-	ShippingInformation,
-	UserInfo,
-	OrderData,
-	OrderItem,
-} from "../types/types";
+import { CartItem, OrderItem } from "../types/types";
 import { State } from "../utils/stateStorage";
 
-export const prepareOrderData = (state: State, total: number) => {
+export const prepareOrderData = (
+	state: State,
+	total: number,
+	userId: string
+) => {
 	const { userInfo, cart } = state;
 	const { shippingInformation, cartItems, shippingCost } = cart;
 
-	console.log("User Info:", userInfo); // Debugging line
-
+	console.log("User Info:", userInfo);
 	return {
 		orderNumber: `ORD-${new Date().toISOString().split("T")[0]}-${crypto.randomUUID()}`,
-		userId: userInfo?.id || "guest",
+		userId: userId || "guest",
 		customer: {
 			name: `${shippingInformation.firstNameShipping} ${shippingInformation.lastNameShipping}`,
 			email: shippingInformation.shippingContactEmail,

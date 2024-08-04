@@ -2,6 +2,7 @@ import { prepareOrderData } from "../../utils/prepareOrderData";
 import { State, Action } from "../../utils/stateStorage";
 //---Packages---//
 import axios from "axios";
+import { Session } from "next-auth";
 
 interface Dispatch {
 	(action: { type: string; payload?: any }): void;
@@ -10,11 +11,16 @@ interface Dispatch {
 export const useHandlePayment = (
 	state: State,
 	total: number,
-	dispatch: React.Dispatch<Action>
+	dispatch: React.Dispatch<Action>,
+	session: Session | null
 ) => {
 	const handlePaymentSuccess = async () => {
 		try {
-			const orderData = prepareOrderData(state, total);
+			const orderData = prepareOrderData(
+				state,
+				total,
+				session?.user?.id || "guest"
+			);
 
 			console.log("Order data prepared:", orderData);
 

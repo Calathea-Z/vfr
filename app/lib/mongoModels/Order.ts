@@ -30,6 +30,7 @@ interface Customer {
 interface OrderDocument extends Document {
 	orderNumber: string;
 	userId: ObjectId | string; // Allow string for guest users
+	transactionId: string; // Add this line
 	customer: Customer;
 	items: OrderItem[];
 	fees: Fees;
@@ -70,6 +71,7 @@ const orderSchema = new Schema<OrderDocument>(
 	{
 		orderNumber: { type: String, required: true },
 		userId: { type: mongoose.Schema.Types.Mixed, required: true }, // Allow mixed types
+		transactionId: { type: String, required: true }, // Add this line
 		customer: { type: customerSchema, required: true },
 		items: { type: [orderItemSchema], required: true },
 		fees: { type: feesSchema, required: true },

@@ -4,7 +4,8 @@ import { State } from "../utils/stateStorage";
 export const prepareOrderData = (
 	state: State,
 	total: number,
-	userId: string
+	userId: string,
+	transactionId: string
 ) => {
 	const { userInfo, cart } = state;
 	const { shippingInformation, cartItems, shippingCost } = cart;
@@ -13,6 +14,7 @@ export const prepareOrderData = (
 	return {
 		orderNumber: `ORD-${new Date().toISOString().split("T")[0]}-${crypto.randomUUID()}`,
 		userId: userId || "guest",
+		transactionId: transactionId,
 		customer: {
 			name: `${shippingInformation.firstNameShipping} ${shippingInformation.lastNameShipping}`,
 			email: shippingInformation.shippingContactEmail,

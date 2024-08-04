@@ -1,19 +1,20 @@
 "use client";
 import { submitPayment } from "../../actions/squarePaymentAction";
-import { useStateStorage } from "../../../utils/stateStorage";
 //Framework
 import { useState, useEffect } from "react";
 //Packages
 import { CreditCard, PaymentForm } from "react-square-web-payments-sdk";
 
-const CreditCardPay = ({ totalAmount, disabled, onPaymentSuccess }) => {
+const CreditCardPay = ({
+	totalAmount,
+	disabled,
+	onPaymentSuccess,
+	onPaymentError,
+}) => {
 	const appId = process.env.NEXT_PUBLIC_SQUARE_APP_ID;
 	const locationId = process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID;
 
 	const [isClient, setIsClient] = useState(false);
-	const { state, dispatch } = useStateStorage();
-	const { userInfo, cart } = state;
-	const { shippingInformation, cartItems, shippingCost } = cart;
 
 	useEffect(() => {
 		if (typeof window !== "undefined") {
@@ -32,12 +33,17 @@ const CreditCardPay = ({ totalAmount, disabled, onPaymentSuccess }) => {
 			console.log("Payment result:", result);
 
 			if (result.payment.status === "COMPLETED") {
-				onPaymentSuccess();
+				onPaymentSuccess(result.payment.id); // Pass the transaction ID
 			} else {
-				console.log("Payment not completed, status:", result.payment.status);
+				const errorMessage = `Payment not completed. Status: ${result.payment.status}`;
+				console.log(errorMessage);
+				onPaymentError(errorMessage);
 			}
 		} catch (error) {
 			console.error("Error processing payment:", error);
+			onPaymentError(
+				"There was an error processing your payment. Please try again."
+			);
 		}
 	};
 

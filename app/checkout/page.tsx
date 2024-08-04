@@ -1,37 +1,37 @@
 "use client";
 import DeliveryAddressForm from "../components/checkout/DeliveryAddressForm";
 import ContactForm from "../components/checkout/ContactForm";
-import { lato } from "../fonts/fonts";
-import { useStateStorage } from "../../utils/stateStorage";
-import { sanityImageBuilder } from "../../utils/sanityImageBuilder";
+import navigateWithDelay from "../../utils/navigateWithDelay";
 import ShippingRate from "../components/checkout/ShippingRate";
 import CreditCardPay from "../components/checkout/CreditCardPay";
 import MobileOrderSummary from "../components/checkout/MobileOrderSummary";
+import { lato } from "../fonts/fonts";
+import { useStateStorage } from "../../utils/stateStorage";
+import { sanityImageBuilder } from "../../utils/sanityImageBuilder";
 import { fullLogo } from "@/public/assets";
 import { useCalculateTotal } from "../hooks/useCalculateTotal";
 import { useHandlePayment } from "../hooks/useHandlePayment";
-import navigateWithDelay from "../../utils/navigateWithDelay";
 //Framework
 import { useState, useEffect, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 //Packages
 import { CaretDown, CaretUp } from "@phosphor-icons/react";
+import { useSnackbar } from "notistack";
 
 const CheckoutPage = () => {
 	const { state, dispatch } = useStateStorage();
 	const { data: session } = useSession();
-	const router = useRouter(); // Ensure this is within the component
+	const router = useRouter();
+	const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
 	const [isTopOrderSummaryOpen, setIsTopOrderSummaryOpen] = useState(false);
 	const [postalCode, setPostalCode] = useState("");
 	const [shippingRate, setShippingRate] = useState(0);
 	const [total, setTotal] = useState(0);
 	const [isContactFormFilled, setIsContactFormFilled] = useState(false);
 	const [isDeliveryFormFilled, setIsDeliveryFormFilled] = useState(false);
-
-	const toggleTopOrderSummary = () => {
-		setIsTopOrderSummaryOpen(!isTopOrderSummaryOpen);
-	};
+	const [isOrderCreationError, setIsOrderCreationError] = useState(false);
 
 	const calculatedTotal = useCalculateTotal(state.cart.cartItems, shippingRate);
 
@@ -39,9 +39,50 @@ const CheckoutPage = () => {
 		setTotal(calculatedTotal);
 	}, [calculatedTotal]);
 
+	const toggleTopOrderSummary = () => {
+		setIsTopOrderSummaryOpen(!isTopOrderSummaryOpen);
+	};
+
 	const handlePaymentSuccess = async (orderNumber: string) => {
 		const url = `/checkout/summary?orderNumber=${orderNumber}`;
 		await navigateWithDelay(router, url);
+	};
+
+	const handlePaymentError = (errorMessage: string) => {
+		enqueueSnackbar(errorMessage, {
+			variant: "error",
+			autoHideDuration: 5000,
+			anchorOrigin: {
+				vertical: "top",
+				horizontal: "center",
+			},
+		});
+	};
+
+	const handleOrderCreationError = async (
+		errorMessage: string,
+		transactionId: string
+	) => {
+		setIsOrderCreationError(true);
+		await navigateWithDelay(router, "/");
+		enqueueSnackbar(errorMessage, {
+			variant: "default",
+			hideIconVariant: true,
+			persist: true,
+			action: (key) => (
+				<button
+					onClick={() => closeSnackbar(key)}
+					className="bg-white text-black hover:bg-blue-500 hover:text-white font-bold py-2 px-4 rounded"
+				>
+					OK
+				</button>
+			),
+			anchorOrigin: {
+				vertical: "top",
+				horizontal: "center",
+			},
+		});
+		console.error(`Order creation failed for transaction: ${transactionId}`);
 	};
 
 	const { handlePayment } = useHandlePayment(
@@ -49,7 +90,8 @@ const CheckoutPage = () => {
 		total,
 		dispatch,
 		session,
-		handlePaymentSuccess
+		handlePaymentSuccess,
+		handleOrderCreationError
 	);
 
 	const handleSetShippingRate = useCallback((rate: number) => {
@@ -179,6 +221,7 @@ const CheckoutPage = () => {
 								totalAmount={total}
 								disabled={!isContactFormFilled || !isDeliveryFormFilled}
 								onPaymentSuccess={handlePayment}
+								onPaymentError={handlePaymentError}
 							/>
 						</div>
 					</div>

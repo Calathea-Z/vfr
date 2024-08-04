@@ -11,6 +11,7 @@ export async function POST(request: NextRequest) {
 		const {
 			orderNumber,
 			userId,
+			transactionId,
 			customer,
 			items,
 			fees,
@@ -35,6 +36,7 @@ export async function POST(request: NextRequest) {
 		const newOrder = new Order({
 			orderNumber,
 			userId: userObjectId,
+			transactionId,
 			customer,
 			items: itemsWithObjectId,
 			fees,
@@ -48,7 +50,7 @@ export async function POST(request: NextRequest) {
 		console.error("Error creating order:", error);
 		return NextResponse.json(
 			{ error: (error as Error).message },
-			{ status: 400 }
+			{ status: 500 }
 		);
 	}
 }

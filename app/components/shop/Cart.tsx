@@ -31,6 +31,7 @@ const Cart: FC = () => {
 	} = state;
 	const [isMobile, setIsMobile] = useState(false);
 	const [isCartItemsLoading, setIsCartItemsLoading] = useState(true);
+	const [isCheckingOut, setIsCheckingOut] = useState(false);
 
 	const { enqueueSnackbar } = useSnackbar();
 	const router = useRouter();
@@ -91,9 +92,11 @@ const Cart: FC = () => {
 		dispatch({ type: "HIDE_CART" });
 	};
 
-	const checkoutHandler = () => {
+	const checkoutHandler = async () => {
+		setIsCheckingOut(true);
 		closeCartHandler();
-		router.push("/checkout");
+		await router.push("/checkout");
+		setIsCheckingOut(false);
 	};
 
 	useEffect(() => {
@@ -152,6 +155,14 @@ const Cart: FC = () => {
 
 	return (
 		<div className={lato.className}>
+			{isCheckingOut && (
+				<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9000]">
+					<div className="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center">
+						<ClipLoader size={50} color={"#36D7B7"} loading={isCheckingOut} />
+						<p className="mt-4 text-lg">Building your order...</p>
+					</div>
+				</div>
+			)}
 			{isCartVisible && (
 				<div
 					id="cartContainer"

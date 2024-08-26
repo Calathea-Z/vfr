@@ -87,7 +87,9 @@ const OrderHistory: FC = () => {
 												: "bg-red-100 text-red-800"
 										}`}
 									>
-										{order.paymentStatus}
+										{order.paymentStatus.toLowerCase() === "completed"
+											? "Paid"
+											: order.paymentStatus}
 									</span>
 									<span
 										className={`text-xs sm:text-base px-2 py-1 rounded-full ${
@@ -99,7 +101,7 @@ const OrderHistory: FC = () => {
 										{order.shippingStatus}
 									</span>
 								</div>
-								<p className="text-xs sm:text-base text-gray-800 truncate mb-2">
+								<p className="text-xs sm:text-base text-gray-800 truncate mb-2 font-bold">
 									{order.orderNumber}
 								</p>
 								<button
@@ -111,18 +113,21 @@ const OrderHistory: FC = () => {
 							</div>
 							{order.showDetails && (
 								<div className="border-t border-gray-200">
-									<div className="p-4">
+									<div className="p-2 mb-1">
 										<p className="font-bold mb-2">Items:</p>
 										<ul className="divide-y divide-gray-200">
 											{order.items.map((item: OrderItem, idx) => (
 												<li
 													key={idx}
-													className={`py-2 ${idx % 2 === 0 ? "bg-gray-50" : "bg-white"}`}
+													className={`p2 ${idx % 2 === 0 ? "bg-gray-50" : "bg-white"}`}
 												>
 													<div className="flex justify-between items-center">
-														<span className="text-sm">
-															{item.name} x {item.quantity}
-														</span>
+														<div className="flex items-center space-x-2">
+															<span className="text-xs sm:text-base bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center">
+																{item.quantity}
+															</span>
+															<span className="text-sm">{item.name}</span>
+														</div>
 														<span className="text-sm font-medium">
 															${(item.price * item.quantity).toFixed(2)}
 														</span>

@@ -24,18 +24,29 @@ const UserAccountDashboard: FC = () => {
 			<div
 				className={`relative bg-gray-200 p-4 ${isNavCollapsed ? "w-16" : "w-1/4"}`}
 			>
-				<button
-					className="absolute top-0 right-0 mt-2 mr-2 hover:text-gray-500"
-					onClick={() => setIsNavCollapsed(!isNavCollapsed)}
-				>
-					{isNavCollapsed ? (
-						<ArrowCircleRight size={24} className="hover:fill-gray-500" />
-					) : (
+				{isNavCollapsed && (
+					<button
+						title="Expand"
+						className="absolute top-0 left-1/2 transform -translate-x-1/2 mt-2 hover:text-gray-500"
+						onClick={() => setIsNavCollapsed(!isNavCollapsed)}
+					>
+						<ArrowCircleRight size={32} className="hover:fill-gray-500" />
+					</button>
+				)}
+				{!isNavCollapsed && (
+					<button
+						title="Collapse"
+						className="absolute top-0 right-0 mt-2 mr-2 hover:text-gray-500"
+						onClick={() => setIsNavCollapsed(!isNavCollapsed)}
+					>
 						<ArrowCircleLeft size={32} className="hover:fill-gray-500" />
-					)}
-				</button>
-				<ul className="space-y-4 mt-8">
+					</button>
+				)}
+				<ul
+					className={`space-y-4 mt-8 ${isNavCollapsed ? "flex flex-col items-center" : ""}`}
+				>
 					<li
+						title="Order History"
 						className="cursor-pointer hover:bg-gray-300 p-2 rounded-full flex justify-center items-center"
 						onClick={() => setSelectedOption("OrderHistory")}
 					>
@@ -45,10 +56,16 @@ const UserAccountDashboard: FC = () => {
 							"Order History"
 						)}
 					</li>
-					<li className="cursor-pointer hover:bg-gray-300 p-2 rounded-full flex justify-center items-center">
+					<li
+						title="Address Book"
+						className="cursor-pointer hover:bg-gray-300 p-2 rounded-full flex justify-center items-center"
+					>
 						{isNavCollapsed ? <AddressBook size={32} /> : "Address Book"}
 					</li>
-					<li className="cursor-pointer hover:bg-gray-300 p-2 rounded-full flex justify-center items-center">
+					<li
+						title="Logout"
+						className="cursor-pointer hover:bg-gray-300 p-2 rounded-full flex justify-center items-center"
+					>
 						{isNavCollapsed ? <SignOut size={32} /> : "Logout"}
 					</li>
 				</ul>

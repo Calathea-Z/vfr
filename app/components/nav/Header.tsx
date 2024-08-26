@@ -11,7 +11,7 @@ import { useRouter, usePathname } from "next/navigation"; // Combined imports
 import Image from "next/legacy/image";
 import Link from "next/link";
 //---Packages---//
-import { AppBar, Toolbar, IconButton } from "@mui/material";
+import { AppBar, Toolbar, IconButton, Badge } from "@mui/material";
 import { Binoculars, Basket, List } from "@phosphor-icons/react";
 import { motion } from "framer-motion";
 
@@ -26,6 +26,10 @@ const Header: FC = () => {
 	const [isMobileSubMenuOpen, setIsMobileSubMenuOpen] = useState(false);
 	const { state, dispatch } = useStateStorage();
 	const { cart, isCartVisible } = state;
+	const cartQuantity = cart.cartItems.reduce(
+		(acc, item) => acc + item.quantity,
+		0
+	);
 
 	const toggleMenu = () => {
 		console.log("Toggling menu:", !isMenuOpen);
@@ -175,12 +179,14 @@ const Header: FC = () => {
 							)}
 							{/* Menu Section */}
 							<div className="hidden lg:flex lg:flex-1 justify-end space-x-4">
-								<IconButton onClick={toggleSearch}>
+								<IconButton title="Search" onClick={toggleSearch}>
 									<Binoculars className="w-5 h-5 md:w-7 md:h-7 lg:w-8 lg:h-8" />
 								</IconButton>
 								<AccountDropdown />
-								<IconButton onClick={handleCartClick}>
-									<Basket className="w-5 h-5 md:w-7 md:h-7 lg:w-8 lg:h-8" />
+								<IconButton title="Cart" onClick={handleCartClick}>
+									<Badge badgeContent={cartQuantity} color="primary">
+										<Basket className="w-5 h-5 md:w-7 md:h-7 lg:w-8 lg:h-8" />
+									</Badge>
 								</IconButton>
 							</div>
 							{/* Mobile Menu Section */}
@@ -199,7 +205,9 @@ const Header: FC = () => {
 									</IconButton>
 									<AccountDropdown />
 									<IconButton onClick={handleCartClick}>
-										<Basket size={28} />
+										<Badge badgeContent={cartQuantity} color="primary">
+											<Basket size={28} />
+										</Badge>
 									</IconButton>
 								</div>
 							</div>

@@ -72,7 +72,7 @@ const AccountDropdown: FC = () => {
 						</MenuItem>,
 						<MenuItem
 							key="account"
-							onClick={() => handleNavigate("/userDashboard")}
+							onClick={() => handleNavigate("/user/account")}
 						>
 							<GearSix className="w-5 h-5" />
 							&nbsp;Account

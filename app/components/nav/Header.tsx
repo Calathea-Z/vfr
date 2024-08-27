@@ -115,13 +115,6 @@ const Header: FC = () => {
 										/>
 									)}
 								</div>
-								{/* LEAVING WHOLESALE LINKS IN-CASE CLIENT WANTS LATER*/}
-								{/* <Link
-									className={`hover-underline-animation ${pathname === "/shop/wholesale" ? "text-emerald-600" : ""}`}
-									href="/shop/wholesale"
-								>
-									Wholesale
-								</Link> */}
 								<Link
 									className={`hover-underline-animation ${pathname === "/info/stockists" ? "text-emerald-600" : ""}`}
 									href="/info/stockists"
@@ -136,47 +129,11 @@ const Header: FC = () => {
 								</Link>
 							</div>
 							{/* Logo Section */}
-							{pathname === "/" && isFirstLoad ? (
-								<motion.div
-									className="flex-1 justify-center hidden lg:flex rounded-sm"
-									initial={{ opacity: 0, backgroundColor: "rgba(0, 0, 0, 0)" }}
-									animate={{
-										opacity: 1,
-										backgroundColor: "#f2c88c",
-										scale: 1.0,
-										transition: { duration: 4 },
-									}}
-									exit={{
-										opacity: 0,
-										backgroundColor: "rgba(0, 0, 0, 0)",
-										transition: { duration: 4 },
-									}}
-									transition={{
-										duration: 5,
-										ease: "easeInOut",
-									}}
-								>
-									<Link href="/">
-										<Image
-											src={simpleLogo}
-											alt="Logo"
-											width={100}
-											height={100}
-										/>
-									</Link>
-								</motion.div>
-							) : (
-								<div className="flex-1 justify-center hidden lg:flex rounded-lg">
-									<Link href="/">
-										<Image
-											src={simpleLogo}
-											alt="Logo"
-											width={100}
-											height={100}
-										/>
-									</Link>
-								</div>
-							)}
+							<div className="flex-1 justify-center hidden lg:flex rounded-sm ">
+								<Link href="/">
+									<Image src={simpleLogo} alt="Logo" width={100} height={100} />
+								</Link>
+							</div>
 							{/* Menu Section */}
 							<div className="hidden lg:flex lg:flex-1 justify-end space-x-4">
 								<IconButton title="Search" onClick={toggleSearch}>

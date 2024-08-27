@@ -3,7 +3,7 @@ import { FC, useState } from "react";
 import dynamic from "next/dynamic";
 import {
 	ListNumbers,
-	AddressBook,
+	AddressBook as AddressBookIcon,
 	SignOut,
 	ArrowCircleRight,
 	ArrowCircleLeft,
@@ -11,6 +11,10 @@ import {
 
 const OrderHistory = dynamic(
 	() => import("../../components/userAccount/OrderHistory")
+);
+
+const AddressBook = dynamic(
+	() => import("../../components/userAccount/AddressBook")
 );
 
 const UserAccountDashboard: FC = () => {
@@ -59,8 +63,9 @@ const UserAccountDashboard: FC = () => {
 					<li
 						title="Address Book"
 						className="cursor-pointer hover:bg-gray-300 p-2 rounded-full flex justify-center items-center"
+						onClick={() => setSelectedOption("AddressBook")}
 					>
-						{isNavCollapsed ? <AddressBook size={32} /> : "Address Book"}
+						{isNavCollapsed ? <AddressBookIcon size={32} /> : "Address Book"}
 					</li>
 					<li
 						title="Logout"
@@ -73,6 +78,8 @@ const UserAccountDashboard: FC = () => {
 			<div className="w-3/4 p-4">
 				{selectedOption === "OrderHistory" ? (
 					<OrderHistory />
+				) : selectedOption === "AddressBook" ? (
+					<AddressBook />
 				) : (
 					<h1>Welcome to your dashboard</h1>
 				)}

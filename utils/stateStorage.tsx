@@ -52,6 +52,8 @@ const defaultInitialState: State = {
 			firstNameShipping: "",
 			lastNameShipping: "",
 			address: {
+				firstName: "",
+				lastName: "",
 				street: "",
 				city: "",
 				state: "",

@@ -159,6 +159,8 @@ const DeliveryAddressForm: FC<DeliveryAddressFormProps> = ({
 					lastNameShipping: currentFields.lastName,
 					company: watch("company"),
 					address: {
+						firstName: currentFields.firstName,
+						lastName: currentFields.lastName,
 						street: currentFields.address,
 						streetTwo: watch("apartment"),
 						city: currentFields.city,

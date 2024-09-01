@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Address } from "../../../types/types";
 import {
 	Button,
+	IconButton,
 	Modal,
 	FormControl,
 	InputLabel,
@@ -9,10 +10,14 @@ import {
 	FormControlLabel,
 	Checkbox,
 	Switch,
+	Select,
+	MenuItem,
+	CircularProgress,
 } from "@mui/material";
 import { PencilSimple, Plus, TrashSimple } from "@phosphor-icons/react";
 import axios from "axios";
 import { useSession } from "next-auth/react";
+import states from "states-us";
 
 const AddressBook: React.FC = () => {
 	const { data: session } = useSession();
@@ -21,16 +26,19 @@ const AddressBook: React.FC = () => {
 	const [addresses, setAddresses] = useState<Address[]>([]);
 	const [isModalVisible, setIsModalVisible] = useState(false);
 	const [currentAddress, setCurrentAddress] = useState<Address | null>(null);
+	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
 		if (!userId) return;
 
 		// Fetch user addresses from the server
 		const fetchAddresses = async () => {
+			setLoading(true);
 			const response = await axios.get(
 				`/api/user-address/get-addresses/${userId}`
 			);
 			setAddresses(response.data);
+			setLoading(false);
 		};
 
 		fetchAddresses();
@@ -91,39 +99,43 @@ const AddressBook: React.FC = () => {
 			lastName: formData.get("lastName") as string,
 		};
 
-		if (currentAddress) {
-			// Update existing address
-			await axios.put(
-				`/api/user-address/update-address/${currentAddress._id}`,
-				values,
-				{ headers: { userId } }
+		try {
+			if (currentAddress) {
+				// Update existing address
+				await axios.put(
+					`/api/user-address/update-address/${currentAddress._id}`,
+					values,
+					{ headers: { userId } }
+				);
+			} else {
+				// Add new address
+				await axios.put(`/api/user-address/add-address/${userId}`, values);
+			}
+			setIsModalVisible(false);
+			// Refresh addresses after adding/updating
+			const response = await axios.get(
+				`/api/user-address/get-addresses/${userId}`
 			);
-		} else {
-			// Add new address
-			await axios.put(`/api/user-address/add-address/${userId}`, values);
+			setAddresses(response.data);
+		} catch (error) {
+			console.error("Error adding/updating address:", error);
 		}
-		setIsModalVisible(false);
-		// Refresh addresses after adding/updating
-		const response = await axios.get(
-			`/api/user-address/get-addresses/${userId}`
-		);
-		setAddresses(response.data);
 	};
 
 	const handleModalCancel = () => {
 		setIsModalVisible(false);
 	};
 
+	if (loading) {
+		return (
+			<div className="flex justify-center items-center h-full">
+				<div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
+			</div>
+		);
+	}
+
 	return (
 		<div>
-			<Button
-				variant="contained"
-				color="primary"
-				startIcon={<Plus />}
-				onClick={handleAddNewAddress}
-			>
-				Add New Address
-			</Button>
 			<div className="flex flex-wrap gap-6 mt-6">
 				{addresses.map((address) => (
 					<div
@@ -138,7 +150,7 @@ const AddressBook: React.FC = () => {
 										<Switch
 											checked={address.isPrimary}
 											onChange={() => handleSetPrimary(address._id)}
-											color="primary"
+											color="success"
 										/>
 									}
 									label={address.isPrimary ? "Primary" : "Set as Primary"}
@@ -153,33 +165,57 @@ const AddressBook: React.FC = () => {
 								</p>
 								<p className="text-gray-600">{address.phoneNumber}</p>
 							</div>
-							<div className="flex justify-between mt-4">
-								<Button
-									variant="outlined"
-									startIcon={<PencilSimple />}
+							<div className="flex justify-end gap-2 mt-4">
+								<IconButton
 									onClick={() => handleEditAddress(address)}
-									className="rounded-md"
+									style={{
+										backgroundColor: "blue",
+										color: "white",
+										borderRadius: "50%",
+										cursor: "pointer",
+									}}
+									title="Edit"
 								>
-									Edit
-								</Button>
-								<Button
-									variant="outlined"
-									startIcon={<TrashSimple />}
+									<PencilSimple />
+								</IconButton>
+								<IconButton
 									onClick={() => handleDeleteAddress(address._id)}
-									className="rounded-md"
-									color="secondary"
+									style={{
+										backgroundColor: "red",
+										color: "white",
+										borderRadius: "50%",
+										cursor: "pointer",
+									}}
+									title="Delete"
 								>
-									Delete
-								</Button>
+									<TrashSimple />
+								</IconButton>
 							</div>
 						</div>
 					</div>
 				))}
+				<div className="w-full md:w-1/2 lg:w-1/3 p-4 bg-white rounded-lg shadow-md flex flex-col items-center justify-center">
+					<h2 className="text-xl font-semibold mb-2 text-center">
+						Add an address
+					</h2>
+					<IconButton
+						onClick={handleAddNewAddress}
+						style={{
+							backgroundColor: "green",
+							color: "white",
+							borderRadius: "50%",
+							cursor: "pointer",
+							marginTop: "10px",
+						}}
+					>
+						<Plus />
+					</IconButton>
+				</div>
 			</div>
 			<Modal open={isModalVisible} onClose={handleModalCancel}>
 				<div className="p-6 bg-white rounded-lg shadow-md mx-auto my-20 w-96">
 					<h2 className="text-2xl font-semibold mb-6">
-						{currentAddress ? "Edit Address" : "Add New Address"}
+						{currentAddress ? "Edit Address" : "Add New Address"}s
 					</h2>
 					<form onSubmit={handleModalOk}>
 						<FormControl fullWidth margin="normal">
@@ -234,14 +270,44 @@ const AddressBook: React.FC = () => {
 								required
 							/>
 						</FormControl>
-						<FormControl fullWidth margin="normal">
-							<InputLabel htmlFor="state">State</InputLabel>
-							<Input
+						<FormControl fullWidth margin="normal" error={false}>
+							<InputLabel
+								htmlFor="state"
+								style={{ fontSize: "0.9rem", marginTop: ".4rem" }}
+							>
+								State
+							</InputLabel>
+							<Select
 								id="state"
 								name="state"
 								defaultValue={currentAddress?.state || ""}
 								required
-							/>
+								style={{
+									fontSize: ".9rem",
+									paddingBottom: ".1rem",
+									marginTop: ".6rem",
+								}}
+								MenuProps={{
+									anchorOrigin: {
+										vertical: "bottom",
+										horizontal: "left",
+									},
+									transformOrigin: {
+										vertical: "top",
+										horizontal: "left",
+									},
+								}}
+							>
+								{states.map((state) => (
+									<MenuItem
+										key={state.abbreviation}
+										value={state.abbreviation}
+										style={{ fontSize: "0.9rem" }}
+									>
+										{state.name}
+									</MenuItem>
+								))}
+							</Select>
 						</FormControl>
 						<FormControl fullWidth margin="normal">
 							<InputLabel htmlFor="zipCode">Zip Code</InputLabel>
@@ -258,20 +324,34 @@ const AddressBook: React.FC = () => {
 								id="phoneNumber"
 								name="phoneNumber"
 								defaultValue={currentAddress?.phoneNumber || ""}
+								required
 							/>
 						</FormControl>
-						<FormControlLabel
-							control={
-								<Checkbox
-									name="isPrimary"
-									defaultChecked={currentAddress?.isPrimary || false}
-								/>
-							}
-							label="Set as Primary"
-						/>
-						<Button type="submit" variant="contained" color="primary">
-							{currentAddress ? "Update Address" : "Add Address"}
-						</Button>
+						<div
+							style={{
+								display: "flex",
+								justifyContent: "space-between",
+								alignItems: "center",
+								padding: "10px",
+							}}
+						>
+							<FormControlLabel
+								control={
+									<Checkbox
+										name="isPrimary"
+										defaultChecked={currentAddress?.isPrimary || false}
+									/>
+								}
+								label="Set as Primary"
+							/>
+							<Button
+								type="submit"
+								variant="contained"
+								style={{ backgroundColor: "green", color: "white" }}
+							>
+								{currentAddress ? "Update Address" : "Add Address"}
+							</Button>
+						</div>
 					</form>
 				</div>
 			</Modal>

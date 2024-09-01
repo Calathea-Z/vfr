@@ -19,20 +19,24 @@ import {
 	CaretUp,
 	CaretDown,
 	Leaf,
-	ShoppingCart,
-	Users,
 	SortAscending,
 	FunnelSimple,
 	XCircle,
 	SortDescending,
+	Stack,
+	House,
+	SignOut,
 } from "@phosphor-icons/react"; // Importing Phosphor Icons
 import Switch from "@mui/material/Switch"; // Importing MUI Switch
 import IconButton from "@mui/material/IconButton"; // Importing MUI IconButton
 import Tooltip from "@mui/material/Tooltip"; // Importing MUI Tooltip
+import { handleSignOut } from "@/app/actions/signOutAction"; // Importing signOutAction
+import { useSnackbar } from "notistack"; // Importing useSnackbar from notistack
 
 const AdminDashboard = () => {
 	const router = useRouter();
-	const { data: session, status } = useSession();
+	const { data: session, status, update } = useSession();
+	const { enqueueSnackbar } = useSnackbar();
 	const [orders, setOrders] = useState([]);
 	const [loading, setLoading] = useState(true); // State to manage loading
 	const [sorting, setSorting] = useState<SortingState>([]); // State to manage sorting
@@ -60,7 +64,7 @@ const AdminDashboard = () => {
 	};
 
 	const handleToggle = async (orderId: any, shipped: boolean) => {
-		await fetch(`/api/orders/update-order-status`, {
+		await fetch(`/api/orders/set-shipped-status/${orderId}/${shipped}`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -80,6 +84,18 @@ const AdminDashboard = () => {
 			}
 			return newExpandedRows;
 		});
+	};
+
+	const handleLogout = async () => {
+		try {
+			await handleSignOut();
+			enqueueSnackbar("Successfully logged out", { variant: "success" });
+			await update(); // Recheck the session state
+			router.push("/");
+			window.location.reload(); // Force page reload to clear login state
+		} catch (error) {
+			enqueueSnackbar("Failed to log out", { variant: "error" });
+		}
 	};
 
 	const columnHelper = createColumnHelper<any>();
@@ -109,7 +125,7 @@ const AdminDashboard = () => {
 		}),
 		// Shipped column with smaller size
 		columnHelper.accessor("shippingStatus", {
-			header: () => "Shipping Status",
+			header: () => "Shipped",
 			cell: (info) => {
 				const status = info.getValue();
 				const orderId = info.row.original._id;
@@ -131,7 +147,7 @@ const AdminDashboard = () => {
 					</div>
 				);
 			},
-			enableSorting: false,
+			enableSorting: true,
 			size: 80, // Smaller size
 		}),
 		// Other columns with smaller default size
@@ -228,18 +244,18 @@ const AdminDashboard = () => {
 			<div className="relative bg-gray-200 p-2 w-16 flex flex-col items-center">
 				<ul className="space-y-4 mt-8">
 					<li
+						title="Home"
+						className="cursor-pointer hover:bg-gray-300 p-2 rounded-full flex justify-center items-center"
+						onClick={() => router.push("/")}
+					>
+						<House size={32} className="text-gray-700" />
+					</li>
+					<li
 						title="Orders"
 						className="cursor-pointer hover:bg-gray-300 p-2 rounded-full flex justify-center items-center"
 						onClick={() => setSelectedOption("OrderHistory")}
 					>
-						<ShoppingCart size={32} className="text-gray-700" />
-					</li>
-					<li
-						title="Customers"
-						className="cursor-pointer hover:bg-gray-300 p-2 rounded-full flex justify-center items-center"
-						onClick={() => setSelectedOption("Customers")}
-					>
-						<Users size={32} />
+						<Stack size={32} className="text-gray-700" />
 					</li>
 					<li
 						title="Sanity Studio"
@@ -248,12 +264,19 @@ const AdminDashboard = () => {
 					>
 						<Leaf size={32} />
 					</li>
+					<li
+						title="Logout"
+						className="cursor-pointer hover:bg-gray-300 p-2 rounded-full flex justify-center items-center"
+						onClick={handleLogout}
+					>
+						<SignOut size={32} className="text-gray-700" />
+					</li>
 				</ul>
 			</div>
 			<div className="w-full p-4">
 				{loading ? (
 					<div className="flex justify-center items-center h-full">
-						<div className="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-32 w-32"></div>
+						<div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
 					</div>
 				) : (
 					<div className="overflow-x-auto bg-white shadow-md rounded-lg h-full">

@@ -2,7 +2,7 @@
 import client from "../../../../../sanity/lib/client";
 import Filter from "@/app/components/shop/Filter";
 import Sort from "@/app/components/shop/Sort";
-import ProductComponent from "@/app/components/shop/Product";
+import Product from "@/app/components/shop/Product";
 //---Framework---//
 import { useEffect, useState, useCallback, FC } from "react";
 import { useParams } from "next/navigation";
@@ -203,7 +203,7 @@ const CategoryPage: FC = () => {
 						// grid layout when displaying products
 						<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 3xl:grid-cols-4 justify-items-center w-full">
 							{products.map((product, index) => (
-								<ProductComponent key={index} product={product} />
+								<Product key={index} product={product} />
 							))}
 						</div>
 					)}

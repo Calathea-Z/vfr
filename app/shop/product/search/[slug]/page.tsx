@@ -108,7 +108,7 @@ const SearchResultsPage: React.FC = () => {
 						<div className="flex flex-col items-start justify-start w-full">
 							{error ? (
 								<div
-									className={`flex flex-col gap-1 md:gap-4 w-full text-left text-sm sm:text-xl md:text-3xl lg:text-4xl xl:text-5xl font-bold px-5 md:px-10 py-1 sm:py-4 md:py-8 shadow-sm  ${lato.className}`}
+									className={`flex flex-col gap-1 md:gap-4 w-full text-left text-sm sm:text-xl md:text-3xl lg:text-4xl xl:text-5xl font-bold px-5 md:px-10 py-1 sm:py-4 md:py-8 ${lato.className}`}
 								>
 									<span className="flex items-center gap-2 text-secondary">
 										<MaskSad size={40} />
@@ -121,7 +121,7 @@ const SearchResultsPage: React.FC = () => {
 								</div>
 							) : (
 								<div
-									className={`w-full text-left text-xl md:text-3xl lg:text-4xl xl:text-5xl font-bold px-10 py-8 shadow-sm text-emerald-500 ${lato.className}`}
+									className={`w-full text-left text-xl md:text-3xl lg:text-4xl xl:text-5xl font-bold px-10 py-8  text-emerald-500 ${lato.className}`}
 								>
 									{`Search results for "${decodeURIComponent(searchQuery)}"`}
 								</div>

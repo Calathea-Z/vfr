@@ -1,5 +1,21 @@
 import mongoose, { Schema, model, Model } from "mongoose";
 
+const AddressSchema = new Schema({
+	company: { type: String, default: null },
+	street: { type: String, required: true },
+	streetTwo: { type: String, default: null },
+	city: { type: String, required: true },
+	state: { type: String, required: true },
+	zipCode: { type: String, required: true },
+	phoneNumber: { type: String, default: null },
+	isPrimary: { type: Boolean, default: false },
+	_id: { type: mongoose.Schema.Types.ObjectId, auto: true },
+	firstName: { type: String, default: null },
+	lastName: { type: String, default: null },
+	dateCreated: { type: Date, default: Date.now },
+	dateUpdated: { type: Date, default: Date.now },
+});
+
 interface UserDocument extends mongoose.Document {
 	firstName: string;
 	lastName: string;
@@ -11,10 +27,7 @@ interface UserDocument extends mongoose.Document {
 	shippingContactEmail?: string;
 	firstNameShipping?: string;
 	lastNameShipping?: string;
-	address?: string;
-	city?: string;
-	zipCode?: number;
-	usState?: string;
+	addresses: (typeof AddressSchema)[];
 	emailVerified?: Date; // Added for Auth.js
 	image?: string; // Added for Auth.js
 	role: string;
@@ -63,18 +76,7 @@ const UserSchema = new Schema<UserDocument>(
 		lastNameShipping: {
 			type: String,
 		},
-		address: {
-			type: String,
-		},
-		city: {
-			type: String,
-		},
-		zipCode: {
-			type: Number,
-		},
-		usState: {
-			type: String,
-		},
+		addresses: [AddressSchema],
 		emailVerified: {
 			type: Date,
 		},

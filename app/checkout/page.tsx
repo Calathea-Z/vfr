@@ -210,6 +210,7 @@ const CheckoutPage = () => {
 						<DeliveryAddressForm
 							setPostalCode={setPostalCode}
 							setIsDeliveryFormFilled={setIsDeliveryFormFilled}
+							enqueueSnackbar={enqueueSnackbar}
 						/>
 						<MobileOrderSummary
 							postalCode={postalCode}

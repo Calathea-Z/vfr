@@ -1,7 +1,7 @@
 "use client";
 import { Address } from "@/types/types";
 //---Framework---//
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, FC } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { useStateStorage } from "../../../utils/stateStorage";
 import axios from "axios";
@@ -14,6 +14,11 @@ import {
 	FormControl,
 	FormHelperText,
 	Button,
+	Dialog,
+	DialogActions,
+	DialogContent,
+	DialogContentText,
+	DialogTitle,
 } from "@mui/material";
 import states from "states-us";
 import MaskedInput from "react-text-mask";
@@ -27,18 +32,21 @@ type FormFields = {
 	zipCode: string;
 };
 
-const DeliveryAddressForm = ({
-	setPostalCode,
-	setIsDeliveryFormFilled,
-}: {
+interface DeliveryAddressFormProps {
 	setPostalCode: (code: string) => void;
 	setIsDeliveryFormFilled: (filled: boolean) => void;
+	enqueueSnackbar: (message: string, options?: any) => void;
+}
+
+const DeliveryAddressForm: FC<DeliveryAddressFormProps> = ({
+	setPostalCode,
+	setIsDeliveryFormFilled,
+	enqueueSnackbar,
 }) => {
 	const { dispatch, state } = useStateStorage();
 	const {
 		control,
 		watch,
-		handleSubmit,
 		formState: { errors },
 		setValue,
 	} = useForm();
@@ -47,31 +55,52 @@ const DeliveryAddressForm = ({
 		null
 	);
 	const [isValid, setIsValid] = useState(true);
+	const [openDialog, setOpenDialog] = useState(false);
 
 	const validateAddress = async (data: any) => {
+		console.log("Validating address:", data);
 		try {
 			const res = await axios.post("/api/address-validation", data);
-			setIsValid(res.data.valid);
-			setSuggestedAddress(res.data.suggestedAddress);
+			console.log("Validation response:", res.data);
+			if (res.data.valid) {
+				setIsValid(true);
+				setSuggestedAddress(null);
+			} else {
+				setIsValid(false);
+				if (res.data.suggestedAddress) {
+					setSuggestedAddress(res.data.suggestedAddress);
+					setOpenDialog(true);
+				} else {
+					enqueueSnackbar("Invalid address. Please check and try again.", {
+						variant: "warning",
+					});
+				}
+			}
 		} catch (error) {
 			console.error("Error validating address", error);
+			enqueueSnackbar("Error validating address. Please try again.", {
+				variant: "error",
+			});
+			setIsValid(false);
 		}
+	};
+
+	const handleCloseDialog = () => {
+		setOpenDialog(false);
 	};
 
 	const handleUseSuggestedAddress = () => {
 		if (suggestedAddress) {
 			setValue("address", suggestedAddress.street);
+			setValue("apartment", suggestedAddress.streetTwo);
 			setValue("city", suggestedAddress.city);
 			setValue("state", suggestedAddress.state);
 			setValue("zipCode", suggestedAddress.zipCode);
 			setSuggestedAddress(null);
 			setIsValid(true);
+			setOpenDialog(false);
+			setIsDeliveryFormFilled(true);
 		}
-	};
-
-	const onSubmit = (data: any) => {
-		validateAddress(data);
-		setIsDeliveryFormFilled(true);
 	};
 
 	// Watch form fields to determine if the form is filled out
@@ -97,39 +126,43 @@ const DeliveryAddressForm = ({
 		const isFormFilled = watchFields.every(
 			(field) => field && field.trim() !== ""
 		);
-		setIsDeliveryFormFilled(isFormFilled);
 
-		// Update global state whenever the form fields change
 		const currentFields = {
 			firstName: watch("firstName"),
 			lastName: watch("lastName"),
 			address: watch("address"),
 			apartment: watch("apartment"),
-			company: watch("company"),
 			city: watch("city"),
 			state: watch("state"),
 			zipCode: watch("zipCode"),
 		};
 
-		const prevFields = prevFieldsRef.current;
-
-		// Check if any field has changed
 		const hasChanged = Object.keys(currentFields).some(
 			(key) =>
 				currentFields[key as keyof FormFields] !==
-				prevFields[key as keyof FormFields]
+				prevFieldsRef.current[key as keyof FormFields]
 		);
+
 		if (isFormFilled && hasChanged) {
+			validateAddress(currentFields);
+		}
+
+		setIsDeliveryFormFilled(isFormFilled && isValid);
+
+		// Update global state whenever the form fields change
+		if (isFormFilled && isValid && hasChanged) {
 			dispatch({
 				type: "SET_SHIPPING_INFO",
 				payload: {
 					...state.cart.shippingInformation,
 					firstNameShipping: currentFields.firstName,
 					lastNameShipping: currentFields.lastName,
-					company: currentFields.company,
+					company: watch("company"),
 					address: {
+						firstName: currentFields.firstName,
+						lastName: currentFields.lastName,
 						street: currentFields.address,
-						streetTwo: currentFields.apartment,
+						streetTwo: watch("apartment"),
 						city: currentFields.city,
 						state: currentFields.state,
 						zipCode: currentFields.zipCode,
@@ -138,21 +171,13 @@ const DeliveryAddressForm = ({
 						state.cart.shippingInformation.shippingContactEmail,
 				},
 			});
-			// Update the previous fields reference
-			prevFieldsRef.current = currentFields;
 		}
-	}, [
-		watchFields,
-		setIsDeliveryFormFilled,
-		dispatch,
-		state.cart.shippingInformation,
-	]);
+
+		prevFieldsRef.current = currentFields;
+	}, [watchFields, isValid]);
 
 	return (
-		<form
-			onSubmit={handleSubmit(onSubmit)}
-			className="flex flex-col items-center justify-center"
-		>
+		<form className="flex flex-col items-center justify-center">
 			<h1 className="text-2xl font-bold self-start mb-3">Delivery</h1>
 			{/* Country */}
 			<FormControl
@@ -362,7 +387,7 @@ const DeliveryAddressForm = ({
 								{states.map((state, i) => (
 									<MenuItem
 										key={i}
-										value={state.name}
+										value={state.abbreviation}
 										style={{ fontSize: "0.9rem" }}
 									>
 										{state.name}
@@ -425,15 +450,23 @@ const DeliveryAddressForm = ({
 				)}
 			</FormControl>
 
-			{!isValid && suggestedAddress && (
-				<div>
-					<p>Did you mean:</p>
-					<p>{`${suggestedAddress.street}, ${suggestedAddress.city}, ${suggestedAddress.state} ${suggestedAddress.zipCode}`}</p>
-					<Button type="button" onClick={handleUseSuggestedAddress}>
-						Use Suggested Address
+			<Dialog open={openDialog} onClose={handleCloseDialog}>
+				<DialogTitle>Address Suggestion</DialogTitle>
+				<DialogContent>
+					<DialogContentText>
+						We found a suggested address. Would you like to use it?
+					</DialogContentText>
+					{suggestedAddress && (
+						<p>{`${suggestedAddress.street}, ${suggestedAddress.city}, ${suggestedAddress.state} ${suggestedAddress.zipCode}`}</p>
+					)}
+				</DialogContent>
+				<DialogActions>
+					<Button onClick={handleCloseDialog}>Keep Original</Button>
+					<Button onClick={handleUseSuggestedAddress} autoFocus>
+						Use Suggested
 					</Button>
-				</div>
-			)}
+				</DialogActions>
+			</Dialog>
 		</form>
 	);
 };

@@ -1,4 +1,7 @@
 export interface Address {
+	_id?: string;
+	firstName: string;
+	lastName: string;
 	company?: string | null;
 	street: string;
 	streetTwo?: string | null;
@@ -6,7 +9,9 @@ export interface Address {
 	state: string;
 	zipCode: string;
 	phoneNumber?: string | null;
+	isPrimary?: boolean;
 }
+
 export interface BioData {
 	name: string;
 	header: string;
@@ -107,6 +112,7 @@ export interface SessionUser {
 	name?: string | null;
 	email?: string | null;
 	image?: string | null;
+	role: string | null;
 }
 
 export interface ShippingInformation {
@@ -147,7 +153,6 @@ export interface UserInfo {
 	providerId: string;
 	email: string;
 	isAdmin: boolean;
-	isWholesale: boolean;
 	shippingContactEmail?: string;
 	firstNameShipping?: string;
 	lastNameShipping?: string;

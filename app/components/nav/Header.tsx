@@ -11,7 +11,7 @@ import { useRouter, usePathname } from "next/navigation"; // Combined imports
 import Image from "next/legacy/image";
 import Link from "next/link";
 //---Packages---//
-import { AppBar, Toolbar, IconButton } from "@mui/material";
+import { AppBar, Toolbar, IconButton, Badge } from "@mui/material";
 import { Binoculars, Basket, List } from "@phosphor-icons/react";
 import { motion } from "framer-motion";
 
@@ -26,6 +26,10 @@ const Header: FC = () => {
 	const [isMobileSubMenuOpen, setIsMobileSubMenuOpen] = useState(false);
 	const { state, dispatch } = useStateStorage();
 	const { cart, isCartVisible } = state;
+	const cartQuantity = cart.cartItems.reduce(
+		(acc, item) => acc + item.quantity,
+		0
+	);
 
 	const toggleMenu = () => {
 		console.log("Toggling menu:", !isMenuOpen);
@@ -111,13 +115,6 @@ const Header: FC = () => {
 										/>
 									)}
 								</div>
-								{/* LEAVING WHOLESALE LINKS IN-CASE CLIENT WANTS LATER*/}
-								{/* <Link
-									className={`hover-underline-animation ${pathname === "/shop/wholesale" ? "text-emerald-600" : ""}`}
-									href="/shop/wholesale"
-								>
-									Wholesale
-								</Link> */}
 								<Link
 									className={`hover-underline-animation ${pathname === "/info/stockists" ? "text-emerald-600" : ""}`}
 									href="/info/stockists"
@@ -132,61 +129,27 @@ const Header: FC = () => {
 								</Link>
 							</div>
 							{/* Logo Section */}
-							{pathname === "/" && isFirstLoad ? (
-								<motion.div
-									className="flex-1 justify-center hidden lg:flex rounded-sm"
-									initial={{ opacity: 0, backgroundColor: "rgba(0, 0, 0, 0)" }}
-									animate={{
-										opacity: 1,
-										backgroundColor: "#f2c88c",
-										scale: 1.0,
-										transition: { duration: 4 },
-									}}
-									exit={{
-										opacity: 0,
-										backgroundColor: "rgba(0, 0, 0, 0)",
-										transition: { duration: 4 },
-									}}
-									transition={{
-										duration: 5,
-										ease: "easeInOut",
-									}}
-								>
-									<Link href="/">
-										<Image
-											src={simpleLogo}
-											alt="Logo"
-											width={100}
-											height={100}
-										/>
-									</Link>
-								</motion.div>
-							) : (
-								<div className="flex-1 justify-center hidden lg:flex rounded-lg">
-									<Link href="/">
-										<Image
-											src={simpleLogo}
-											alt="Logo"
-											width={100}
-											height={100}
-										/>
-									</Link>
-								</div>
-							)}
+							<div className="flex-1 justify-center hidden lg:flex rounded-sm ">
+								<Link href="/">
+									<Image src={simpleLogo} alt="Logo" width={100} height={100} />
+								</Link>
+							</div>
 							{/* Menu Section */}
 							<div className="hidden lg:flex lg:flex-1 justify-end space-x-4">
-								<IconButton onClick={toggleSearch}>
+								<IconButton title="Search" onClick={toggleSearch}>
 									<Binoculars className="w-5 h-5 md:w-7 md:h-7 lg:w-8 lg:h-8" />
 								</IconButton>
 								<AccountDropdown />
-								<IconButton onClick={handleCartClick}>
-									<Basket className="w-5 h-5 md:w-7 md:h-7 lg:w-8 lg:h-8" />
+								<IconButton title="Cart" onClick={handleCartClick}>
+									<Badge badgeContent={cartQuantity} color="primary">
+										<Basket className="w-5 h-5 md:w-7 md:h-7 lg:w-8 lg:h-8" />
+									</Badge>
 								</IconButton>
 							</div>
 							{/* Mobile Menu Section */}
 							<div className="lg:hidden flex items-center justify-between w-full mr-[1.5rem]">
 								<div className="absolute left-2 flex items-center">
-									<IconButton onClick={toggleMenu}>
+									<IconButton title="Menu" onClick={toggleMenu}>
 										<List size={30} />
 									</IconButton>
 								</div>
@@ -194,12 +157,14 @@ const Header: FC = () => {
 									<Image src={simpleLogo} alt="Logo" width={80} height={80} />
 								</Link>
 								<div className="absolute right-2 flex items-center space-x-1">
-									<IconButton onClick={toggleSearch}>
+									<IconButton title="Search" onClick={toggleSearch}>
 										<Binoculars size={28} />
 									</IconButton>
 									<AccountDropdown />
-									<IconButton onClick={handleCartClick}>
-										<Basket size={28} />
+									<IconButton title="Cart" onClick={handleCartClick}>
+										<Badge badgeContent={cartQuantity} color="primary">
+											<Basket size={28} />
+										</Badge>
 									</IconButton>
 								</div>
 							</div>
@@ -227,15 +192,6 @@ const Header: FC = () => {
 									>
 										About
 									</Link>
-									{/* LEAVING WHOLESALE LINKS IN-CASE CLIENT WANTS LATER*/}
-									{/* <Link
-										    href="/shop/wholesale"
-										    className={`p-1 hover:bg-emerald-500 hover:rounded-sm hover:text-primary ${pathname === "/shop/wholesale" ? "text-emerald-600" : ""}`}
-										    onClick={() => setIsMenuOpen(false)}
-									        >
-										    Wholesale
-									        </Link> 
-                                        */}
 									<div
 										className="relative group"
 										onMouseEnter={() => setIsMobileSubMenuOpen(true)}

@@ -29,7 +29,8 @@
 		".next/types/**/*.ts",
 		"utils/sanityImageBuilder.js",
 		"types/react-splide.d.ts",
-		"app/components/checkout/CreditCardPay.jsx"
+		"app/components/checkout/CreditCardPay.jsx",
+		"app/api/user-address/get-addresses/[userId]"
 	],
 	"exclude": ["node_modules"]
 }

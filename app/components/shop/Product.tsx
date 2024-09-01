@@ -9,9 +9,8 @@ import { Card, CardContent, CardMedia, Chip } from "@mui/material";
 
 interface ProductProps {
 	product: Product;
-	small?: boolean;
 }
-const Product: FC<ProductProps> = ({ product, small = false }) => {
+const Product: FC<ProductProps> = ({ product }) => {
 	const slug =
 		typeof product.slug === "object" ? product.slug.current : product.slug;
 
@@ -29,11 +28,9 @@ const Product: FC<ProductProps> = ({ product, small = false }) => {
 	};
 
 	return (
-		<div
-			className={`flex flex-col items-center relative ${small ? "w-[20rem]" : "w-full"}`}
-		>
+		<div className="flex flex-col items-center relative w-full">
 			<Card
-				className={`w-full h-auto bg-white border border-black flex flex-col items-center justify-center p-2 shadow-none ${small ? "p-1" : "p-2"}`}
+				className="w-full h-auto bg-white border border-black flex flex-col items-center justify-center p-2 shadow-none"
 				style={{ borderRadius: 0 }}
 			>
 				{product.photo && product.photo.length > 0 ? (
@@ -42,7 +39,7 @@ const Product: FC<ProductProps> = ({ product, small = false }) => {
 							component="img"
 							image={sanityImageBuilder(product.photo[0].asset._ref).url()}
 							alt={product.name}
-							className={`object-cover rounded-2xl ${small ? "h-16" : "px-1 py-2"}`}
+							className="object-cover rounded-2xl px-1 py-2"
 							style={{
 								maxHeight: "100%",
 								maxWidth: "100%",
@@ -57,19 +54,11 @@ const Product: FC<ProductProps> = ({ product, small = false }) => {
 						<p className="text-sm text-gray-500">No Image Available</p>
 					</div>
 				)}
-				<CardContent
-					className={`w-full flex flex-col xl:flex-row justify-between gap-3 items-center ${small ? "p-1" : "p-2"}`}
-				>
-					<h4
-						className={`font-bold ${small ? "text-xs" : "text-sm lg:text-[1.15rem]"}`}
-					>
+				<CardContent className="w-full flex flex-col xl:flex-row justify-between gap-3 items-center p-2">
+					<h4 className="font-bold text-sm lg:text-[1.15rem]">
 						{product.name}
 					</h4>
-					<p
-						className={`text-slate-800 ${small ? "text-sm" : "text-xl md:ml-3"}`}
-					>
-						${product.price}
-					</p>
+					<p className="text-slate-800 text-xl md:ml-3">${product.price}</p>
 				</CardContent>
 				{product.countInStock === 0 && (
 					<Chip
@@ -89,11 +78,9 @@ const Product: FC<ProductProps> = ({ product, small = false }) => {
 						style={{ fontFamily: "Helvetica", fontWeight: "bold" }}
 					/>
 				)}
-				{!small && (
-					<div className="flex items-end justify-center md:justify-end w-full min-h-[3.5rem] lg:min-h-[3rem]">
-						<AddToCartButton product={cartItem} />
-					</div>
-				)}
+				<div className="flex items-end justify-center md:justify-end w-full min-h-[3.5rem] lg:min-h-[3rem]">
+					<AddToCartButton product={cartItem} />
+				</div>
 			</Card>
 		</div>
 	);

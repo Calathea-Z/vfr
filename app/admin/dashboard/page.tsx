@@ -21,7 +21,14 @@ import {
 	Leaf,
 	ShoppingCart,
 	Users,
+	SortAscending,
+	FunnelSimple,
+	XCircle,
+	SortDescending,
 } from "@phosphor-icons/react"; // Importing Phosphor Icons
+import Switch from "@mui/material/Switch"; // Importing MUI Switch
+import IconButton from "@mui/material/IconButton"; // Importing MUI IconButton
+import Tooltip from "@mui/material/Tooltip"; // Importing MUI Tooltip
 
 const AdminDashboard = () => {
 	const router = useRouter();
@@ -33,6 +40,7 @@ const AdminDashboard = () => {
 		"OrderHistory"
 	);
 	const [isNavCollapsed, setIsNavCollapsed] = useState(false); // State to manage nav collapse
+	const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set()); // State to manage expanded rows
 
 	useEffect(() => {
 		if (status === "loading") return; // Do nothing while loading
@@ -51,121 +59,158 @@ const AdminDashboard = () => {
 		setLoading(false); // Set loading to false after data is fetched
 	};
 
-	const handleToggle = async (orderId: any) => {
+	const handleToggle = async (orderId: any, shipped: boolean) => {
 		await fetch(`/api/orders/update-order-status`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({ orderId, shipped: true }),
+			body: JSON.stringify({ orderId, shipped }),
 		});
 		fetchOrderData();
+	};
+
+	const handleRowClick = (rowId: string) => {
+		setExpandedRows((prev) => {
+			const newExpandedRows = new Set(prev);
+			if (newExpandedRows.has(rowId)) {
+				newExpandedRows.delete(rowId);
+			} else {
+				newExpandedRows.add(rowId);
+			}
+			return newExpandedRows;
+		});
 	};
 
 	const columnHelper = createColumnHelper<any>();
 
 	const columns = [
+		// Arrow column for expanding/collapsing rows
+		columnHelper.display({
+			id: "expander",
+			cell: ({ row }) => (
+				<Tooltip title="More details">
+					<IconButton
+						onClick={(e) => {
+							e.stopPropagation();
+							handleRowClick(row.id);
+						}}
+						className="cursor-pointer text-lg font-bold"
+					>
+						{expandedRows.has(row.id) ? (
+							<CaretDown size={20} />
+						) : (
+							<CaretUp size={20} />
+						)}
+					</IconButton>
+				</Tooltip>
+			),
+			size: 10, // Size for the arrow column
+		}),
+		// Shipped column with smaller size
+		columnHelper.accessor("shippingStatus", {
+			header: () => "Shipping Status",
+			cell: (info) => {
+				const status = info.getValue();
+				const orderId = info.row.original._id;
+				const shipped = status === "Shipped";
+				return (
+					<div className="flex items-center">
+						{shipped ? (
+							<CheckCircle size={20} className="text-green-500 mr-2" />
+						) : (
+							<XCircle size={20} className="text-red-500 mr-2" />
+						)}
+						<Tooltip title="Change Shipping Status">
+							<Switch
+								checked={shipped}
+								onChange={() => handleToggle(orderId, !shipped)}
+								color="primary"
+							/>
+						</Tooltip>
+					</div>
+				);
+			},
+			enableSorting: false,
+			size: 80, // Smaller size
+		}),
+		// Other columns with smaller default size
 		columnHelper.accessor("createdAt", {
-			header: () => "Created At",
+			header: () => "Date",
 			cell: (info) => {
 				const createdAt = new Date(info.getValue());
 				return createdAt.toLocaleDateString();
 			},
 			enableSorting: true,
+			size: 80, // Smaller size
 		}),
+		// Customer column with larger size
 		columnHelper.accessor("customer", {
 			header: () => "Customer",
 			cell: (info) => {
 				const customer = info.getValue();
 				return (
 					<div className="text-sm font-medium text-gray-900">
-						{customer.name} ({customer.email})
+						{customer.name}
+						<br />
+						<span className="text-gray-600">{customer.email}</span>
 					</div>
 				);
 			},
 			enableSorting: true,
+			size: 150, // Larger size
 		}),
+		// Address column with larger size
 		columnHelper.accessor("customer.address", {
 			header: () => "Address",
 			cell: (info) => {
 				const address = info.getValue();
 				return (
 					<div className="text-sm text-gray-900">
-						{address.street}, {address.city}, {address.state} {address.zipCode}
+						{address.street}
+						<br />
+						{address.city} {address.state}
+						<br />
+						{address.zipCode}
 					</div>
 				);
 			},
 			enableSorting: true,
+			size: 150, // Larger size
 		}),
-		columnHelper.accessor("shippingStatus", {
-			header: () => "Shipping Status",
-			cell: (info) => {
-				const status = "Shipped";
-				return (
-					<span
-						className={`px-2 py-1 rounded-full text-sm text-white ${
-							status === "Shipped" ? "bg-gray-700" : "bg-gray-400"
-						}`}
-					>
-						{status}
-					</span>
-				);
-			},
-			enableSorting: true,
-		}),
-		columnHelper.accessor("_id", {
-			header: () => "ID",
-			cell: (info) => (
-				<div className="text-sm text-gray-900">{info.getValue()}</div>
-			),
-			enableSorting: true,
-		}),
+		// Total column with smaller size
 		columnHelper.accessor("fees.total", {
 			header: () => "Total",
 			cell: (info) => {
 				const total = info.getValue();
 				return (
-					<div className="text-sm text-gray-900">
+					<div className="text-base text-gray-900">
 						{total !== undefined ? `$${total.toFixed(2)}` : "N/A"}
 					</div>
 				);
 			},
 			enableSorting: true,
+			size: 80, // Smaller size
 		}),
-		columnHelper.accessor("items", {
-			header: () => "Items",
-			cell: (info) => {
-				const items = info.getValue();
-				return (
-					<div className="text-sm text-gray-900">
-						{items.map((item: any) => (
-							<div key={item._id}>
-								{item.name} - {item.quantity}
-							</div>
-						))}
-					</div>
-				);
-			},
-			enableSorting: true,
-		}),
-		columnHelper.display({
-			id: "action",
-			header: () => "Action",
-			cell: ({ row }) => (
-				<button
-					className="bg-gray-700 text-white px-4 py-2 rounded flex items-center text-sm"
-					onClick={() => handleToggle(row.original._id)}
-				>
-					<CheckCircle weight="bold" className="mr-2" />
-					Mark as Shipped
-				</button>
+		// ID column with smaller size
+		columnHelper.accessor("_id", {
+			header: () => "ID",
+			cell: (info) => (
+				<div className="text-base text-gray-900">{info.getValue()}</div>
 			),
+			enableSorting: true,
+			size: 100, // Smaller size
 		}),
 	];
 
 	const table = useReactTable({
 		data: orders,
 		columns,
+		defaultColumn: {
+			size: 80, // Default smaller size for all columns
+			minSize: 50,
+			maxSize: 150,
+		},
 		getCoreRowModel: getCoreRowModel(),
 		getSortedRowModel: getSortedRowModel(),
 		getFacetedRowModel: getFacetedRowModel(),
@@ -213,7 +258,7 @@ const AdminDashboard = () => {
 				) : (
 					<div className="overflow-x-auto bg-white shadow-md rounded-lg h-full">
 						<div className="w-full overflow-x-auto">
-							<table className="min-w-full divide-y divide-gray-200 h-full">
+							<table className="min-w-full divide-y divide-gray-200 h-full text-sm md:text-base">
 								<thead className="bg-gray-700">
 									{table.getHeaderGroups().map((headerGroup) => (
 										<tr key={headerGroup.id}>
@@ -221,7 +266,7 @@ const AdminDashboard = () => {
 												<th
 													key={header.id}
 													colSpan={header.colSpan}
-													className="px-6 py-3 text-left text-xs font-semibold text-white uppercase tracking-wider cursor-pointer"
+													className="px-2 md:px-6 py-1 md:py-3 text-left font-semibold text-white uppercase tracking-wider cursor-pointer"
 													onClick={header.column.getToggleSortingHandler()}
 												>
 													<div className="flex items-center">
@@ -231,17 +276,19 @@ const AdminDashboard = () => {
 																	header.column.columnDef.header,
 																	header.getContext()
 																)}
-														{!header.column.getIsSorted() && (
-															<div className="ml-2 bg-gray-500 text-white rounded-md px-2 py-1 text-xs">
-																SORT
-															</div>
-														)}
+														{header.id !== "expander" &&
+															!header.column.getIsSorted() && (
+																<FunnelSimple
+																	size={16}
+																	className="ml-2 text-white"
+																/>
+															)}
 														{header.column.getIsSorted() ? (
-															<div className="ml-2 bg-gray-400 text-white rounded-full p-1">
+															<div className="ml-2 bg-gray-400 text-white rounded-full p-0.5 md:p-1">
 																{header.column.getIsSorted() === "desc" ? (
-																	<CaretDown size={16} />
+																	<SortDescending size={12} />
 																) : (
-																	<CaretUp size={16} />
+																	<SortAscending size={12} />
 																)}
 															</div>
 														) : null}
@@ -253,32 +300,70 @@ const AdminDashboard = () => {
 								</thead>
 								<tbody className="bg-white divide-y divide-gray-200">
 									{table.getRowModel().rows.map((row) => (
-										<tr key={row.id}>
-											{row.getVisibleCells().map((cell) => (
-												<td
-													key={cell.id}
-													className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"
-												>
-													{flexRender(
-														cell.column.columnDef.cell,
-														cell.getContext()
-													)}
-												</td>
-											))}
-										</tr>
+										<React.Fragment key={row.id}>
+											<tr
+												className={`cursor-pointer ${
+													expandedRows.has(row.id)
+														? "bg-gray-100"
+														: "hover:bg-gray-100"
+												}`}
+											>
+												{row.getVisibleCells().map((cell, index) => (
+													<td
+														key={cell.id}
+														className={`px-2 md:px-6 py-1 md:py-4 whitespace-nowrap text-sm md:text-base font-medium text-gray-900 ${index === 0 ? "cursor-pointer" : ""}`}
+														onClick={
+															index === 0
+																? () => handleRowClick(row.id)
+																: undefined
+														}
+													>
+														{flexRender(
+															cell.column.columnDef.cell,
+															cell.getContext()
+														)}
+													</td>
+												))}
+											</tr>
+											{expandedRows.has(row.id) && (
+												<tr>
+													<td
+														colSpan={columns.length}
+														className="px-2 md:px-6 py-1 md:py-4 bg-gray-100"
+													>
+														<div className="text-base text-gray-900">
+															<strong>Items Ordered:</strong>
+															<ul className="list-disc pl-5">
+																{row.original.items.map((item: any) => (
+																	<li
+																		key={item._id}
+																		className="flex items-center"
+																	>
+																		<span className="inline-block bg-gray-200 text-gray-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">
+																			{item.quantity}
+																		</span>
+																		{item.name}
+																	</li>
+																))}
+															</ul>
+														</div>
+													</td>
+												</tr>
+											)}
+										</React.Fragment>
 									))}
 								</tbody>
 							</table>
 						</div>
-						<div className="flex justify-between items-center p-4">
+						<div className="flex justify-between items-center p-2 md:p-4">
 							<button
-								className="bg-gray-700 text-white px-4 py-2 rounded text-sm"
+								className="bg-gray-700 text-white px-2 md:px-4 py-1 md:py-2 rounded text-xs md:text-sm"
 								onClick={() => table.previousPage()}
 								disabled={!table.getCanPreviousPage()}
 							>
 								Previous
 							</button>
-							<span className="text-sm text-gray-900">
+							<span className="text-xs md:text-sm text-gray-900">
 								Page{" "}
 								<strong>
 									{table.getState().pagination.pageIndex + 1} of{" "}
@@ -286,7 +371,7 @@ const AdminDashboard = () => {
 								</strong>
 							</span>
 							<button
-								className="bg-gray-700 text-white px-4 py-2 rounded text-sm"
+								className="bg-gray-700 text-white px-2 md:px-4 py-1 md:py-2 rounded text-xs md:text-sm"
 								onClick={() => table.nextPage()}
 								disabled={!table.getCanNextPage()}
 							>

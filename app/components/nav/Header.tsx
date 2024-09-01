@@ -149,7 +149,7 @@ const Header: FC = () => {
 							{/* Mobile Menu Section */}
 							<div className="lg:hidden flex items-center justify-between w-full mr-[1.5rem]">
 								<div className="absolute left-2 flex items-center">
-									<IconButton onClick={toggleMenu}>
+									<IconButton title="Menu" onClick={toggleMenu}>
 										<List size={30} />
 									</IconButton>
 								</div>
@@ -157,11 +157,11 @@ const Header: FC = () => {
 									<Image src={simpleLogo} alt="Logo" width={80} height={80} />
 								</Link>
 								<div className="absolute right-2 flex items-center space-x-1">
-									<IconButton onClick={toggleSearch}>
+									<IconButton title="Search" onClick={toggleSearch}>
 										<Binoculars size={28} />
 									</IconButton>
 									<AccountDropdown />
-									<IconButton onClick={handleCartClick}>
+									<IconButton title="Cart" onClick={handleCartClick}>
 										<Badge badgeContent={cartQuantity} color="primary">
 											<Basket size={28} />
 										</Badge>
@@ -192,15 +192,6 @@ const Header: FC = () => {
 									>
 										About
 									</Link>
-									{/* LEAVING WHOLESALE LINKS IN-CASE CLIENT WANTS LATER*/}
-									{/* <Link
-										    href="/shop/wholesale"
-										    className={`p-1 hover:bg-emerald-500 hover:rounded-sm hover:text-primary ${pathname === "/shop/wholesale" ? "text-emerald-600" : ""}`}
-										    onClick={() => setIsMenuOpen(false)}
-									        >
-										    Wholesale
-									        </Link> 
-                                        */}
 									<div
 										className="relative group"
 										onMouseEnter={() => setIsMobileSubMenuOpen(true)}

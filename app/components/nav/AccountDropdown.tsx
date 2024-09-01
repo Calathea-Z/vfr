@@ -6,7 +6,12 @@ import { useState, MouseEvent, useRef, FC } from "react";
 import { useRouter } from "next/navigation";
 //---Packages---//
 import { IconButton, Menu, MenuItem, Avatar } from "@mui/material";
-import { UserCircle, GearSix, HandWaving } from "@phosphor-icons/react";
+import {
+	UserCircle,
+	GearSix,
+	HandWaving,
+	Storefront,
+} from "@phosphor-icons/react";
 import { useSnackbar } from "notistack";
 import { useSession } from "next-auth/react";
 
@@ -46,7 +51,7 @@ const AccountDropdown: FC = () => {
 
 	return (
 		<>
-			<IconButton ref={buttonRef} onClick={handleClick}>
+			<IconButton title="My Account" ref={buttonRef} onClick={handleClick}>
 				{session?.user ? (
 					<Avatar
 						src={(session.user as SessionUser).image ?? undefined}
@@ -77,6 +82,15 @@ const AccountDropdown: FC = () => {
 							<GearSix className="w-5 h-5" />
 							&nbsp;Account
 						</MenuItem>,
+						(session.user as SessionUser)?.role === "admin" && (
+							<MenuItem
+								key="admin"
+								onClick={() => handleNavigate("/admin/dashboard")}
+							>
+								<Storefront className="w-5 h-5" />
+								&nbsp;MyShop
+							</MenuItem>
+						),
 						<MenuItem key="logout" onClick={handleLogout}>
 							<HandWaving className="w-5 h-5" />
 							&nbsp;Logout
